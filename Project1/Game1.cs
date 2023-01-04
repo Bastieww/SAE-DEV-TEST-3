@@ -9,8 +9,9 @@ using MonoGame.Extended.Sprites;
 using MonoGame.Extended.Serialization;
 using MonoGame.Extended.Screens;
 using MonoGame.Extended.Screens.Transitions;
+using System;
 
-namespace SAE
+namespace Project1
 {
     public class Game1 : Game
     {

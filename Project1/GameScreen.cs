@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Screens;
 using MonoGame.Extended;
 
-namespace SAE
+namespace Project1
 {
     public class GameScreen : MonoGame.Extended.Screens.GameScreen
     {

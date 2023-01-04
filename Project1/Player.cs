@@ -10,7 +10,7 @@ using MonoGame.Extended.Sprites;
 using MonoGame.Extended.Tiled;
 using MonoGame.Extended.Tiled.Renderers;
 
-namespace SAE
+namespace Project1
 {
     internal class Player
     {

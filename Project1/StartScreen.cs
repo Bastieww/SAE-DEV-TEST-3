@@ -1,17 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using MonoGame.Extended.Screens;
-using MonoGame.Extended;
 using MonoGame.Extended.Tiled;
 using MonoGame.Extended.Tiled.Renderers;
-
-namespace SAE
+using MonoGame.Extended.Animations;
+using MonoGame.Extended.Content;
+using MonoGame.Extended.Sprites;
+using MonoGame.Extended.Serialization;
+using MonoGame.Extended.Screens;
+using MonoGame.Extended.Screens.Transitions;
+using System;
+namespace Project1
 {
     public class StartScreen : MonoGame.Extended.Screens.GameScreen
     {
@@ -27,7 +26,7 @@ namespace SAE
         }
         public override void LoadContent()
         {
-            _tiledMap = Content.Load<TiledMap>("map");
+            _tiledMap = Content.Load<TiledMap>("mapGenerale");
             _tiledMapRenderer = new TiledMapRenderer(GraphicsDevice, _tiledMap);
             base.LoadContent();
         }
