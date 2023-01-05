@@ -18,6 +18,12 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin animation.sf
+/importer:SpriteFactoryContentImporter
+/processor:SpriteFactoryContentProcessor
+/processorParam:ContentType=MonoGame.Extended MonoGame.Extended.Animations.SpriteFactory.SpriteFactoryFileReader, MonoGame.Extended.Animations
+/build:animation.sf
+
 #begin fond_de_map.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -51,6 +57,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:mapGeneraleTuiles.png
+
+#begin perso.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:perso.png
 
 #begin zombie.sf
 /importer:SpriteFactoryContentImporter
