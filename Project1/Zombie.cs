@@ -48,10 +48,10 @@ namespace Project1
             // pt spawn chaque zombie
             for (int i = 0; i < nbZombMax; i++)
             {
-                int XspawnGauche = rd.Next(-250, -50);
-                int XspawnDroite = rd.Next(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Width + 150);
-                int YspawnHaut = rd.Next(-250, -50);
-                int YspawnBas = rd.Next(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Width + 150);
+                int XspawnGauche = rd.Next(50, 250);
+                int XspawnDroite = rd.Next(0, 50);
+                int YspawnHaut = rd.Next(0, 50);
+                int YspawnBas = rd.Next(0, 250);
                 if (XspawnGauche < XspawnDroite)
                     XposZomb = XspawnDroite;
                 else
@@ -64,9 +64,10 @@ namespace Project1
 
             }
         }
-        
+
         protected override void LoadContent()
         {
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
             for (int i = 0; i < nbZombMax; i++)
             {
                 switch (this.TypeZombie)
@@ -74,6 +75,7 @@ namespace Project1
                     case "Normal":
                         vieZombie = Zombie.VIE_NORMAL;
                         vitesseZombie = Zombie.VITESSE_NORMAL;
+
                         SpriteSheet spriteSheet = Content.Load<SpriteSheet>("zombie.sf", new JsonContentLoader());
                         _textureZombNormal = new AnimatedSprite(spriteSheet);
                         break;
@@ -86,10 +88,26 @@ namespace Project1
                         vitesseZombie = Zombie.VITESSE_GROS;
                         break;
                 }
+
+
             }
         }
         protected override void Update(GameTime gameTime)
         {
+            float deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            _textureZombNormal.Update(deltaSeconds);
+        }
+        protected override void Draw(GameTime gameTime)
+        {
+            for (int i = 0; i < nbZombMax; i++)
+            {
+                _spriteBatch.Draw(_textureZombNormal, _positionZombie[i]);
+            }
+            base.Draw(gameTime);
+        }
+        public void Test()
+        {
+            Console.WriteLine("test");
         }
     }
 }

@@ -62,9 +62,12 @@ namespace Project1
             _graphics.IsFullScreen = true;
             _graphics.ApplyChanges();
 
+            // Zombie
+            Zombie zombie1 = new Zombie("Normal");
+            zombie1.Initialize();
 
             //Joueur
-            _positionPerso= new Vector2(_graphics.PreferredBackBufferWidth / 3 , _graphics.PreferredBackBufferHeight / 2);
+            _positionPerso = new Vector2(_graphics.PreferredBackBufferWidth / 3 , _graphics.PreferredBackBufferHeight / 2);
             
             base.Initialize();
         }
@@ -180,6 +183,7 @@ namespace Project1
             _tiledMapRenderer.Draw();
             _spriteBatch.Begin();
             _spriteBatch.Draw(_perso, _positionPerso);
+            //zombie1.Draw(gameTime);
             _spriteBatch.End();
             // TODO: Add your drawing code here
             base.Draw(gameTime);
