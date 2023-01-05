@@ -29,6 +29,8 @@ namespace Project1
         private MonoGame.Extended.Sprites.AnimatedSprite _perso;
         private int vitesse = 100;
 
+        private Vector2 _positionZombie;
+        private MonoGame.Extended.Sprites.AnimatedSprite _zombie;
 
         StartScreen startscreen;
         GameScreen gamescreen;
@@ -67,8 +69,9 @@ namespace Project1
             zombie1.Initialize();
 
             //Joueur
-            _positionPerso = new Vector2(_graphics.PreferredBackBufferWidth / 3 , _graphics.PreferredBackBufferHeight / 2);
-            
+            _positionPerso= new Vector2(_graphics.PreferredBackBufferWidth / 3 , _graphics.PreferredBackBufferHeight / 2);
+            _positionZombie = new Vector2(_graphics.PreferredBackBufferWidth / 3, _graphics.PreferredBackBufferHeight / 2);
+
             base.Initialize();
         }
 
@@ -90,8 +93,11 @@ namespace Project1
             SpriteSheet spriteSheet = Content.Load<SpriteSheet>("animation.sf", new JsonContentLoader());
             _perso = new MonoGame.Extended.Sprites.AnimatedSprite(spriteSheet);
 
+            SpriteSheet spriteSheetZombie = Content.Load<SpriteSheet>("zombieAnim.sf", new JsonContentLoader());
+            _zombie = new MonoGame.Extended.Sprites.AnimatedSprite(spriteSheetZombie);
 
-       
+
+
 
 
 
@@ -172,8 +178,10 @@ namespace Project1
             _tiledMapRenderer.Update(gameTime);
 
             _perso.Update(deltaTime); // time écoulé
-
             
+            _zombie.Play("idle");
+            _zombie.Update(deltaTime);
+
             base.Update(gameTime);
         }
 
@@ -183,7 +191,7 @@ namespace Project1
             _tiledMapRenderer.Draw();
             _spriteBatch.Begin();
             _spriteBatch.Draw(_perso, _positionPerso);
-            //zombie1.Draw(gameTime);
+            _spriteBatch.Draw(_zombie, _positionZombie);
             _spriteBatch.End();
             // TODO: Add your drawing code here
             base.Draw(gameTime);

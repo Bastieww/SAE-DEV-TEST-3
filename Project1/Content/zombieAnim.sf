@@ -1,0 +1,14 @@
+{
+  "textureAtlas": {
+    "texture": "zombie.png",
+    "regionWidth": 30,
+    "regionHeight": 60
+  },
+  "cycles": {
+    "idle": {
+      "frames": [ 1,2],
+      "isLooping": false,
+      "frameDuration": 0.5
+    }
+  }
+}
