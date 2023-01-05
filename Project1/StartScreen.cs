@@ -26,7 +26,7 @@ namespace Project1
         }
         public override void LoadContent()
         {
-            _tiledMap = Content.Load<TiledMap>("mapGenerale");
+            _tiledMap = Content.Load<TiledMap>("map");
             _tiledMapRenderer = new TiledMapRenderer(GraphicsDevice, _tiledMap);
             base.LoadContent();
         }
