@@ -18,8 +18,17 @@ namespace Project1
         private GraphicsDeviceManager _graphics;
         private readonly ScreenManager _screenManager;
         public SpriteBatch _spriteBatch { get; set; }
-        
-        
+
+
+        private TiledMap _tiledMap;
+        private TiledMapRenderer _tiledMapRenderer;
+        private TiledMapTileLayer mapLayer;
+
+        //a deplacer + tard
+        private Vector2 _positionPerso;
+        private MonoGame.Extended.Sprites.AnimatedSprite _perso;
+        private int vitesse = 100;
+
 
         StartScreen startscreen;
         GameScreen gamescreen;
@@ -55,7 +64,7 @@ namespace Project1
 
 
             //Joueur
-            //_positionPlayer = new Vector2(_graphics.PreferredBackBufferWidth / 2 , _graphics.PreferredBackBufferHeight / 2);
+            _positionPerso= new Vector2(_graphics.PreferredBackBufferWidth / 3 , _graphics.PreferredBackBufferHeight / 2);
             
             base.Initialize();
         }
@@ -67,13 +76,20 @@ namespace Project1
 
             startscreen = new StartScreen(this); 
             gamescreen = new GameScreen(this); 
-            endscreen = new EndScreen(this); 
+            endscreen = new EndScreen(this);
 
-            
+            //a deplacer + tard
+            _tiledMap = Content.Load<TiledMap>("map");
+            _tiledMapRenderer = new TiledMapRenderer(GraphicsDevice, _tiledMap);
+            mapLayer = _tiledMap.GetLayer<TiledMapTileLayer>("Cailloux");
 
-            //Joueur
-            //SpriteSheet spriteSheet = Content.Load<SpriteSheet>("playerSide.sf", new JsonContentLoader());
-         
+
+            SpriteSheet spriteSheet = Content.Load<SpriteSheet>("animation.sf", new JsonContentLoader());
+            _perso = new MonoGame.Extended.Sprites.AnimatedSprite(spriteSheet);
+
+
+       
+
 
 
             // TODO: use this.Content to load your game content here
@@ -84,40 +100,53 @@ namespace Project1
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-           
-
+            // TODO: Add your update logic here
             float deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds; // DeltaTime
-            //float walkSpeed = deltaSeconds * playerDeBase.Vitesse; 
-
+            float walkSpeed = deltaSeconds * vitesse; // Vitesse de déplacement du sprite
             KeyboardState keyboardState = Keyboard.GetState();
+            
 
 
-            //player bouge
-            /*
-            string playerSide = "idle";
-            if (keyboardState.IsKeyDown(Keys.Up))
+            if (keyboardState.IsKeyDown(Keys.Z))
             {
-                _positionPlayer.Y += 1;
-                playerSide = "walkNorth";
+                ushort tx = (ushort)(_positionPerso.X / _tiledMap.TileWidth);
+                ushort ty = (ushort)(_positionPerso.Y / _tiledMap.TileHeight - 1);
+                
+                if (!IsCollision(tx, ty))
+                    _positionPerso.Y -= walkSpeed;
             }
-            else if (keyboardState.IsKeyDown(Keys.Down))
-            {
-                _positionPlayer.Y -= 1;
-                playerSide = "walkSouth";
-            }
-            else if (keyboardState.IsKeyDown(Keys.Left))
-            {
-                _positionPlayer.X -= 1;
-                playerSide = "walkEast";
 
-            }
-            else if (Keyboard.GetState().IsKeyDown(Keys.Right))
+            if (keyboardState.IsKeyDown(Keys.S))
             {
-                _positionPlayer.X += 1;
-                playerSide = "walkWest";
+                ushort tx = (ushort)(_positionPerso.X / _tiledMap.TileWidth);
+                ushort ty = (ushort)(_positionPerso.Y / _tiledMap.TileHeight + 1);
+               
+                if (!IsCollision(tx, ty))
+                    _positionPerso.Y += walkSpeed;
             }
-            */
-           
+
+            if (keyboardState.IsKeyDown(Keys.Q))
+            {
+                ushort tx = (ushort)(_positionPerso.X / _tiledMap.TileWidth - 1);
+                ushort ty = (ushort)(_positionPerso.Y / _tiledMap.TileHeight);
+                
+                if (!IsCollision(tx, ty))
+                    _positionPerso.X -= walkSpeed;
+            }
+            if (keyboardState.IsKeyDown(Keys.D))
+            {
+                ushort tx = (ushort)(_positionPerso.X / _tiledMap.TileWidth + 1);
+                ushort ty = (ushort)(_positionPerso.Y / _tiledMap.TileHeight);
+                
+                if (!IsCollision(tx, ty))
+                    _positionPerso.X += walkSpeed;
+            }
+            
+
+            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+                Exit();
 
             if (keyboardState.IsKeyDown(Keys.Left))
             {
@@ -129,25 +158,47 @@ namespace Project1
                 _screenManager.LoadScreen(endscreen, new FadeTransition(GraphicsDevice,
                 Color.Black));
             }
-            else
-            {
+            
 
-            }
+            // TODO: Add your update logic here
+            /*
+            _player.Play(playerSide);
+            _player.Update(deltaSeconds);
+            */
 
-             // TODO: Add your update logic here
-             /*
-             _player.Play(playerSide);
-             _player.Update(deltaSeconds);
-             */
-             base.Update(gameTime);
+            _tiledMapRenderer.Update(gameTime);
+
+            _perso.Update(deltaTime); // time écoulé
+
+            
+            base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            
 
+            _tiledMapRenderer.Draw();
+            _spriteBatch.Begin();
+            _spriteBatch.Draw(_perso, _positionPerso);
+            _spriteBatch.End();
             // TODO: Add your drawing code here
             base.Draw(gameTime);
+        }
+
+        private bool IsCollision(ushort x, ushort y)
+        {
+            // définition de tile qui peut être null (?)
+            
+            TiledMapTile? tile;
+            if (mapLayer.TryGetTile(x, y, out tile) == false)
+                return false;
+            if (!tile.Value.IsBlank)
+            {
+                Console.WriteLine(mapLayer.GetTile(x, y).GlobalIdentifier);
+                return true;
+            }
+            
+            return false;
         }
     }
 }
