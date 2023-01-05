@@ -1,0 +1,8 @@
+{
+  "textureAtlas": {
+    "texture": "zombie.png",
+    "regionWidth": 30,
+    "regionHeight": 60
+  },
+  "cycles": {}
+}

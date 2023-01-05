@@ -144,7 +144,7 @@ namespace Project1
 
         protected override void Draw(GameTime gameTime)
         {
-            
+
 
             // TODO: Add your drawing code here
             base.Draw(gameTime);
