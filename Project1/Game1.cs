@@ -131,7 +131,11 @@ namespace Project1
             // TODO: Add your update logic here
             KeyboardState keyboardState = Keyboard.GetState();
             
-
+            if (this.Etat == Etats.EndScreen)
+            {
+                _screenManager.LoadScreen(startscreen, new FadeTransition(GraphicsDevice,
+                Color.White));
+            }
             
 
             if (keyboardState.IsKeyDown(Keys.Left))
@@ -144,6 +148,7 @@ namespace Project1
                 _screenManager.LoadScreen(gamescreen, new FadeTransition(GraphicsDevice,
                 Color.Black));
             }
+
             
 
             // TODO: Add your update logic here

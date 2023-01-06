@@ -19,6 +19,9 @@ namespace Project1
         // défini dans Game1;
 
         private Player player;
+        private Vector2 Playerpos;
+
+        
 
         private float deltaTime;
 
@@ -34,15 +37,19 @@ namespace Project1
             _myGame.mapLayer = _myGame._tiledMap.GetLayer<TiledMapTileLayer>("Cailloux");
 
             player = new Player(this);
+            Playerpos = new Vector2(400, 400);
+
 
             SpriteSheet spriteSheetZombie = Content.Load<SpriteSheet>("zombieAnim.sf", new JsonContentLoader());
         }
         public override void Update(GameTime gameTime)
         {
             deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-
+           
             _myGame._tiledMapRenderer.Update(gameTime);
 
+           
+            
             
 
         }
@@ -51,7 +58,7 @@ namespace Project1
             _myGame._tiledMapRenderer.Draw();
             
             _myGame._spriteBatch.Begin();
-            _myGame._spriteBatch.Draw(player.Apparence, new Vector2(644, 566));
+            _myGame._spriteBatch.Draw(player.Apparence, Playerpos);
            
             _myGame._spriteBatch.End();
 
