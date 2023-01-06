@@ -17,25 +17,68 @@ namespace Project1
         private Game1 _myGame;
         // pour récupérer une référence à l’objet game pour avoir accès à tout ce qui est
         // défini dans Game1
-        
+
+        private Texture2D _textBoutons;
+        private Rectangle[] boutons;
+        private Vector2 _posbuttons;
+
+
 
 
         public StartScreen(Game1 game) : base(game)
         {
             _myGame = game;
-         
+            
+           
+
+
         }
         public override void LoadContent()
         {
+            _myGame._tiledMap = Content.Load<TiledMap>("map");
+            _myGame._tiledMapRenderer = new TiledMapRenderer(GraphicsDevice, _myGame._tiledMap);
+            _textBoutons = Content.Load<Texture2D>("buttons");
+            _posbuttons = new Vector2(Game1.WIDTH / 2 - _textBoutons.Width / 2, Game1.HEIGHT / 2 - _textBoutons.Height / 2);
+
+            boutons = new Rectangle[2];
+            boutons[0] = new Rectangle(Game1.HEIGHT / 2 - _textBoutons.Height / 2 , Game1.WIDTH / 2 - _textBoutons.Width / 2, 333, 128);
+            boutons[1] = new Rectangle(Game1.HEIGHT / 2 - _textBoutons.Height / 2 +170, Game1.WIDTH / 2 - _textBoutons.Width / 2, 333, 128);
         }
         public override void Update(GameTime gameTime)
         {
-         
+           
+            MouseState _mouseState = Mouse.GetState();
+            if (_mouseState.LeftButton == ButtonState.Pressed)
+            {
+                for (int i = 0; i < boutons.Length; i++)
+                {
+                    // si le clic correspond à un des 3 boutons
+                    if (boutons[i].Contains(Mouse.GetState().X, Mouse.GetState().Y))
+                    {
+                        // on change l'état défini dans Game1 en fonction du bouton cliqué
+                        if (i == 0)
+                            _myGame.Etat = Game1.Etats.GameScreen;
+                        else
+                            _myGame.Etat = Game1.Etats.EndScreen;
+                        break;
+                    }
+
+                }
+
+            }
+
+
+
         }
+
+
+
         public override void Draw(GameTime gameTime)
         {
-            _myGame._tiledMapRenderer.Draw();
+            //_myGame._tiledMapRenderer.Draw();
+
             _myGame._spriteBatch.Begin();
+            _myGame._spriteBatch.Draw(_textBoutons, _posbuttons, Color.Red);
           
 
             _myGame._spriteBatch.End();

@@ -40,6 +40,8 @@ namespace Project1
             }
         }
 
+        public object SpriteBatch { get; internal set; }
+
         StartScreen startscreen;
         GameScreen gamescreen;
         EndScreen endscreen;
@@ -110,7 +112,7 @@ namespace Project1
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            _screenManager.LoadScreen(gamescreen, new FadeTransition(GraphicsDevice, Color.Black));
+            _screenManager.LoadScreen(startscreen, new FadeTransition(GraphicsDevice, Color.Black));
 
             //a deplacer + tard
             
@@ -130,10 +132,28 @@ namespace Project1
 
             // TODO: Add your update logic here
             KeyboardState keyboardState = Keyboard.GetState();
+            MouseState _mouseState = Mouse.GetState();
             
 
-            
+            if (_mouseState.LeftButton == ButtonState.Pressed)
+            {
+                // Attention, l'état a été mis à jour directement par l'écran en question
+                if (this.Etat == Etats.EndScreen)
+                    Exit();
 
+                else if (this.Etat == Etats.GameScreen)
+                    _screenManager.LoadScreen(gamescreen, new FadeTransition(GraphicsDevice, Color.Black));
+
+            }
+
+            if (keyboardState.IsKeyDown(Keys.P))
+            {
+                if (this.Etat == Etats.GameScreen)
+                    _screenManager.LoadScreen(startscreen, new FadeTransition(GraphicsDevice, Color.Black));
+
+            }
+
+            /*
             if (keyboardState.IsKeyDown(Keys.Left))
             {
                 _screenManager.LoadScreen(startscreen, new FadeTransition(GraphicsDevice,
@@ -143,16 +163,13 @@ namespace Project1
             {
                 _screenManager.LoadScreen(gamescreen, new FadeTransition(GraphicsDevice,
                 Color.Black));
-            }
+            }/*
             
-
             // TODO: Add your update logic here
-            /*
+            
             _player.Play(playerSide);
             _player.Update(deltaSeconds);
             */
-
-            
 
             base.Update(gameTime);
         }
