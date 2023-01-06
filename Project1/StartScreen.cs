@@ -35,7 +35,6 @@ namespace Project1
         public override void Draw(GameTime gameTime)
         {
             _tiledMapRenderer.Draw();
-           
         }
     }
 }

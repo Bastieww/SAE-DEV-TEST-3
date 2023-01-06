@@ -1,14 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using MonoGame.Extended.Tiled;
-using MonoGame.Extended.Tiled.Renderers;
-using MonoGame.Extended.Animations;
 using MonoGame.Extended.Content;
-using MonoGame.Extended.Sprites;
-using MonoGame.Extended.Serialization;
 using MonoGame.Extended.Screens;
 using MonoGame.Extended.Screens.Transitions;
+using MonoGame.Extended.Serialization;
+using MonoGame.Extended.Sprites;
+using MonoGame.Extended.Tiled;
+using MonoGame.Extended.Tiled.Renderers;
 using System;
 
 namespace Project1
@@ -29,6 +28,8 @@ namespace Project1
         private MonoGame.Extended.Sprites.AnimatedSprite _perso;
         private int vitesse = 100;
 
+        // Zombie
+        private Zombie zombie1;
         private Vector2 _positionZombie;
         private MonoGame.Extended.Sprites.AnimatedSprite _zombie;
 
@@ -36,14 +37,13 @@ namespace Project1
         GameScreen gamescreen;
         EndScreen endscreen;
 
-        
         //Joueur
         /*private Vector2 _positionPlayer;
         private AnimatedSprite _player;
         Player playerDeBase = new Player("Player1", 100, 10, 0);
         */
 
-       
+
 
         public Game1()
         {
@@ -54,23 +54,20 @@ namespace Project1
             _screenManager = new ScreenManager();
             Components.Add(_screenManager);
         }
-       
+
         protected override void Initialize()
         {
-            
+
             // TODO: Add your initialization logic here
             _graphics.PreferredBackBufferWidth = 1920;
             _graphics.PreferredBackBufferHeight = 1080;
             _graphics.IsFullScreen = true;
             _graphics.ApplyChanges();
 
-            // Zombie
-            Zombie zombie1 = new Zombie("Normal");
-            zombie1.Initialize();
 
             //Joueur
-            _positionPerso= new Vector2(_graphics.PreferredBackBufferWidth / 3 , _graphics.PreferredBackBufferHeight / 2);
-            _positionZombie = new Vector2(_graphics.PreferredBackBufferWidth / 3, _graphics.PreferredBackBufferHeight / 2);
+            _positionPerso = new Vector2(_graphics.PreferredBackBufferWidth / 3, _graphics.PreferredBackBufferHeight / 2);
+            _positionZombie = new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2);
 
             base.Initialize();
         }
@@ -78,30 +75,28 @@ namespace Project1
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            
 
-            startscreen = new StartScreen(this); 
-            gamescreen = new GameScreen(this); 
+
+            startscreen = new StartScreen(this);
+            gamescreen = new GameScreen(this);
             endscreen = new EndScreen(this);
 
+            // TODO: use this.Content to load your game content here
             //a deplacer + tard
             _tiledMap = Content.Load<TiledMap>("map");
             _tiledMapRenderer = new TiledMapRenderer(GraphicsDevice, _tiledMap);
             mapLayer = _tiledMap.GetLayer<TiledMapTileLayer>("Cailloux");
 
+            // Zombie
+            zombie1 = new Zombie("Normal");
+            zombie1.CreationZombie();
 
             SpriteSheet spriteSheet = Content.Load<SpriteSheet>("animation.sf", new JsonContentLoader());
             _perso = new MonoGame.Extended.Sprites.AnimatedSprite(spriteSheet);
 
-            SpriteSheet spriteSheetZombie = Content.Load<SpriteSheet>("zombieAnim.sf", new JsonContentLoader());
-            _zombie = new MonoGame.Extended.Sprites.AnimatedSprite(spriteSheetZombie);
+            SpriteSheet spriteSheetZomb = Content.Load<SpriteSheet>("zombieAnim.sf", new JsonContentLoader());
+            _zombie = new MonoGame.Extended.Sprites.AnimatedSprite(spriteSheetZomb);
 
-
-
-
-
-
-            // TODO: use this.Content to load your game content here
         }
 
         protected override void Update(GameTime gameTime)
@@ -113,32 +108,30 @@ namespace Project1
             float deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds; // DeltaTime
             float walkSpeed = deltaSeconds * vitesse; // Vitesse de déplacement du sprite
             KeyboardState keyboardState = Keyboard.GetState();
-            
 
 
+            // Joueur
             if (keyboardState.IsKeyDown(Keys.Z))
             {
                 ushort tx = (ushort)(_positionPerso.X / _tiledMap.TileWidth);
                 ushort ty = (ushort)(_positionPerso.Y / _tiledMap.TileHeight - 1);
-                
+
                 if (!IsCollision(tx, ty))
                     _positionPerso.Y -= walkSpeed;
             }
-
             if (keyboardState.IsKeyDown(Keys.S))
             {
                 ushort tx = (ushort)(_positionPerso.X / _tiledMap.TileWidth);
                 ushort ty = (ushort)(_positionPerso.Y / _tiledMap.TileHeight + 1);
-               
+
                 if (!IsCollision(tx, ty))
                     _positionPerso.Y += walkSpeed;
             }
-
             if (keyboardState.IsKeyDown(Keys.Q))
             {
                 ushort tx = (ushort)(_positionPerso.X / _tiledMap.TileWidth - 1);
                 ushort ty = (ushort)(_positionPerso.Y / _tiledMap.TileHeight);
-                
+
                 if (!IsCollision(tx, ty))
                     _positionPerso.X -= walkSpeed;
             }
@@ -146,11 +139,11 @@ namespace Project1
             {
                 ushort tx = (ushort)(_positionPerso.X / _tiledMap.TileWidth + 1);
                 ushort ty = (ushort)(_positionPerso.Y / _tiledMap.TileHeight);
-                
+
                 if (!IsCollision(tx, ty))
                     _positionPerso.X += walkSpeed;
             }
-            
+
 
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
@@ -167,20 +160,20 @@ namespace Project1
                 _screenManager.LoadScreen(endscreen, new FadeTransition(GraphicsDevice,
                 Color.Black));
             }
-            
+
 
             // TODO: Add your update logic here
-            /*
-            _player.Play(playerSide);
-            _player.Update(deltaSeconds);
-            */
 
             _tiledMapRenderer.Update(gameTime);
 
             _perso.Update(deltaTime); // time écoulé
-            
+
+            // Zombie
+            Vector2 deplacementZombie = new Vector2((_positionPerso.X - _positionZombie.X), (_positionPerso.Y - _positionZombie.Y));
+            _positionZombie += deplacementZombie / 100;
+
             _zombie.Play("idle");
-            _zombie.Update(deltaTime);
+            _zombie.Update(deltaSeconds);
 
             base.Update(gameTime);
         }
@@ -200,7 +193,7 @@ namespace Project1
         private bool IsCollision(ushort x, ushort y)
         {
             // définition de tile qui peut être null (?)
-            
+
             TiledMapTile? tile;
             if (mapLayer.TryGetTile(x, y, out tile) == false)
                 return false;
@@ -209,7 +202,7 @@ namespace Project1
                 Console.WriteLine(mapLayer.GetTile(x, y).GlobalIdentifier);
                 return true;
             }
-            
+
             return false;
         }
     }
