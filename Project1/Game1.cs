@@ -15,26 +15,44 @@ namespace Project1
 {
     public class Game1 : Game
     {
-        private GraphicsDeviceManager _graphics;
+        public GraphicsDeviceManager _graphics;
         private readonly ScreenManager _screenManager;
         public SpriteBatch _spriteBatch { get; set; }
+        public const int WIDTH = 1920, HEIGHT = 1080;
+        
+
+        
+        public enum Etats { StartScreen, GameScreen, EndScreen };
 
 
-        private TiledMap _tiledMap;
-        private TiledMapRenderer _tiledMapRenderer;
-        private TiledMapTileLayer mapLayer;
+        private Etats etat;
+        
+            public Etats Etat
+        {
+            get
+            {
+                return this.etat;
+            }
 
-        //a deplacer + tard
-        private Vector2 _positionPerso;
-        private MonoGame.Extended.Sprites.AnimatedSprite _perso;
-        private int vitesse = 100;
-
-        private Vector2 _positionZombie;
-        private MonoGame.Extended.Sprites.AnimatedSprite _zombie;
+            set
+            {
+                this.etat = value;
+            }
+        }
 
         StartScreen startscreen;
         GameScreen gamescreen;
         EndScreen endscreen;
+
+
+        public TiledMap _tiledMap;
+        public TiledMapRenderer _tiledMapRenderer;
+        public TiledMapTileLayer mapLayer;
+
+        //a deplacer + tard
+        
+
+       
 
         
         //Joueur
@@ -47,30 +65,43 @@ namespace Project1
 
         public Game1()
         {
+
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
 
+            _graphics.PreferredBackBufferWidth = WIDTH;
+            _graphics.PreferredBackBufferHeight = HEIGHT;
+
             _screenManager = new ScreenManager();
             Components.Add(_screenManager);
+
+            // Par défaut, le 1er état flèche l'écran de menu
+            Etat = Etats.StartScreen;
+
+            // on charge les 3 écrans 
+            startscreen = new StartScreen(this);
+            gamescreen = new GameScreen(this);
+            endscreen = new EndScreen(this);
+
+
         }
        
         protected override void Initialize()
         {
-            
+
             // TODO: Add your initialization logic here
-            _graphics.PreferredBackBufferWidth = 1920;
-            _graphics.PreferredBackBufferHeight = 1080;
+            
             _graphics.IsFullScreen = true;
             _graphics.ApplyChanges();
 
             // Zombie
-            Zombie zombie1 = new Zombie("Normal");
-            zombie1.Initialize();
+            //Zombie zombie1 = new Zombie("Normal");
+            //zombie1.Initialize();
+            
 
             //Joueur
-            _positionPerso= new Vector2(_graphics.PreferredBackBufferWidth / 3 , _graphics.PreferredBackBufferHeight / 2);
-            _positionZombie = new Vector2(_graphics.PreferredBackBufferWidth / 3, _graphics.PreferredBackBufferHeight / 2);
+            
 
             base.Initialize();
         }
@@ -78,23 +109,11 @@ namespace Project1
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            
 
-            startscreen = new StartScreen(this); 
-            gamescreen = new GameScreen(this); 
-            endscreen = new EndScreen(this);
+            _screenManager.LoadScreen(gamescreen, new FadeTransition(GraphicsDevice, Color.Black));
 
             //a deplacer + tard
-            _tiledMap = Content.Load<TiledMap>("map");
-            _tiledMapRenderer = new TiledMapRenderer(GraphicsDevice, _tiledMap);
-            mapLayer = _tiledMap.GetLayer<TiledMapTileLayer>("Cailloux");
-
-
-            SpriteSheet spriteSheet = Content.Load<SpriteSheet>("animation.sf", new JsonContentLoader());
-            _perso = new MonoGame.Extended.Sprites.AnimatedSprite(spriteSheet);
-
-            SpriteSheet spriteSheetZombie = Content.Load<SpriteSheet>("zombieAnim.sf", new JsonContentLoader());
-            _zombie = new MonoGame.Extended.Sprites.AnimatedSprite(spriteSheetZombie);
+            
 
 
 
@@ -110,61 +129,19 @@ namespace Project1
                 Exit();
 
             // TODO: Add your update logic here
-            float deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds; // DeltaTime
-            float walkSpeed = deltaSeconds * vitesse; // Vitesse de déplacement du sprite
             KeyboardState keyboardState = Keyboard.GetState();
             
 
-
-            if (keyboardState.IsKeyDown(Keys.Z))
-            {
-                ushort tx = (ushort)(_positionPerso.X / _tiledMap.TileWidth);
-                ushort ty = (ushort)(_positionPerso.Y / _tiledMap.TileHeight - 1);
-                
-                if (!IsCollision(tx, ty))
-                    _positionPerso.Y -= walkSpeed;
-            }
-
-            if (keyboardState.IsKeyDown(Keys.S))
-            {
-                ushort tx = (ushort)(_positionPerso.X / _tiledMap.TileWidth);
-                ushort ty = (ushort)(_positionPerso.Y / _tiledMap.TileHeight + 1);
-               
-                if (!IsCollision(tx, ty))
-                    _positionPerso.Y += walkSpeed;
-            }
-
-            if (keyboardState.IsKeyDown(Keys.Q))
-            {
-                ushort tx = (ushort)(_positionPerso.X / _tiledMap.TileWidth - 1);
-                ushort ty = (ushort)(_positionPerso.Y / _tiledMap.TileHeight);
-                
-                if (!IsCollision(tx, ty))
-                    _positionPerso.X -= walkSpeed;
-            }
-            if (keyboardState.IsKeyDown(Keys.D))
-            {
-                ushort tx = (ushort)(_positionPerso.X / _tiledMap.TileWidth + 1);
-                ushort ty = (ushort)(_positionPerso.Y / _tiledMap.TileHeight);
-                
-                if (!IsCollision(tx, ty))
-                    _positionPerso.X += walkSpeed;
-            }
             
-
-            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
 
             if (keyboardState.IsKeyDown(Keys.Left))
             {
                 _screenManager.LoadScreen(startscreen, new FadeTransition(GraphicsDevice,
                 Color.White));
             }
-            else if (keyboardState.IsKeyDown(Keys.Right))
+            else if (keyboardState.IsKeyDown(Keys.Right) && this.Etat == Etats.StartScreen)
             {
-                _screenManager.LoadScreen(endscreen, new FadeTransition(GraphicsDevice,
+                _screenManager.LoadScreen(gamescreen, new FadeTransition(GraphicsDevice,
                 Color.Black));
             }
             
@@ -175,24 +152,13 @@ namespace Project1
             _player.Update(deltaSeconds);
             */
 
-            _tiledMapRenderer.Update(gameTime);
-
-            _perso.Update(deltaTime); // time écoulé
             
-            _zombie.Play("idle");
-            _zombie.Update(deltaTime);
 
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
-        {
-
-            _tiledMapRenderer.Draw();
-            _spriteBatch.Begin();
-            _spriteBatch.Draw(_perso, _positionPerso);
-            _spriteBatch.Draw(_zombie, _positionZombie);
-            _spriteBatch.End();
+        { 
             // TODO: Add your drawing code here
             base.Draw(gameTime);
         }
