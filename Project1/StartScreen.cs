@@ -14,27 +14,32 @@ namespace Project1
 {
     public class StartScreen : MonoGame.Extended.Screens.GameScreen
     {
-        private Game1 startscreen;
+        private Game1 _myGame;
         // pour récupérer une référence à l’objet game pour avoir accès à tout ce qui est
         // défini dans Game1
-        private TiledMap _tiledMap;
-        private TiledMapRenderer _tiledMapRenderer;
-        private TiledMapTileLayer mapLayer;
+        
+
+
         public StartScreen(Game1 game) : base(game)
         {
-            startscreen = game;
+            _myGame = game;
+         
         }
         public override void LoadContent()
         {
-            _tiledMap = Content.Load<TiledMap>("map");
-            _tiledMapRenderer = new TiledMapRenderer(GraphicsDevice, _tiledMap);
-            base.LoadContent();
         }
         public override void Update(GameTime gameTime)
-        { }
+        {
+         
+        }
         public override void Draw(GameTime gameTime)
         {
-            _tiledMapRenderer.Draw();
+            _myGame._tiledMapRenderer.Draw();
+            _myGame._spriteBatch.Begin();
+          
+
+            _myGame._spriteBatch.End();
+
         }
     }
 }
