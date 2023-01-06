@@ -19,7 +19,7 @@ namespace Project1
         // défini dans Game1;
 
         private Player player;
-        private Zombie zombie;
+        //private Zombie zombie;
         private Vector2 Playerpos;
 
         
