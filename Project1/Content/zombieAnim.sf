@@ -6,7 +6,7 @@
   },
   "cycles": {
     "idle": {
-      "frames": [ 1,2],
+      "frames": [ 1,2,3,2 ],
       "isLooping": false,
       "frameDuration": 0.5
     }

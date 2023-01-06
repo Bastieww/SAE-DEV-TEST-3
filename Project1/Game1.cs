@@ -1,14 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using MonoGame.Extended.Tiled;
-using MonoGame.Extended.Tiled.Renderers;
-using MonoGame.Extended.Animations;
 using MonoGame.Extended.Content;
-using MonoGame.Extended.Sprites;
-using MonoGame.Extended.Serialization;
 using MonoGame.Extended.Screens;
 using MonoGame.Extended.Screens.Transitions;
+using MonoGame.Extended.Serialization;
+using MonoGame.Extended.Sprites;
+using MonoGame.Extended.Tiled;
+using MonoGame.Extended.Tiled.Renderers;
 using System;
 
 namespace Project1
@@ -63,7 +62,7 @@ namespace Project1
         Player playerDeBase = new Player("Player1", 100, 10, 0);
         */
 
-       
+
 
         public Game1()
         {
@@ -88,7 +87,7 @@ namespace Project1
 
 
         }
-       
+
         protected override void Initialize()
         {
 
@@ -114,6 +113,7 @@ namespace Project1
 
             _screenManager.LoadScreen(startscreen, new FadeTransition(GraphicsDevice, Color.Black));
 
+            // TODO: use this.Content to load your game content here
             //a deplacer + tard
             
 
@@ -183,7 +183,7 @@ namespace Project1
         private bool IsCollision(ushort x, ushort y)
         {
             // définition de tile qui peut être null (?)
-            
+
             TiledMapTile? tile;
             if (mapLayer.TryGetTile(x, y, out tile) == false)
                 return false;
@@ -192,7 +192,7 @@ namespace Project1
                 Console.WriteLine(mapLayer.GetTile(x, y).GlobalIdentifier);
                 return true;
             }
-            
+
             return false;
         }
     }

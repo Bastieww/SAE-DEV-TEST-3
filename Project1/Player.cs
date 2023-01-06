@@ -12,99 +12,96 @@ using MonoGame.Extended.Tiled.Renderers;
 
 namespace Project1
 {
-    internal class Player
+    internal class Player 
     {
-        //private sprite 
-        private SpriteBatch spriteBatch;
-        private string pseudo;
-        private int points_de_vie;
-        private int vitesse;
-        private int coins;
+        private int life = 3;
+        private int gold = 0;
+        private int speed = 100;
+        private int damage = 1;
 
-        public Player(string pseudo, int points_de_vie, int vitesse, int coins)
+        private AnimatedSprite apparence;
+
+        public Player(GameScreen gamescreen)
         {
-            this.Pseudo = pseudo;
-            this.Points_de_vie = points_de_vie;
-            this.Vitesse = vitesse;
-            this.Coins = coins;
+            LoadContent(gamescreen);
+
+            this.Life = life;
+            this.Gold = gold;
+            this.Speed = speed;
+            this.Damage = damage;
+            this.Apparence = apparence;
+
         }
 
-        public string Pseudo
+
+        public int Life
         {
             get
             {
-                return this.pseudo;
+                return this.life;
             }
 
             set
             {
-                this.pseudo = value;
+                this.life = value;
             }
         }
 
-        public int Points_de_vie
+        public int Gold
         {
             get
             {
-                return this.points_de_vie;
+                return this.gold;
             }
 
             set
             {
-               
-                this.points_de_vie = value;
+                this.gold = value;
             }
         }
 
-        public int Vitesse
+        public int Speed
         {
             get
             {
-                return this.vitesse;
+                return this.speed;
             }
 
             set
             {
-                this.vitesse = value;
+                this.speed = value;
             }
         }
 
-        public int Coins
+        public int Damage
         {
             get
             {
-                return this.coins;
+                return this.damage;
             }
 
             set
             {
-                if (value != 0)
-                    throw new ArgumentException("Le Joueur ne peut pas avoir des coins au debut de la partie");
-                this.coins = value;
+                this.damage = value;
             }
         }
 
-        public override bool Equals(object obj)
+        public AnimatedSprite Apparence
         {
-            return obj is Player player &&
-                   this.Pseudo == player.Pseudo &&
-                   this.Points_de_vie == player.Points_de_vie &&
-                   this.Vitesse == player.Vitesse &&
-                   this.Coins == player.Coins;
-        }
+            get
+            {
+                return this.apparence;
+            }
 
-        public override int GetHashCode()
+            set
+            {
+                this.apparence = value;
+            }
+        }
+        public void LoadContent(GameScreen gamescreen)
         {
-            return HashCode.Combine(this.Pseudo, this.Points_de_vie, this.Vitesse, this.Coins);
+            SpriteSheet apparence = gamescreen.Content.Load<SpriteSheet>("animation.sf", new JsonContentLoader());
+            this.Apparence = new AnimatedSprite(apparence);
         }
-
-        public override string ToString()
-        {
-            return base.ToString();
-        }
-
-
-         
-
     }
 }
