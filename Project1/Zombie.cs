@@ -18,16 +18,20 @@ namespace Project1
     {
         public const int VIE_NORMAL = 25, VIE_GROS = 50, VIE_RAPIDE = 10;
         public const int VITESSE_NORMAL = 25, VITESSE_GROS = 10, VITESSE_RAPIDE = 50;
-        private static int nbZombies = 0;
         private int vieZombie, vitesseZombie, XposZomb, YposZomb;
-        private string typeZombie, _textureZomb;
+        private string typeZombie;
         private Random rd = new Random();
         private Vector2 _positionZombie;
 
-        public Zombie(string typeZombie)
+        private AnimatedSprite textureZomb;
+
+        public Zombie(GameScreen gamescreen, string typeZombie)
         {
             this.TypeZombie = typeZombie;
+            this.TextureZomb = textureZomb;
+            LoadContent(gamescreen);
         }
+
 
         public string TypeZombie
         {
@@ -41,9 +45,40 @@ namespace Project1
                 this.typeZombie = value;
             }
         }
-        public void CreationZombie()
+        public AnimatedSprite TextureZomb
         {
-            // pt spawn chaque zombie
+            get
+            {
+                return this.textureZomb;
+            }
+
+            set
+            {
+                this.textureZomb = value;
+            }
+        }
+        private void LoadContent(GameScreen gamescreen)
+        {
+            // Type du zombie
+            switch (this.TypeZombie)
+            {
+                case "Normal":
+                    vieZombie = Zombie.VIE_NORMAL;
+                    vitesseZombie = Zombie.VITESSE_NORMAL;
+                    SpriteSheet apparence = gamescreen.Content.Load<SpriteSheet>("zombieAnim.sf", new JsonContentLoader());
+                    this.TextureZomb = new AnimatedSprite(apparence);
+                    break;
+                case "Rapide":
+                    vieZombie = Zombie.VIE_RAPIDE;
+                    vitesseZombie = Zombie.VITESSE_RAPIDE;
+                    break;
+                case "Gros":
+                    vieZombie = Zombie.VIE_GROS;
+                    vitesseZombie = Zombie.VITESSE_GROS;
+                    break;
+            }
+
+            // pt spawn zombie
             int XspawnGauche = rd.Next(50, 250);
             int XspawnDroite = rd.Next(0, 50);
             int YspawnHaut = rd.Next(0, 50);
@@ -56,31 +91,8 @@ namespace Project1
                 YposZomb = YspawnHaut;
             else
                 YposZomb = YspawnBas;
-            _positionZombie = new Vector2(XposZomb, YposZomb);
 
-            //_spriteBatch = new SpriteBatch(GraphicsDevice);
-            switch (this.TypeZombie)
-            {
-                case "Normal":
-                    vieZombie = Zombie.VIE_NORMAL;
-                    vitesseZombie = Zombie.VITESSE_NORMAL;
-                    _textureZomb = "Normal";
-                    break;
-                case "Rapide":
-                    vieZombie = Zombie.VIE_RAPIDE;
-                    vitesseZombie = Zombie.VITESSE_RAPIDE;
-                    _textureZomb = "Rapide";
-                    break;
-                case "Gros":
-                    vieZombie = Zombie.VIE_GROS;
-                    vitesseZombie = Zombie.VITESSE_GROS;
-                    _textureZomb = "Gros";
-                    break;
-            }
-        }
-        public string StatZombie()
-        {
-            return _textureZomb;
+            _positionZombie = new Vector2(XposZomb, YposZomb);
         }
     }
 }
