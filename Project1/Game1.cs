@@ -134,7 +134,7 @@ namespace Project1
             KeyboardState keyboardState = Keyboard.GetState();
             MouseState _mouseState = Mouse.GetState();
             
-
+            /*
             if (_mouseState.LeftButton == ButtonState.Pressed)
             {
                 // Attention, l'état a été mis à jour directement par l'écran en question
@@ -145,31 +145,32 @@ namespace Project1
                     _screenManager.LoadScreen(gamescreen, new FadeTransition(GraphicsDevice, Color.Black));
 
             }
+            */
 
             if (keyboardState.IsKeyDown(Keys.P))
             {
-                if (this.Etat == Etats.GameScreen)
-                    _screenManager.LoadScreen(startscreen, new FadeTransition(GraphicsDevice, Color.Black));
+                //if (this.Etat == Etats.GameScreen)
+                    _screenManager.LoadScreen(gamescreen, new FadeTransition(GraphicsDevice, Color.Black));
 
             }
 
-            /*
+           /* 
             if (keyboardState.IsKeyDown(Keys.Left))
             {
                 _screenManager.LoadScreen(startscreen, new FadeTransition(GraphicsDevice,
-                Color.White));
+                Color.Black));
             }
-            else if (keyboardState.IsKeyDown(Keys.Right) && this.Etat == Etats.StartScreen)
+            else if (keyboardState.IsKeyDown(Keys.Right))
             {
                 _screenManager.LoadScreen(gamescreen, new FadeTransition(GraphicsDevice,
                 Color.Black));
-            }/*
+            }
+           */
             
             // TODO: Add your update logic here
             
-            _player.Play(playerSide);
-            _player.Update(deltaSeconds);
-            */
+          
+            
 
             base.Update(gameTime);
         }
