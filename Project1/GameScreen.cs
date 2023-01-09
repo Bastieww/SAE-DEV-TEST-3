@@ -80,7 +80,7 @@ namespace Project1
             //pausetemps =+ 0.1;
 
             //Debug.WriteLine(pausetemps);
-            if (keyboardState.IsKeyUp(Keys.P) && screenpause != true)
+            if (keyboardState.IsKeyUp(Keys.P))
                 pausetemps = +1;
             else if (keyboardState.IsKeyDown(Keys.P) && pausetemps == 1)
                 screenpause = false;
