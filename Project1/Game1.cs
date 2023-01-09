@@ -142,7 +142,6 @@ namespace Project1
                     else if (this.Etat == Etats.GameScreen)
                         _screenManager.LoadScreen(gamescreen, new FadeTransition(GraphicsDevice, Color.Black));
 
-
                 }
 
 
