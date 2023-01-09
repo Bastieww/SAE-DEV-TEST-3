@@ -14,21 +14,27 @@ using MonoGame.Extended.Tiled.Renderers;
 
 namespace Project1
 {
-    public class Zombie : Game
+    public class Zombie
     {
         public const int VIE_NORMAL = 25, VIE_GROS = 50, VIE_RAPIDE = 10;
         public const int VITESSE_NORMAL = 25, VITESSE_GROS = 10, VITESSE_RAPIDE = 50;
-        private int vieZombie, vitesseZombie, XposZomb, YposZomb;
+
+        private int vieZombie, vitesseZombie, XposZomb, YposZomb, nbzombie = 0;
+
         private string typeZombie;
+
         private Random rd = new Random();
-        private Vector2 _positionZombie;
 
         private AnimatedSprite textureZomb;
+
+        private Vector2 position;
+
 
         public Zombie(GameScreen gamescreen, string typeZombie)
         {
             this.TypeZombie = typeZombie;
             this.TextureZomb = textureZomb;
+            this.Position = new Vector2(0, 0);
             LoadContent(gamescreen);
         }
 
@@ -43,6 +49,21 @@ namespace Project1
             set
             {
                 this.typeZombie = value;
+                switch (this.TypeZombie)
+                {
+                    case "Normal":
+                        vieZombie = Zombie.VIE_NORMAL;
+                        vitesseZombie = Zombie.VITESSE_NORMAL;
+                        break;
+                    case "Rapide":
+                        vieZombie = Zombie.VIE_RAPIDE;
+                        vitesseZombie = Zombie.VITESSE_RAPIDE;
+                        break;
+                    case "Gros":
+                        vieZombie = Zombie.VIE_GROS;
+                        vitesseZombie = Zombie.VITESSE_GROS;
+                        break;
+                }
             }
         }
         public AnimatedSprite TextureZomb
@@ -57,42 +78,41 @@ namespace Project1
                 this.textureZomb = value;
             }
         }
+        public Vector2 Position
+        {
+            get
+            {
+                return this.position;
+            }
+
+            set
+            {
+                int XspawnGauche = rd.Next(-250, -10);
+                int XspawnDroite = rd.Next(Game1.WIDTH , Game1.WIDTH + 250);
+                int YspawnHaut = rd.Next(-250, -30);
+                int YspawnBas = rd.Next(Game1.HEIGHT, Game1.HEIGHT + 250);
+                if (XspawnGauche < XspawnDroite)
+                    XposZomb = XspawnDroite;
+                else
+                    XposZomb = XspawnGauche;
+                if (YspawnBas < YspawnHaut)
+                    YposZomb = YspawnHaut;
+                else
+                    YposZomb = YspawnBas;
+
+                this.position = new Vector2(XposZomb, YposZomb);
+            }
+        }
         private void LoadContent(GameScreen gamescreen)
         {
             // Type du zombie
             switch (this.TypeZombie)
             {
                 case "Normal":
-                    vieZombie = Zombie.VIE_NORMAL;
-                    vitesseZombie = Zombie.VITESSE_NORMAL;
                     SpriteSheet apparence = gamescreen.Content.Load<SpriteSheet>("zombieAnim.sf", new JsonContentLoader());
                     this.TextureZomb = new AnimatedSprite(apparence);
                     break;
-                case "Rapide":
-                    vieZombie = Zombie.VIE_RAPIDE;
-                    vitesseZombie = Zombie.VITESSE_RAPIDE;
-                    break;
-                case "Gros":
-                    vieZombie = Zombie.VIE_GROS;
-                    vitesseZombie = Zombie.VITESSE_GROS;
-                    break;
             }
-
-            // pt spawn zombie
-            int XspawnGauche = rd.Next(50, 250);
-            int XspawnDroite = rd.Next(0, 50);
-            int YspawnHaut = rd.Next(0, 50);
-            int YspawnBas = rd.Next(0, 250);
-            if (XspawnGauche < XspawnDroite)
-                XposZomb = XspawnDroite;
-            else
-                XposZomb = XspawnGauche;
-            if (YspawnBas < YspawnHaut)
-                YposZomb = YspawnHaut;
-            else
-                YposZomb = YspawnBas;
-
-            _positionZombie = new Vector2(XposZomb, YposZomb);
         }
     }
 }

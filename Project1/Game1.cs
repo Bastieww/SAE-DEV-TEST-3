@@ -117,10 +117,6 @@ namespace Project1
 
 
 
-
-
-
-            // TODO: use this.Content to load your game content here
         }
 
         protected override void Update(GameTime gameTime)

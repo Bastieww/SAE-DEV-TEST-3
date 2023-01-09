@@ -23,7 +23,7 @@ namespace Project1
 
         private Vector2 direction;
 
-        public const int SPEED = 1;
+        public const int SPEED = 700;
         
         private Rectangle hitbox;
         private Texture2D apparence;
@@ -36,7 +36,7 @@ namespace Project1
             this.CoordClick = coordClick;
             this.Hitbox = hitbox;
             this.Apparence = apparence;
-            this.Direction = new Vector2(player.Position.X - CoordClick.X, player.Position.Y - CoordClick.Y);
+            this.Direction = Vector2.Normalize(coordClick - Position);
             //Code non opti, il faudrait charger la texture qu'une seule fois par balle
             LoadContent(gamescreen);
         }
@@ -112,8 +112,4 @@ namespace Project1
             this.Apparence = apparence;
         }
     }
-    
-    
-    
-  
 }
