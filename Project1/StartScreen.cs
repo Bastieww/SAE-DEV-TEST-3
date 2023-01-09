@@ -69,12 +69,12 @@ namespace Project1
                 }
 
             }
-
+            /*
             if (Keyboard.GetState().IsKeyDown(Keys.P))
             {
                 if (_myGame.Etat == Game1.Etats.GameScreen)
                     _myGame.Etat = Game1.Etats.StartScreen;
-            }
+            }*/
            
 
         }

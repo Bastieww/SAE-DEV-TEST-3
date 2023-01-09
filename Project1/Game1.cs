@@ -145,16 +145,23 @@ namespace Project1
                 }
 
 
-                if (keyboardState.IsKeyDown(Keys.Escape))
+            if (keyboardState.IsKeyDown(Keys.Escape))
+            {
+                if (this.Etat == Etats.GameScreen)
                 {
-                    if (this.Etat == Etats.GameScreen)
+                    {
+                        this.Etat = Etats.StartScreen;
                         _screenManager.LoadScreen(startscreen, new FadeTransition(GraphicsDevice, Color.Black));
+
+                    }
+
+
 
                 }
 
-              
 
 
+            }
 
                 // TODO: Add your update logic here
 
