@@ -12,6 +12,7 @@ using MonoGame.Extended.Screens.Transitions;
 using System;
 using System.Collections.Generic;
 using MonoGame.Extended.TextureAtlases;
+using System.Diagnostics;
 
 namespace Project1
 {
@@ -31,6 +32,7 @@ namespace Project1
         private Texture2D pause;
         private Vector2 _pausepos;
         private bool screenpause;
+        private double pausetemps=0;
 
         
         List<Bullet> listeBalles;
@@ -51,6 +53,7 @@ namespace Project1
 
             pause = Content.Load<Texture2D>("pause");
             _pausepos = new Vector2(0, 0);
+            
 
             player = new Player(this);
             camera = new Camera();
@@ -74,25 +77,23 @@ namespace Project1
         {
             KeyboardState keyboardState = Keyboard.GetState();
             MouseState mouseState = Mouse.GetState();
+            //pausetemps =+ 0.1;
 
-            if (keyboardState.IsKeyDown(Keys.P) == true && screenpause == false)
-                screenpause = true;
-            else if (keyboardState.IsKeyDown(Keys.P) == false && screenpause == true)
-            {
+            //Debug.WriteLine(pausetemps);
+            if (keyboardState.IsKeyUp(Keys.P) && screenpause != true)
+                pausetemps = +1;
+            else if (keyboardState.IsKeyDown(Keys.P) && pausetemps == 1)
                 screenpause = false;
-            }
-
+                    
 
             if (screenpause == false)
             {
                 float deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds; // DeltaTime
                 float walkSpeed = deltaSeconds * player.Speed; // Vitesse de déplacement du joueur
                 float flySpeed = deltaSeconds * Bullet.SPEED; // Vitesse de déplacement de la balle
-            float deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds; // DeltaTime
-            float walkSpeed = deltaSeconds * player.Speed; // Vitesse de déplacement du joueur
-            float flySpeed = deltaSeconds * Bullet.SPEED; // Vitesse de déplacement de la balle
+          
             float zombSpeed = deltaSeconds * Zombie.VITESSE_NORMAL; //Vitesse de déplacement du zomb
-
+                
                 
 
                 relativeCursor = Vector2.Transform(new Vector2(mouseState.X, mouseState.Y), Matrix.Invert(camera.Transform));
@@ -174,15 +175,17 @@ namespace Project1
                 
             }
 
-            //////////////////////////////////////////////////////////////////////////////////////////////
-            player.Apparence.Play(animation);
+           
+         
 
-                else if(keyboardState.IsKeyUp(Keys.P))
-                {
+                if(keyboardState.IsKeyDown(Keys.P))
+                { 
+                    
                     screenpause = true;
+                   
                 }
                 
-                //////////////////////////////////////////////////////////////////////////////////////////////
+          
                 player.Apparence.Play(animation);
 
 

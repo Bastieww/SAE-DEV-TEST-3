@@ -109,11 +109,11 @@ namespace Project1
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
+
             _screenManager.LoadScreen(startscreen, new FadeTransition(GraphicsDevice, Color.Black));
          
-            // TODO: use this.Content to load your game content here
-            //a deplacer + tard
-            
+
+            _screenManager.LoadScreen(gamescreen, new FadeTransition(GraphicsDevice, Color.Black));
 
 
 
@@ -155,16 +155,6 @@ namespace Project1
               
 
 
-                if (keyboardState.IsKeyDown(Keys.Left))
-                {
-                    _screenManager.LoadScreen(startscreen, new FadeTransition(GraphicsDevice,
-                    Color.White));
-                }
-                else if (keyboardState.IsKeyDown(Keys.Right) && this.Etat == Etats.StartScreen)
-                {
-                    _screenManager.LoadScreen(gamescreen, new FadeTransition(GraphicsDevice,
-                    Color.Black));
-                }
 
                 // TODO: Add your update logic here
 
