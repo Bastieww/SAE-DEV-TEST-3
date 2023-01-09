@@ -112,8 +112,4 @@ namespace Project1
             this.Apparence = apparence;
         }
     }
-    
-    
-    
-  
 }

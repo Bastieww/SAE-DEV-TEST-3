@@ -111,7 +111,7 @@ namespace Project1
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            _screenManager.LoadScreen(startscreen, new FadeTransition(GraphicsDevice, Color.Black));
+            _screenManager.LoadScreen(gamescreen, new FadeTransition(GraphicsDevice, Color.Black));
 
             // TODO: use this.Content to load your game content here
             //a deplacer + tard
@@ -119,10 +119,6 @@ namespace Project1
 
 
 
-
-
-
-            // TODO: use this.Content to load your game content here
         }
 
         protected override void Update(GameTime gameTime)

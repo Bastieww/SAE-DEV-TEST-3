@@ -29,8 +29,9 @@ namespace Project1
 
         
         List<Bullet> listeBalles;
-        
-        //private Zombie zombie;
+
+        List<Zombie> listeZomb;
+        private int chrono = 0;
 
         public GameScreen(Game1 game) : base(game)
         {
@@ -52,9 +53,9 @@ namespace Project1
             
 
             listeBalles = new List<Bullet>();
-            
-            //zombie = new Zombie(this, "Normal");
-            
+
+
+            listeZomb = new List<Zombie>();
 
 
         }
@@ -63,6 +64,7 @@ namespace Project1
             float deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds; // DeltaTime
             float walkSpeed = deltaSeconds * player.Speed; // Vitesse de déplacement du joueur
             float flySpeed = deltaSeconds * Bullet.SPEED; // Vitesse de déplacement de la balle
+            float zombSpeed = deltaSeconds * Zombie.VITESSE_NORMAL; //Vitesse de déplacement du zomb
 
             KeyboardState keyboardState = Keyboard.GetState();
             MouseState mouseState = Mouse.GetState();
@@ -129,6 +131,23 @@ namespace Project1
             }
 
 
+            if (listeZomb != null)
+            {
+                foreach (Zombie zombie in listeZomb)
+                {
+                    zombie.Position += new Vector2((player.Position.X - zombie.Position.X), (player.Position.Y - zombie.Position.Y));
+                }
+            }
+            chrono += 1;
+            Console.WriteLine(chrono);
+            if (chrono == 1)
+            {
+                chrono = 0;
+                Zombie zombie = new Zombie(this, "Normal");
+                listeZomb.Add(zombie);
+                
+            }
+
             //////////////////////////////////////////////////////////////////////////////////////////////
             player.Apparence.Play(animation);
 
@@ -166,7 +185,15 @@ namespace Project1
                     
                 }
             }
-         
+            if (listeZomb != null)
+            {
+                foreach (Zombie zombie in listeZomb)
+                {
+                    _myGame._spriteBatch.Draw(zombie.TextureZomb, zombie.Position);
+
+                }
+            }
+
             _myGame._spriteBatch.End();
         }
         private bool IsCollision(ushort x, ushort y)
