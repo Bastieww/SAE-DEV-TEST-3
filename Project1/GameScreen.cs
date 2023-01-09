@@ -12,6 +12,7 @@ using MonoGame.Extended.Screens.Transitions;
 using System;
 using System.Collections.Generic;
 using MonoGame.Extended.TextureAtlases;
+using System.Diagnostics;
 
 namespace Project1
 {
@@ -27,6 +28,11 @@ namespace Project1
 
         private Vector2 relativeCursor;
         private bool click;
+
+        private Texture2D pause;
+        private Vector2 _pausepos;
+        private bool screenpause;
+        private double pausetemps=0;
 
         
         List<Bullet> listeBalles;
@@ -45,11 +51,17 @@ namespace Project1
             _myGame._tiledMapRenderer = new TiledMapRenderer(GraphicsDevice, _myGame._tiledMap);
             _myGame.mapLayer = _myGame._tiledMap.GetLayer<TiledMapTileLayer>("Cailloux");
 
+            pause = Content.Load<Texture2D>("pause");
+            _pausepos = new Vector2(0, 0);
+            
+
             player = new Player(this);
             camera = new Camera();
             core = new Core(this);
 
             click = false;
+            screenpause = false;
+            
             
             
             
@@ -63,37 +75,50 @@ namespace Project1
         }
         public override void Update(GameTime gameTime)
         {
-            float deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds; // DeltaTime
-            float walkSpeed = deltaSeconds * player.Speed; // Vitesse de déplacement du joueur
-            float flySpeed = deltaSeconds * Bullet.SPEED; // Vitesse de déplacement de la balle
-            float zombSpeed = deltaSeconds * Zombie.VITESSE_NORMAL; //Vitesse de déplacement du zomb
-
             KeyboardState keyboardState = Keyboard.GetState();
             MouseState mouseState = Mouse.GetState();
+            //pausetemps =+ 0.1;
 
-            relativeCursor = Vector2.Transform(new Vector2(mouseState.X, mouseState.Y), Matrix.Invert(camera.Transform));
+            //Debug.WriteLine(pausetemps);
+            if (keyboardState.IsKeyUp(Keys.P) && screenpause != true)
+                pausetemps = +1;
+            else if (keyboardState.IsKeyDown(Keys.P) && pausetemps == 1)
+                screenpause = false;
+                    
 
-            string animation = "walkWest";
-
-            //ALL TESTS ///////////////////////////////////////////////////////////////////////////////////
-
-            if (keyboardState.IsKeyDown(Keys.Up))
+            if (screenpause == false)
             {
-                ushort tx = (ushort)(player.Position.X / _myGame._tiledMap.TileWidth);
-                ushort ty = (ushort)(player.Position.Y / _myGame._tiledMap.TileHeight - 1);
-                animation = "walkNorth";
-                if (!IsCollision(tx, ty))
-                    player.Position -= new Vector2(0, walkSpeed);
-            }
+                float deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds; // DeltaTime
+                float walkSpeed = deltaSeconds * player.Speed; // Vitesse de déplacement du joueur
+                float flySpeed = deltaSeconds * Bullet.SPEED; // Vitesse de déplacement de la balle
+          
+            float zombSpeed = deltaSeconds * Zombie.VITESSE_NORMAL; //Vitesse de déplacement du zomb
+                
+                
 
-            if (keyboardState.IsKeyDown(Keys.Down))
-            {
-                ushort tx = (ushort)(player.Position.X / _myGame._tiledMap.TileWidth);
-                ushort ty = (ushort)(player.Position.Y / _myGame._tiledMap.TileHeight + 1);
-                animation = "walkSouth";
-                if (!IsCollision(tx, ty))
-                    player.Position += new Vector2(0, walkSpeed);
-            }
+                relativeCursor = Vector2.Transform(new Vector2(mouseState.X, mouseState.Y), Matrix.Invert(camera.Transform));
+
+                string animation = "walkWest";
+
+                //ALL TESTS ///////////////////////////////////////////////////////////////////////////////////
+
+                if (keyboardState.IsKeyDown(Keys.Up))
+                {
+                    ushort tx = (ushort)(player.Position.X / _myGame._tiledMap.TileWidth);
+                    ushort ty = (ushort)(player.Position.Y / _myGame._tiledMap.TileHeight - 1);
+                    animation = "walkNorth";
+                    if (!IsCollision(tx, ty))
+                        player.Position -= new Vector2(0, walkSpeed);
+                }
+
+                if (keyboardState.IsKeyDown(Keys.Down))
+                {
+                    ushort tx = (ushort)(player.Position.X / _myGame._tiledMap.TileWidth);
+                    ushort ty = (ushort)(player.Position.Y / _myGame._tiledMap.TileHeight + 1);
+                    animation = "walkSouth";
+                    if (!IsCollision(tx, ty))
+                        player.Position += new Vector2(0, walkSpeed);
+                }
 
             if (keyboardState.IsKeyDown(Keys.Left))
             {
@@ -151,24 +176,34 @@ namespace Project1
                 
             }
 
-            //////////////////////////////////////////////////////////////////////////////////////////////
-            player.Apparence.Play(animation);
-
-            
-
-
-
-
-
-            _myGame._tiledMapRenderer.Update(gameTime);
-
-            player.Apparence.Update(deltaSeconds); // time écoulé
-
-            camera.Follow(player);
-            
-            //player.Position += new Vector2 (6,1);
-            //Console.WriteLine(player.Position);
            
+         
+
+                if(keyboardState.IsKeyDown(Keys.P))
+                { 
+                    
+                    screenpause = true;
+                   
+                }
+                
+          
+                player.Apparence.Play(animation);
+
+
+
+
+
+
+
+                _myGame._tiledMapRenderer.Update(gameTime);
+
+                player.Apparence.Update(deltaSeconds); // time écoulé
+
+                camera.Follow(player);
+
+                //player.Position += new Vector2 (6,1);
+                //Console.WriteLine(player.Position);
+            }
            
            
 
