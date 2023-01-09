@@ -23,6 +23,7 @@ namespace Project1
 
         private Player player;
         private Camera camera;
+        private Core core;
 
         private Vector2 relativeCursor;
         private bool click;
@@ -45,6 +46,7 @@ namespace Project1
 
             player = new Player(this);
             camera = new Camera();
+            core = new Core(this);
 
             click = false;
             
@@ -113,7 +115,7 @@ namespace Project1
             {
                 foreach (Bullet balle in listeBalles)
                 {
-                    balle.Position -= new Vector2(flySpeed * balle.Direction.X, flySpeed * balle.Direction.Y);
+                    balle.Position += new Vector2(flySpeed * balle.Direction.X, flySpeed * balle.Direction.Y);
                 }
             }
             
@@ -166,6 +168,7 @@ namespace Project1
                     
                 }
             }
+            _myGame._spriteBatch.Draw(core.Apparence, core.Position, Color.White);
          
             _myGame._spriteBatch.End();
         }
