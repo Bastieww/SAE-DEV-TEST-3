@@ -27,6 +27,10 @@ namespace Project1
         private Vector2 relativeCursor;
         private bool click;
 
+        private Texture2D pause;
+        private Vector2 _pausepos;
+        private bool screenpause;
+
         
         List<Bullet> listeBalles;
         
@@ -50,6 +54,8 @@ namespace Project1
             camera = new Camera();
 
             click = false;
+            screenpause = false;
+            
             
             
             
@@ -63,93 +69,110 @@ namespace Project1
         }
         public override void Update(GameTime gameTime)
         {
-            float deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds; // DeltaTime
-            float walkSpeed = deltaSeconds * player.Speed; // Vitesse de déplacement du joueur
-            float flySpeed = deltaSeconds * Bullet.SPEED; // Vitesse de déplacement de la balle
-
             KeyboardState keyboardState = Keyboard.GetState();
             MouseState mouseState = Mouse.GetState();
 
-            relativeCursor = Vector2.Transform(new Vector2(mouseState.X, mouseState.Y), Matrix.Invert(camera.Transform));
-
-            string animation = "walkWest";
-
-            //ALL TESTS ///////////////////////////////////////////////////////////////////////////////////
-
-            if (keyboardState.IsKeyDown(Keys.Up))
+            if (keyboardState.IsKeyDown(Keys.P) == true && screenpause == false)
+                screenpause = true;
+            else if (keyboardState.IsKeyDown(Keys.P) == false && screenpause == true)
             {
-                ushort tx = (ushort)(player.Position.X / _myGame._tiledMap.TileWidth);
-                ushort ty = (ushort)(player.Position.Y / _myGame._tiledMap.TileHeight - 1);
-                animation = "walkNorth";
-                if (!IsCollision(tx, ty))
-                    player.Position -= new Vector2(0, walkSpeed);
+                screenpause = false;
             }
 
-            if (keyboardState.IsKeyDown(Keys.Down))
-            {
-                ushort tx = (ushort)(player.Position.X / _myGame._tiledMap.TileWidth);
-                ushort ty = (ushort)(player.Position.Y / _myGame._tiledMap.TileHeight + 1);
-                animation = "walkSouth";
-                if (!IsCollision(tx, ty))
-                    player.Position += new Vector2(0, walkSpeed);
-            }
 
-            if (keyboardState.IsKeyDown(Keys.Left))
+            if (screenpause == false)
             {
-                ushort tx = (ushort)(player.Position.X / _myGame._tiledMap.TileWidth - 1);
-                ushort ty = (ushort)(player.Position.Y / _myGame._tiledMap.TileHeight);
-                animation = "walkWest";
-                if (!IsCollision(tx, ty))
-                    player.Position -= new Vector2(walkSpeed, 0);
-            }
-            if (keyboardState.IsKeyDown(Keys.Right))
-            {
-                ushort tx = (ushort)(player.Position.X / _myGame._tiledMap.TileWidth + 1);
-                ushort ty = (ushort)(player.Position.Y / _myGame._tiledMap.TileHeight);
-                animation = "walkEast";
-                if (!IsCollision(tx, ty))
-                    player.Position += new Vector2(walkSpeed, 0);
-            }
-            
-           
-            if (listeBalles != null)
-            {
-                foreach (Bullet balle in listeBalles)
+                float deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds; // DeltaTime
+                float walkSpeed = deltaSeconds * player.Speed; // Vitesse de déplacement du joueur
+                float flySpeed = deltaSeconds * Bullet.SPEED; // Vitesse de déplacement de la balle
+
+                
+
+                relativeCursor = Vector2.Transform(new Vector2(mouseState.X, mouseState.Y), Matrix.Invert(camera.Transform));
+
+                string animation = "walkWest";
+
+                //ALL TESTS ///////////////////////////////////////////////////////////////////////////////////
+
+                if (keyboardState.IsKeyDown(Keys.Up))
                 {
-                    balle.Position -= new Vector2(flySpeed * balle.Direction.X, flySpeed * balle.Direction.Y);
+                    ushort tx = (ushort)(player.Position.X / _myGame._tiledMap.TileWidth);
+                    ushort ty = (ushort)(player.Position.Y / _myGame._tiledMap.TileHeight - 1);
+                    animation = "walkNorth";
+                    if (!IsCollision(tx, ty))
+                        player.Position -= new Vector2(0, walkSpeed);
                 }
+
+                if (keyboardState.IsKeyDown(Keys.Down))
+                {
+                    ushort tx = (ushort)(player.Position.X / _myGame._tiledMap.TileWidth);
+                    ushort ty = (ushort)(player.Position.Y / _myGame._tiledMap.TileHeight + 1);
+                    animation = "walkSouth";
+                    if (!IsCollision(tx, ty))
+                        player.Position += new Vector2(0, walkSpeed);
+                }
+
+                if (keyboardState.IsKeyDown(Keys.Left))
+                {
+                    ushort tx = (ushort)(player.Position.X / _myGame._tiledMap.TileWidth - 1);
+                    ushort ty = (ushort)(player.Position.Y / _myGame._tiledMap.TileHeight);
+                    animation = "walkWest";
+                    if (!IsCollision(tx, ty))
+                        player.Position -= new Vector2(walkSpeed, 0);
+                }
+                if (keyboardState.IsKeyDown(Keys.Right))
+                {
+                    ushort tx = (ushort)(player.Position.X / _myGame._tiledMap.TileWidth + 1);
+                    ushort ty = (ushort)(player.Position.Y / _myGame._tiledMap.TileHeight);
+                    animation = "walkEast";
+                    if (!IsCollision(tx, ty))
+                        player.Position += new Vector2(walkSpeed, 0);
+                }
+
+
+                if (listeBalles != null)
+                {
+                    foreach (Bullet balle in listeBalles)
+                    {
+                        balle.Position -= new Vector2(flySpeed * balle.Direction.X, flySpeed * balle.Direction.Y);
+                    }
+                }
+
+                if (mouseState.LeftButton == ButtonState.Pressed && click == false)
+                {
+                    Bullet balle = new Bullet(this, player, new Vector2(relativeCursor.X, relativeCursor.Y));
+                    listeBalles.Add(balle);
+                    click = true;
+                }
+                else if (mouseState.LeftButton == ButtonState.Released && click == true)
+                {
+                    click = false;
+                }
+
+
+                else if(keyboardState.IsKeyUp(Keys.P))
+                {
+                    screenpause = true;
+                }
+                
+                //////////////////////////////////////////////////////////////////////////////////////////////
+                player.Apparence.Play(animation);
+
+
+
+
+
+
+
+                _myGame._tiledMapRenderer.Update(gameTime);
+
+                player.Apparence.Update(deltaSeconds); // time écoulé
+
+                camera.Follow(player);
+
+                //player.Position += new Vector2 (6,1);
+                //Console.WriteLine(player.Position);
             }
-            
-            if (mouseState.LeftButton == ButtonState.Pressed && click == false)
-            {
-                Bullet balle = new Bullet(this, player, new Vector2(relativeCursor.X, relativeCursor.Y));
-                listeBalles.Add(balle);
-                click = true;
-            }
-            else if (mouseState.LeftButton == ButtonState.Released && click == true)
-            {
-                click = false;
-            }
-
-
-            //////////////////////////////////////////////////////////////////////////////////////////////
-            player.Apparence.Play(animation);
-
-            
-
-
-
-
-
-            _myGame._tiledMapRenderer.Update(gameTime);
-
-            player.Apparence.Update(deltaSeconds); // time écoulé
-
-            camera.Follow(player);
-            
-            //player.Position += new Vector2 (6,1);
-            //Console.WriteLine(player.Position);
-           
            
            
 

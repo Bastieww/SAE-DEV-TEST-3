@@ -156,10 +156,7 @@ namespace Project1
 
                 }
 
-                if (keyboardState.IsKeyDown(Keys.P))
-                {
-                    _screenpause = true;
-                }
+              
 
 
                 if (keyboardState.IsKeyDown(Keys.Left))
