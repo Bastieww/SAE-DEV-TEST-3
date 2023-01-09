@@ -22,6 +22,8 @@ namespace Project1
         private Rectangle[] buttons;
         private Vector2 _posbuttons;
 
+        public bool clickMenu;
+
 
 
 
@@ -50,14 +52,16 @@ namespace Project1
         {
            MouseState mouseState = Mouse.GetState();
            Rectangle mouserect = new Rectangle(mouseState.X, mouseState.Y, 1,1);
-            
+            clickMenu = false;
             if (mouseState.LeftButton == ButtonState.Pressed)
             {
+                
                 for (int i = 0; i < buttons.Length; i++)
                 {
                     // si le clic correspond à un des 3 boutons
                     if (buttons[i].Contains(Mouse.GetState().X, Mouse.GetState().Y))
                     {
+                        clickMenu = true;
                         // on change l'état défini dans Game1 en fonction du bouton cliqué
                         if (i == 0)
                             _myGame.Etat = Game1.Etats.GameScreen;
