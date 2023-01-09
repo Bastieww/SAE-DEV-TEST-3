@@ -10,6 +10,9 @@ using MonoGame.Extended.Serialization;
 using MonoGame.Extended.Screens;
 using MonoGame.Extended.Screens.Transitions;
 using System;
+using System.Collections.Generic;
+using MonoGame.Extended.TextureAtlases;
+
 namespace Project1
 {
     public class GameScreen : MonoGame.Extended.Screens.GameScreen
@@ -19,14 +22,15 @@ namespace Project1
         // défini dans Game1;
 
         private Player player;
-        private Zombie zombie;
-        private Vector2 Playerpos;
-        private Texture2D pause;
-        private Vector2 _pausepos;
-        private bool _screenpause = false;
+        private Camera camera;
 
+        private Vector2 relativeCursor;
+        private bool click;
 
-        private float deltaTime;
+        
+        List<Bullet> listeBalles;
+        
+        //private Zombie zombie;
 
         public GameScreen(Game1 game) : base(game)
         {
@@ -43,37 +47,144 @@ namespace Project1
             _pausepos = new Vector2(0, 0);
 
             player = new Player(this);
+            camera = new Camera();
+
+            click = false;
+            
+            
+            
+
+            listeBalles = new List<Bullet>();
+            
             //zombie = new Zombie(this, "Normal");
-            Playerpos = new Vector2(400, 400);
+            
 
 
         }
         public override void Update(GameTime gameTime)
         {
-           
-                deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            float deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds; // DeltaTime
+            float walkSpeed = deltaSeconds * player.Speed; // Vitesse de déplacement du joueur
+            float flySpeed = deltaSeconds * Bullet.SPEED; // Vitesse de déplacement de la balle
 
-                _myGame._tiledMapRenderer.Update(gameTime);
+            KeyboardState keyboardState = Keyboard.GetState();
+            MouseState mouseState = Mouse.GetState();
+
+            relativeCursor = Vector2.Transform(new Vector2(mouseState.X, mouseState.Y), Matrix.Invert(camera.Transform));
+
+            string animation = "walkWest";
+
+            //ALL TESTS ///////////////////////////////////////////////////////////////////////////////////
+
+            if (keyboardState.IsKeyDown(Keys.Up))
+            {
+                ushort tx = (ushort)(player.Position.X / _myGame._tiledMap.TileWidth);
+                ushort ty = (ushort)(player.Position.Y / _myGame._tiledMap.TileHeight - 1);
+                animation = "walkNorth";
+                if (!IsCollision(tx, ty))
+                    player.Position -= new Vector2(0, walkSpeed);
+            }
+
+            if (keyboardState.IsKeyDown(Keys.Down))
+            {
+                ushort tx = (ushort)(player.Position.X / _myGame._tiledMap.TileWidth);
+                ushort ty = (ushort)(player.Position.Y / _myGame._tiledMap.TileHeight + 1);
+                animation = "walkSouth";
+                if (!IsCollision(tx, ty))
+                    player.Position += new Vector2(0, walkSpeed);
+            }
+
+            if (keyboardState.IsKeyDown(Keys.Left))
+            {
+                ushort tx = (ushort)(player.Position.X / _myGame._tiledMap.TileWidth - 1);
+                ushort ty = (ushort)(player.Position.Y / _myGame._tiledMap.TileHeight);
+                animation = "walkWest";
+                if (!IsCollision(tx, ty))
+                    player.Position -= new Vector2(walkSpeed, 0);
+            }
+            if (keyboardState.IsKeyDown(Keys.Right))
+            {
+                ushort tx = (ushort)(player.Position.X / _myGame._tiledMap.TileWidth + 1);
+                ushort ty = (ushort)(player.Position.Y / _myGame._tiledMap.TileHeight);
+                animation = "walkEast";
+                if (!IsCollision(tx, ty))
+                    player.Position += new Vector2(walkSpeed, 0);
+            }
+            
+           
+            if (listeBalles != null)
+            {
+                foreach (Bullet balle in listeBalles)
+                {
+                    balle.Position -= new Vector2(flySpeed * balle.Direction.X, flySpeed * balle.Direction.Y);
+                }
+            }
+            
+            if (mouseState.LeftButton == ButtonState.Pressed && click == false)
+            {
+                Bullet balle = new Bullet(this, player, new Vector2(relativeCursor.X, relativeCursor.Y));
+                listeBalles.Add(balle);
+                click = true;
+            }
+            else if (mouseState.LeftButton == ButtonState.Released && click == true)
+            {
+                click = false;
+            }
+
+
+            //////////////////////////////////////////////////////////////////////////////////////////////
+            player.Apparence.Play(animation);
+
             
 
+
+
+
+
+            _myGame._tiledMapRenderer.Update(gameTime);
+
+            player.Apparence.Update(deltaSeconds); // time écoulé
+
+            camera.Follow(player);
+            
+            //player.Position += new Vector2 (6,1);
+            //Console.WriteLine(player.Position);
            
-            
-            
+           
+           
 
         }
         public override void Draw(GameTime gameTime)
         {
-            _myGame._tiledMapRenderer.Draw();
+            _myGame._tiledMapRenderer.Draw(viewMatrix: camera.Transform);
             
-            _myGame._spriteBatch.Begin();
-            _myGame._spriteBatch.Draw(player.Apparence, new Vector2(644, 566));
-            /*
-            if (Game1._screenpause == true)
-                Game1._spriteBatch.Draw(pause, _pausepos, Color.Blue);*/
-          
-            //_myGame._spriteBatch.Draw(zombie.TextureZomb, new Vector2(544, 874));
-            _myGame._spriteBatch.End();
+            _myGame._spriteBatch.Begin(transformMatrix : camera.Transform);
+            _myGame._spriteBatch.Draw(player.Apparence, player.Position);
 
+            if (listeBalles != null)
+            {
+                foreach (Bullet balle in listeBalles)
+                {
+                    _myGame._spriteBatch.Draw(balle.Apparence, balle.Position, Color.White);
+                    
+                }
+            }
+         
+            _myGame._spriteBatch.End();
+        }
+        private bool IsCollision(ushort x, ushort y)
+        {
+            // définition de tile qui peut être null (?)
+
+            TiledMapTile? tile;
+            if (_myGame.mapLayer.TryGetTile(x, y, out tile) == false)
+                return false;
+            if (!tile.Value.IsBlank)
+            {
+                Console.WriteLine(_myGame.mapLayer.GetTile(x, y).GlobalIdentifier);
+                return true;
+            }
+            return false;
         }
     }
 }
