@@ -18,6 +18,8 @@ namespace Project1
         private readonly ScreenManager _screenManager;
         public SpriteBatch _spriteBatch { get; set; }
         public const int WIDTH = 1920, HEIGHT = 1080;
+   
+        
         
 
         
@@ -50,17 +52,13 @@ namespace Project1
         public TiledMapRenderer _tiledMapRenderer;
         public TiledMapTileLayer mapLayer;
 
-        //a deplacer + tard
+       
         
 
        
 
         
-        //Joueur
-        /*private Vector2 _positionPlayer;
-        private AnimatedSprite _player;
-        Player playerDeBase = new Player("Player1", 100, 10, 0);
-        */
+        
 
 
 
@@ -112,7 +110,7 @@ namespace Project1
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             _screenManager.LoadScreen(startscreen, new FadeTransition(GraphicsDevice, Color.Black));
-
+         
             // TODO: use this.Content to load your game content here
             //a deplacer + tard
             
@@ -126,57 +124,69 @@ namespace Project1
         }
 
         protected override void Update(GameTime gameTime)
-        {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
-
-            // TODO: Add your update logic here
+        {   
             KeyboardState keyboardState = Keyboard.GetState();
             MouseState _mouseState = Mouse.GetState();
+
+
+
             
 
-            if (_mouseState.LeftButton == ButtonState.Pressed)
-            {
-                // Attention, l'état a été mis à jour directement par l'écran en question
-                if (this.Etat == Etats.EndScreen)
-                    Exit();
+                // TODO: Add your update logic here
 
-                else if (this.Etat == Etats.GameScreen)
-                    _screenManager.LoadScreen(gamescreen, new FadeTransition(GraphicsDevice, Color.Black));
 
+
+                if (_mouseState.LeftButton == ButtonState.Pressed)
+                {
+                    // Attention, l'état a été mis à jour directement par l'écran en question
+                    if (this.Etat == Etats.EndScreen)
+                        Exit();
+
+                    else if (this.Etat == Etats.GameScreen)
+                        _screenManager.LoadScreen(gamescreen, new FadeTransition(GraphicsDevice, Color.Black));
+
+
+                }
+
+
+                if (keyboardState.IsKeyDown(Keys.Escape))
+                {
+                    if (this.Etat == Etats.GameScreen)
+                        _screenManager.LoadScreen(startscreen, new FadeTransition(GraphicsDevice, Color.Black));
+
+                }
+
+                if (keyboardState.IsKeyDown(Keys.P))
+                {
+                    _screenpause = true;
+                }
+
+
+                if (keyboardState.IsKeyDown(Keys.Left))
+                {
+                    _screenManager.LoadScreen(startscreen, new FadeTransition(GraphicsDevice,
+                    Color.White));
+                }
+                else if (keyboardState.IsKeyDown(Keys.Right) && this.Etat == Etats.StartScreen)
+                {
+                    _screenManager.LoadScreen(gamescreen, new FadeTransition(GraphicsDevice,
+                    Color.Black));
+                }
+
+                // TODO: Add your update logic here
+
+
+
+                base.Update(gameTime);
             }
-
-            if (keyboardState.IsKeyDown(Keys.P))
-            {
-                if (this.Etat == Etats.GameScreen)
-                    _screenManager.LoadScreen(startscreen, new FadeTransition(GraphicsDevice, Color.Black));
-
-            }
-
-            /*
-            if (keyboardState.IsKeyDown(Keys.Left))
-            {
-                _screenManager.LoadScreen(startscreen, new FadeTransition(GraphicsDevice,
-                Color.White));
-            }
-            else if (keyboardState.IsKeyDown(Keys.Right) && this.Etat == Etats.StartScreen)
-            {
-                _screenManager.LoadScreen(gamescreen, new FadeTransition(GraphicsDevice,
-                Color.Black));
-            }/*
+       
             
-            // TODO: Add your update logic here
-            
-            _player.Play(playerSide);
-            _player.Update(deltaSeconds);
-            */
-
-            base.Update(gameTime);
-        }
+        
 
         protected override void Draw(GameTime gameTime)
-        { 
+        {
             // TODO: Add your drawing code here
+           
             base.Draw(gameTime);
         }
 

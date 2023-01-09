@@ -18,8 +18,8 @@ namespace Project1
         // pour récupérer une référence à l’objet game pour avoir accès à tout ce qui est
         // défini dans Game1
 
-        private Texture2D _textBoutons;
-        private Rectangle[] boutons;
+        private Texture2D _textButtons;
+        private Rectangle[] buttons;
         private Vector2 _posbuttons;
 
 
@@ -29,45 +29,53 @@ namespace Project1
         {
             _myGame = game;
             
-           
-
 
         }
         public override void LoadContent()
         {
             _myGame._tiledMap = Content.Load<TiledMap>("map");
             _myGame._tiledMapRenderer = new TiledMapRenderer(GraphicsDevice, _myGame._tiledMap);
-            _textBoutons = Content.Load<Texture2D>("buttons");
-            _posbuttons = new Vector2(Game1.WIDTH / 2 - _textBoutons.Width / 2, Game1.HEIGHT / 2 - _textBoutons.Height / 2);
+            _textButtons = Content.Load<Texture2D>("buttons");
+            _posbuttons = new Vector2(Game1.WIDTH / 2 - _textButtons.Width / 2, Game1.HEIGHT / 2 - _textButtons.Height / 2);
 
-            boutons = new Rectangle[2];
-            boutons[0] = new Rectangle(Game1.HEIGHT / 2 - _textBoutons.Height / 2 , Game1.WIDTH / 2 - _textBoutons.Width / 2, 333, 128);
-            boutons[1] = new Rectangle(Game1.HEIGHT / 2 - _textBoutons.Height / 2 +170, Game1.WIDTH / 2 - _textBoutons.Width / 2, 333, 128);
+            buttons = new Rectangle[2];
+            buttons[0] = new Rectangle(719,315, 461, 150);
+            buttons[1] = new Rectangle(719, 670, 461, 150);
+           
         }
+
+
+
         public override void Update(GameTime gameTime)
         {
-           
-            MouseState _mouseState = Mouse.GetState();
-            if (_mouseState.LeftButton == ButtonState.Pressed)
+           MouseState mouseState = Mouse.GetState();
+           Rectangle mouserect = new Rectangle(mouseState.X, mouseState.Y, 1,1);
+            
+            if (mouseState.LeftButton == ButtonState.Pressed)
             {
-                for (int i = 0; i < boutons.Length; i++)
+                for (int i = 0; i < buttons.Length; i++)
                 {
                     // si le clic correspond à un des 3 boutons
-                    if (boutons[i].Contains(Mouse.GetState().X, Mouse.GetState().Y))
+                    if (buttons[i].Contains(Mouse.GetState().X, Mouse.GetState().Y))
                     {
                         // on change l'état défini dans Game1 en fonction du bouton cliqué
                         if (i == 0)
                             _myGame.Etat = Game1.Etats.GameScreen;
-                        else
+                        else if(i == 1)
                             _myGame.Etat = Game1.Etats.EndScreen;
-                        break;
+                        
                     }
 
                 }
 
             }
 
-
+            if (Keyboard.GetState().IsKeyDown(Keys.P))
+            {
+                if (_myGame.Etat == Game1.Etats.GameScreen)
+                    _myGame.Etat = Game1.Etats.StartScreen;
+            }
+           
 
         }
 
@@ -78,7 +86,8 @@ namespace Project1
             //_myGame._tiledMapRenderer.Draw();
 
             _myGame._spriteBatch.Begin();
-            _myGame._spriteBatch.Draw(_textBoutons, _posbuttons, Color.Red);
+            
+            _myGame._spriteBatch.Draw(_textButtons, _posbuttons, Color.Red);
           
 
             _myGame._spriteBatch.End();

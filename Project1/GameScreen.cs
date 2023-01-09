@@ -21,8 +21,10 @@ namespace Project1
         private Player player;
         private Zombie zombie;
         private Vector2 Playerpos;
+        private Texture2D pause;
+        private Vector2 _pausepos;
+        private bool _screenpause = false;
 
-        
 
         private float deltaTime;
 
@@ -37,6 +39,9 @@ namespace Project1
             _myGame._tiledMapRenderer = new TiledMapRenderer(GraphicsDevice, _myGame._tiledMap);
             _myGame.mapLayer = _myGame._tiledMap.GetLayer<TiledMapTileLayer>("Cailloux");
 
+            pause = Content.Load<Texture2D>("pause");
+            _pausepos = new Vector2(0, 0);
+
             player = new Player(this);
             //zombie = new Zombie(this, "Normal");
             Playerpos = new Vector2(400, 400);
@@ -45,9 +50,11 @@ namespace Project1
         }
         public override void Update(GameTime gameTime)
         {
-            deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
            
-            _myGame._tiledMapRenderer.Update(gameTime);
+                deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                _myGame._tiledMapRenderer.Update(gameTime);
+            
 
            
             
@@ -60,6 +67,10 @@ namespace Project1
             
             _myGame._spriteBatch.Begin();
             _myGame._spriteBatch.Draw(player.Apparence, new Vector2(644, 566));
+            /*
+            if (Game1._screenpause == true)
+                Game1._spriteBatch.Draw(pause, _pausepos, Color.Blue);*/
+          
             //_myGame._spriteBatch.Draw(zombie.TextureZomb, new Vector2(544, 874));
             _myGame._spriteBatch.End();
 
