@@ -137,16 +137,17 @@ namespace Project1
             {
                 foreach (Zombie zombie in listeZomb)
                 {
-                    zombie.Position += new Vector2((player.Position.X - zombie.Position.X), (player.Position.Y - zombie.Position.Y));
+                    zombie.Position += Vector2.Normalize(player.Position - zombie.Position)*5;
                 }
             }
             chrono += 1;
-            Console.WriteLine(chrono);
+            
             if (chrono == 1)
             {
                 chrono = 0;
                 Zombie zombie = new Zombie(this, "Normal");
                 listeZomb.Add(zombie);
+               
                 
             }
 
@@ -194,6 +195,7 @@ namespace Project1
                 foreach (Zombie zombie in listeZomb)
                 {
                     _myGame._spriteBatch.Draw(zombie.TextureZomb, zombie.Position);
+                 
 
                 }
             }
