@@ -119,7 +119,7 @@ namespace Project1
                     ushort tx = (ushort)(player.Position.X / _myGame._tiledMap.TileWidth - 1);
                     ushort ty = (ushort)(player.Position.Y / _myGame._tiledMap.TileHeight);
                     animation = "walkEast";
-                    if (!IsCollision(tx, ty))
+                    if (!IsCollisionTile(tx, ty))
                         player.Position -= new Vector2(walkSpeed, 0);
                 }
                 if (keyboardState.IsKeyDown(Keys.Right) && player.Position.X < _myGame._tiledMap.WidthInPixels-50)
@@ -127,7 +127,7 @@ namespace Project1
                     ushort tx = (ushort)(player.Position.X / _myGame._tiledMap.TileWidth + 1);
                     ushort ty = (ushort)(player.Position.Y / _myGame._tiledMap.TileHeight);
                     animation = "walkWest";
-                    if (!IsCollision(tx, ty))
+                    if (!IsCollisionTile(tx, ty))
                         player.Position += new Vector2(walkSpeed, 0);
                 }
 
