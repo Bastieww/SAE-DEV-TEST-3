@@ -37,13 +37,9 @@ namespace Project1
         private bool testpause= false;
         private bool toucheBalleZombie;
 
-        
         List<Bullet> listeBalles;
         List<Zombie> listeZomb;
-        
-        
-
-     
+        private int nbZombie = 0, numVague = 1, zombMaxVague = 5;
 
         public GameScreen(Game1 game) : base(game)
         {
@@ -86,6 +82,7 @@ namespace Project1
                 float deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds; // DeltaTime
                 float walkSpeed = deltaSeconds * player.Speed; // Vitesse de déplacement du joueur
                 float flySpeed = deltaSeconds * Bullet.SPEED; // Vitesse de déplacement de la balle
+          
                 float zombSpeed = deltaSeconds * Zombie.VITESSE_NORMAL; //Vitesse de déplacement du zomb
                 
                 
@@ -127,7 +124,7 @@ namespace Project1
                 
                         player.Position += new Vector2(walkSpeed, 0);
                 }
-            
+
            
                 if (listeBalles != null)
                 {
@@ -155,14 +152,16 @@ namespace Project1
                 {
                     foreach (Zombie zombie in listeZomb)
                     {
-                        zombie.Position += Vector2.Normalize(player.Position - zombie.Position) * 2;
-                        zombie.UpdateHitbox();
-                    
+                        zombie.Position += Vector2.Normalize((player.Position - zombie.Position) * 2);
                     }
                 }
-                
-            
-       
+
+                while (nbZombie < zombMaxVague)
+                {
+                    nbZombie += 1;
+                    Zombie zombie = new Zombie(this, "Normal", _myGame._tiledMap);
+                    listeZomb.Add(zombie);
+                }
 
 
 
@@ -211,30 +210,29 @@ namespace Project1
 
                 player.Apparence.Update(deltaSeconds); // time écoulé
 
-                camera.Follow(player);
+                camera.Follow(player, _myGame);
 
              
             }
-           
-           
+
+
 
         }
         public override void Draw(GameTime gameTime)
         {
+            _myGame._spriteBatch.Begin(transformMatrix : camera.Transform);
             _myGame._tiledMapRenderer.Draw(viewMatrix: camera.Transform);
             
-            _myGame._spriteBatch.Begin(transformMatrix : camera.Transform);
             _myGame._spriteBatch.Draw(player.Apparence, player.Position);
-            
+
+            _myGame._spriteBatch.Draw(core.Apparence, core.Position, Color.White);
             if (listeBalles != null)
             {
                 foreach (Bullet balle in listeBalles)
                 {
                     _myGame._spriteBatch.Draw(balle.Apparence, balle.Position, Color.White);
-                    
                 }
             }
-            _myGame._spriteBatch.Draw(core.Apparence, core.Position, Color.White);
          
             if (listeZomb != null)
             {

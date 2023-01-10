@@ -75,7 +75,6 @@ namespace Project1
                     }
 
                 }
-
             }
             /*
             if (Keyboard.GetState().IsKeyDown(Keys.P))

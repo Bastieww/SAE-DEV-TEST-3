@@ -17,7 +17,7 @@ namespace Project1
     public class Zombie
     {
         public const int VIE_NORMAL = 25, VIE_GROS = 50, VIE_RAPIDE = 10;
-        public const int VITESSE_NORMAL = 25, VITESSE_GROS = 10, VITESSE_RAPIDE = 50;
+        public const int VITESSE_NORMAL = 2, VITESSE_GROS = 1, VITESSE_RAPIDE = 4;
 
         private int vieZombie, vitesseZombie, XposZomb, YposZomb, nbzombie = 0;
 
@@ -34,24 +34,26 @@ namespace Project1
         private Vector2 cible;
 
 
-        public Zombie(GameScreen gamescreen, string typeZombie)
+        public Zombie(GameScreen gamescreen, string typeZombie, TiledMap map)
         {
             this.TypeZombie = typeZombie;
             this.TextureZomb = textureZomb;
             
-            int XspawnGauche = rd.Next(-250, -10);
-            int XspawnDroite = rd.Next(Game1.WIDTH, Game1.WIDTH + 250);
-            int YspawnHaut = rd.Next(-250, -30);
-            int YspawnBas = rd.Next(Game1.HEIGHT, Game1.HEIGHT + 250);
-            if (XspawnGauche < XspawnDroite)
+            int XspawnGauche = rd.Next(-300, -10);
+            int XspawnDroite = rd.Next((map.Width * map.TileWidth), (map.Width * map.TileWidth) + 300);
+            int YspawnHaut = rd.Next(-350, -30);
+            int YspawnBas = rd.Next((map.Height * map.TileHeight), (map.Height * map.TileHeight) + 300);
+            int hautBas = rd.Next(2);
+            int gaucheDroite = rd.Next(2);
+            if (gaucheDroite == 1)
                 XposZomb = XspawnDroite;
             else
                 XposZomb = XspawnGauche;
-            if (YspawnBas < YspawnHaut)
+            if (hautBas == 1)
                 YposZomb = YspawnHaut;
             else
                 YposZomb = YspawnBas;
-           
+
             this.Position = new Vector2(XposZomb,YposZomb);
 
             this.Cible = new Vector2(0, 0);
