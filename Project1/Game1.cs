@@ -18,8 +18,6 @@ namespace Project1
         private readonly ScreenManager _screenManager;
         public SpriteBatch _spriteBatch { get; set; }
         public const int WIDTH = 1920, HEIGHT = 1080;
-   
-        
         
 
         
@@ -118,11 +116,7 @@ namespace Project1
             MouseState _mouseState = Mouse.GetState();
 
 
-
-            
-
                 // TODO: Add your update logic here
-
 
 
                 if (_mouseState.LeftButton == ButtonState.Pressed)
@@ -145,21 +139,10 @@ namespace Project1
                         this.Etat = Etats.StartScreen;
                        
                         _screenManager.LoadScreen(startscreen, new FadeTransition(GraphicsDevice, Color.Black));
-                        
 
                     }
-
-
-
                 }
-
-
-
             }
-
-                // TODO: Add your update logic here
-
-
 
                 base.Update(gameTime);
             }

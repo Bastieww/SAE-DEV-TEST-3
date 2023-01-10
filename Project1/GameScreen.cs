@@ -35,11 +35,10 @@ namespace Project1
         private double pausetemps=0;
         private bool testpause= false;
 
-        
         List<Bullet> listeBalles;
 
         List<Zombie> listeZomb;
-        private int chrono = 0;
+        private int nbZombie = 0, numVague = 1, zombMaxVague = 5;
 
         public GameScreen(Game1 game) : base(game)
         {
@@ -122,23 +121,23 @@ namespace Project1
                         player.Position += new Vector2(0, walkSpeed);
                 }
 
-            if (keyboardState.IsKeyDown(Keys.Left)&& player.Position.X >30)
-            {
-                ushort tx = (ushort)(player.Position.X / _myGame._tiledMap.TileWidth - 1);
-                ushort ty = (ushort)(player.Position.Y / _myGame._tiledMap.TileHeight);
-                animation = "walkEast";
-                if (!IsCollision(tx, ty))
-                    player.Position -= new Vector2(walkSpeed, 0);
-            }
-            if (keyboardState.IsKeyDown(Keys.Right) && player.Position.X < _myGame._tiledMap.WidthInPixels-50)
-            {
-                ushort tx = (ushort)(player.Position.X / _myGame._tiledMap.TileWidth + 1);
-                ushort ty = (ushort)(player.Position.Y / _myGame._tiledMap.TileHeight);
-                animation = "walkWest";
-                if (!IsCollision(tx, ty))
-                    player.Position += new Vector2(walkSpeed, 0);
-            }
-            
+                if (keyboardState.IsKeyDown(Keys.Left)&& player.Position.X >30)
+                {
+                    ushort tx = (ushort)(player.Position.X / _myGame._tiledMap.TileWidth - 1);
+                    ushort ty = (ushort)(player.Position.Y / _myGame._tiledMap.TileHeight);
+                    animation = "walkEast";
+                    if (!IsCollision(tx, ty))
+                        player.Position -= new Vector2(walkSpeed, 0);
+                }
+                if (keyboardState.IsKeyDown(Keys.Right) && player.Position.X < _myGame._tiledMap.WidthInPixels-50)
+                {
+                    ushort tx = (ushort)(player.Position.X / _myGame._tiledMap.TileWidth + 1);
+                    ushort ty = (ushort)(player.Position.Y / _myGame._tiledMap.TileHeight);
+                    animation = "walkWest";
+                    if (!IsCollision(tx, ty))
+                        player.Position += new Vector2(walkSpeed, 0);
+                }
+
            
                 if (listeBalles != null)
                 {
@@ -164,17 +163,15 @@ namespace Project1
                 {
                     foreach (Zombie zombie in listeZomb)
                     {
-                        zombie.Position += new Vector2((player.Position.X - zombie.Position.X), (player.Position.Y - zombie.Position.Y));
+                        zombie.Position += Vector2.Normalize((player.Position - zombie.Position) * 2);
                     }
                 }
-                chrono += 1;
-                Console.WriteLine(chrono);
-                if (chrono == 1)
+
+                while (nbZombie < zombMaxVague)
                 {
-                    chrono = 0;
-                    Zombie zombie = new Zombie(this, "Normal");
+                    nbZombie += 1;
+                    Zombie zombie = new Zombie(this, "Normal", _myGame._tiledMap);
                     listeZomb.Add(zombie);
-                
                 }
 
            
@@ -190,7 +187,7 @@ namespace Project1
                 }
                 
           
-                player.Apparence.Play(animation);
+                    player.Apparence.Play(animation);
 
 
 
@@ -202,31 +199,30 @@ namespace Project1
 
                 player.Apparence.Update(deltaSeconds); // time écoulé
 
-                camera.Follow(player);
+                camera.Follow(player, _myGame);
 
                 //player.Position += new Vector2 (6,1);
                 //Console.WriteLine(player.Position);
             }
-           
-           
+
+
 
         }
         public override void Draw(GameTime gameTime)
         {
+            _myGame._spriteBatch.Begin(transformMatrix : camera.Transform);
             _myGame._tiledMapRenderer.Draw(viewMatrix: camera.Transform);
             
-            _myGame._spriteBatch.Begin(transformMatrix : camera.Transform);
             _myGame._spriteBatch.Draw(player.Apparence, player.Position);
 
+            _myGame._spriteBatch.Draw(core.Apparence, core.Position, Color.White);
             if (listeBalles != null)
             {
                 foreach (Bullet balle in listeBalles)
                 {
                     _myGame._spriteBatch.Draw(balle.Apparence, balle.Position, Color.White);
-                    
                 }
             }
-            _myGame._spriteBatch.Draw(core.Apparence, core.Position, Color.White);
          
             if (listeZomb != null)
             {
