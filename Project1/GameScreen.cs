@@ -33,6 +33,10 @@ namespace Project1
         private Texture2D pause;
         private Vector2 _pausepos;
         private bool screenpause;
+      
+        
+        private bool testpause= false;
+        private bool toucheBalleZombie;
         
         private bool testpause= false;
 
@@ -45,8 +49,9 @@ namespace Project1
 
         List<Bullet> listeBalles;
 
+        List<Bullet> listeBalles;
         List<Zombie> listeZomb;
-        private int chrono = 0;
+        private int nbZombie = 0, numVague = 1, zombMaxVague = 5;
 
         public GameScreen(Game1 game) : base(game)
         {
@@ -88,11 +93,9 @@ namespace Project1
             
 
             listeBalles = new List<Bullet>();
-
-
             listeZomb = new List<Zombie>();
-
-
+            
+            
         }
         public override void Update(GameTime gameTime)
         {
@@ -112,9 +115,9 @@ namespace Project1
                 float walkSpeed = deltaSeconds * player.Speed; // Vitesse de déplacement du joueur
                 float flySpeed = deltaSeconds * Bullet.SPEED; // Vitesse de déplacement de la balle
           
-            float zombSpeed = deltaSeconds * Zombie.VITESSE_NORMAL; //Vitesse de déplacement du zomb
-           
-
+                float zombSpeed = deltaSeconds * Zombie.VITESSE_NORMAL; //Vitesse de déplacement du zomb
+                
+                
 
                 relativeCursor = Vector2.Transform(new Vector2(mouseState.X, mouseState.Y), Matrix.Invert(camera.Transform));
 
@@ -124,80 +127,75 @@ namespace Project1
 
                 //ALL TESTS ///////////////////////////////////////////////////////////////////////////////////
 
-                if (keyboardState.IsKeyDown(Keys.Up) && player.Position.Y > 0  )
+                if (keyboardState.IsKeyDown(Keys.Up) && player.Position.Y > player.Hitbox.Height/2)
                 {
                    
-                    ushort tx = (ushort)(player.Position.X / _myGame._tiledMap.TileWidth);
-                    ushort ty = (ushort)(player.Position.Y / _myGame._tiledMap.TileHeight - 1);
+                   
                     animation = "walkNorth";
-                    if (!IsCollision(tx, ty))
+                   
                         player.Position -= new Vector2(0, walkSpeed);
                 }
 
-                if (keyboardState.IsKeyDown(Keys.Down) && player.Position.Y < _myGame._tiledMap.HeightInPixels-90)
+                if (keyboardState.IsKeyDown(Keys.Down) && player.Position.Y < _myGame._tiledMap.HeightInPixels-player.Hitbox.Height/2)
                 {
-                    ushort tx = (ushort)(player.Position.X / _myGame._tiledMap.TileWidth);
-                    ushort ty = (ushort)(player.Position.Y / _myGame._tiledMap.TileHeight + 1);
+                   
                     animation = "walkSouth";
-                    if (!IsCollision(tx, ty))
+                    
                         player.Position += new Vector2(0, walkSpeed);
                 }
 
-            if (keyboardState.IsKeyDown(Keys.Left)&& player.Position.X >30)
-            {
-                ushort tx = (ushort)(player.Position.X / _myGame._tiledMap.TileWidth - 1);
-                ushort ty = (ushort)(player.Position.Y / _myGame._tiledMap.TileHeight);
-                animation = "walkEast";
-                if (!IsCollision(tx, ty))
-                    player.Position -= new Vector2(walkSpeed, 0);
-            }
-            if (keyboardState.IsKeyDown(Keys.Right) && player.Position.X < _myGame._tiledMap.WidthInPixels-50)
-            {
-                ushort tx = (ushort)(player.Position.X / _myGame._tiledMap.TileWidth + 1);
-                ushort ty = (ushort)(player.Position.Y / _myGame._tiledMap.TileHeight);
-                animation = "walkWest";
-                if (!IsCollision(tx, ty))
-                    player.Position += new Vector2(walkSpeed, 0);
-            }
-            
-           
-            if (listeBalles != null)
-            {
-                foreach (Bullet balle in listeBalles)
+                if (keyboardState.IsKeyDown(Keys.Left)&& player.Position.X > player.Hitbox.Width/2)
                 {
-                    balle.Position += new Vector2(flySpeed * balle.Direction.X, flySpeed * balle.Direction.Y);
-                }
-            }
-            
-            if (mouseState.LeftButton == ButtonState.Pressed && click == false)
-            {
-                Bullet balle = new Bullet(this, player, new Vector2(relativeCursor.X, relativeCursor.Y));
-                listeBalles.Add(balle);
-                click = true;
-            }
-            else if (mouseState.LeftButton == ButtonState.Released && click == true)
-            {
-                click = false;
-            }
-
-
-            if (listeZomb != null)
-            {
-                foreach (Zombie zombie in listeZomb)
-                {
-                    zombie.Position += Vector2.Normalize(player.Position - zombie.Position)*5;
-                }
-            }
-            chrono += 1;
-            
-            if (chrono == 1)
-            {
-                chrono = 0;
-                Zombie zombie = new Zombie(this, "Normal");
-                listeZomb.Add(zombie);
                
+                    animation = "walkEast";
+              
+                        player.Position -= new Vector2(walkSpeed, 0);
+                }
+                if (keyboardState.IsKeyDown(Keys.Right) && player.Position.X < _myGame._tiledMap.WidthInPixels-player.Hitbox.Width/2)
+                {
+               
+                    animation = "walkWest";
                 
-            }
+                        player.Position += new Vector2(walkSpeed, 0);
+                }
+
+           
+                if (listeBalles != null)
+                {
+                    foreach (Bullet balle in listeBalles)
+                    {
+                        balle.Position += new Vector2(flySpeed * balle.Direction.X, flySpeed * balle.Direction.Y);
+                        balle.UpdateHitbox();
+                    
+                    }
+                }
+            
+                if (mouseState.LeftButton == ButtonState.Pressed && click == false)
+                {
+                    Bullet balle = new Bullet(this, player, new Vector2(relativeCursor.X, relativeCursor.Y));
+                    listeBalles.Add(balle);
+                    click = true;
+                }
+                else if (mouseState.LeftButton == ButtonState.Released && click == true)
+                {
+                    click = false;
+                }
+
+
+                if (listeZomb != null)
+                {
+                    foreach (Zombie zombie in listeZomb)
+                    {
+                        zombie.Position += Vector2.Normalize((player.Position - zombie.Position) * 2);
+                    }
+                }
+
+                while (nbZombie < zombMaxVague)
+                {
+                    nbZombie += 1;
+                    Zombie zombie = new Zombie(this, "Normal", _myGame._tiledMap);
+                    listeZomb.Add(zombie);
+                }
 
             switch(core.Life)
                 {
@@ -264,22 +262,19 @@ namespace Project1
 
                 player.Apparence.Update(deltaSeconds); // time écoulé
 
-                camera.Follow(player);
+                camera.Follow(player, _myGame);
 
-                //player.Position += new Vector2 (6,1);
-                //Console.WriteLine(player.Position);
+             
             }
-           
-           
+
+
 
         }
         public override void Draw(GameTime gameTime)
         {
-            
-
-            _myGame._tiledMapRenderer.Draw(viewMatrix: camera.Transform);
-           
             _myGame._spriteBatch.Begin(transformMatrix : camera.Transform);
+            _myGame._tiledMapRenderer.Draw(viewMatrix: camera.Transform);
+            
             _myGame._spriteBatch.Draw(player.Apparence, player.Position);
             _myGame._spriteBatch.Draw(core.Apparence, core.Position);
 
@@ -295,12 +290,12 @@ namespace Project1
 
             }*/
 
+            _myGame._spriteBatch.Draw(core.Apparence, core.Position, Color.White);
             if (listeBalles != null)
             {
                 foreach (Bullet balle in listeBalles)
                 {
                     _myGame._spriteBatch.Draw(balle.Apparence, balle.Position, Color.White);
-                    
                 }
             }
             _myGame._spriteBatch.Draw(core.Apparence, core.Position);
@@ -318,7 +313,7 @@ namespace Project1
 
             _myGame._spriteBatch.End();
         }
-        private bool IsCollision(ushort x, ushort y)
+        private bool IsCollisionTile(ushort x, ushort y)
         {
             // définition de tile qui peut être null (?)
 
@@ -327,7 +322,15 @@ namespace Project1
                 return false;
             if (!tile.Value.IsBlank)
             {
-                Console.WriteLine(_myGame.mapLayer.GetTile(x, y).GlobalIdentifier);
+                return true;
+            }
+            return false;
+        }
+
+        private bool IsCollision(Rectangle hitboxSprite1,Rectangle hitboxSprite2)
+        {
+            if(hitboxSprite2.Intersects(hitboxSprite1))
+            {
                 return true;
             }
             return false;

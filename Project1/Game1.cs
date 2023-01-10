@@ -18,8 +18,8 @@ namespace Project1
         private readonly ScreenManager _screenManager;
         public SpriteBatch _spriteBatch { get; set; }
         public const int WIDTH = 1920, HEIGHT = 1080;
-   
         
+
         
 
         
@@ -79,14 +79,15 @@ namespace Project1
 
             
 
-    }
+
+        }
 
         protected override void Initialize()
         {
 
-            // TODO: Add your initialization logic here
-            
-            _graphics.IsFullScreen = false;
+        // TODO: Add your initialization logic here
+        
+            _graphics.IsFullScreen = true;
             _graphics.ApplyChanges();
 
             // Zombie
@@ -103,10 +104,11 @@ namespace Project1
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+           
 
             _screenManager.LoadScreen(startscreen, new FadeTransition(GraphicsDevice, Color.Black));
 
-            _screenManager.LoadScreen(startscreen, new FadeTransition(GraphicsDevice, Color.Black));
+            //_screenManager.LoadScreen(startscreen, new FadeTransition(GraphicsDevice, Color.Black));
          
 
             _screenManager.LoadScreen(gamescreen, new FadeTransition(GraphicsDevice, Color.Black));
@@ -155,7 +157,6 @@ namespace Project1
                         this.Etat = Etats.StartScreen;
                        
                         _screenManager.LoadScreen(startscreen, new FadeTransition(GraphicsDevice, Color.Black));
-                        
 
                     }
 

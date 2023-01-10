@@ -23,8 +23,8 @@ namespace Project1
 
         //ATTENTION : JE NE SAVAIS PAS COMMENT RECUPERER LA TAILLE D'UNE SEULE TUILE SUR UNE SPRITE SHEET
         //DONC JE L'AI MESURE A LA MAIN; IL FAUT DONC MODIFIER CES VALEURS EN CAS DE CHANGEMENT DE SPRITE
-        private int width = 31;
-        private int height = 57;
+        private int width = 91;
+        private int height = 177;
 
       
         private AnimatedSprite apparence;
@@ -43,9 +43,8 @@ namespace Project1
             this.Speed = speed;
             this.Damage = damage;
             
-            this.Position = new Vector2(Game1.WIDTH / 3, Game1.HEIGHT / 2);
+            this.Position = new Vector2(300, 300);
             this.Hitbox = new Rectangle((int)Position.X, (int)Position.Y, this.width, this.height);
-            
         }
 
 

@@ -34,11 +34,12 @@ namespace Project1
         {
             this.Position = player.Position;
             this.CoordClick = coordClick;
-            this.Hitbox = hitbox;
+            
             this.Apparence = apparence;
             this.Direction = Vector2.Normalize(coordClick - Position);
-            //Code non opti, il faudrait charger la texture qu'une seule fois par balle
+            //Code non opti, il faudrait charger la texture qu'une seule fois pas à chaque balle
             LoadContent(gamescreen);
+            UpdateHitbox();
         }
 
         public Vector2 Position
@@ -108,8 +109,12 @@ namespace Project1
         
         public void LoadContent(GameScreen gamescreen)
         {
-            Texture2D apparence = gamescreen.Content.Load<Texture2D>("zombie");
+            Texture2D apparence = gamescreen.Content.Load<Texture2D>("bullet");
             this.Apparence = apparence;
+        }
+        public void UpdateHitbox()
+        {
+            this.Hitbox = new Rectangle((int)Position.X, (int)Position.Y, 200, 200);
         }
     }
 }
