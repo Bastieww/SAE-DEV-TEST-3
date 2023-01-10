@@ -24,6 +24,9 @@ namespace Project1
 
         public bool clickMenu;
 
+        private Texture2D _fond;
+        private Vector2 _posfond;
+
 
 
 
@@ -39,7 +42,8 @@ namespace Project1
             _myGame._tiledMapRenderer = new TiledMapRenderer(GraphicsDevice, _myGame._tiledMap);
             _textButtons = Content.Load<Texture2D>("buttons");
             _posbuttons = new Vector2(Game1.WIDTH / 2 - _textButtons.Width / 2, Game1.HEIGHT / 2 - _textButtons.Height / 2);
-
+            _fond = Content.Load<Texture2D>("fond");
+            _posfond = new Vector2(0, 0);
             buttons = new Rectangle[2];
             buttons[0] = new Rectangle(719,315, 461, 150);
             buttons[1] = new Rectangle(719, 670, 461, 150);
@@ -90,7 +94,7 @@ namespace Project1
             //_myGame._tiledMapRenderer.Draw();
 
             _myGame._spriteBatch.Begin();
-            
+            _myGame._spriteBatch.Draw(_fond, _posfond, Color.White);
             _myGame._spriteBatch.Draw(_textButtons, _posbuttons, Color.Red);
           
 

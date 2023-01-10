@@ -170,7 +170,7 @@ namespace Project1
         protected override void Draw(GameTime gameTime)
         {
             // TODO: Add your drawing code here
-           
+            GraphicsDevice.Clear(Color.Black);
             base.Draw(gameTime);
         }
 

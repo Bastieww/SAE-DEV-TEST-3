@@ -33,6 +33,7 @@ namespace Project1
         private Vector2 _pausepos;
         private bool screenpause;
         private double pausetemps=0;
+        private bool testpause= false;
 
         
         List<Bullet> listeBalles;
@@ -80,10 +81,10 @@ namespace Project1
             //pausetemps =+ 0.1;
 
             //Debug.WriteLine(pausetemps);
-            if (keyboardState.IsKeyUp(Keys.P))
-                pausetemps = +1;
-            else if (keyboardState.IsKeyDown(Keys.P) && pausetemps == 1)
-                screenpause = false;
+            while(pausetemps < 10&& pausetemps>0)
+                for (int i = 1; i < 10; i++)
+                    if (keyboardState.IsKeyDown(Keys.P))
+                        screenpause = false;
                     
 
             if (screenpause == false)
@@ -98,12 +99,13 @@ namespace Project1
 
                 relativeCursor = Vector2.Transform(new Vector2(mouseState.X, mouseState.Y), Matrix.Invert(camera.Transform));
 
-                string animation = "walkWest";
+                string animation = "idle";
 
                 //ALL TESTS ///////////////////////////////////////////////////////////////////////////////////
 
-                if (keyboardState.IsKeyDown(Keys.Up))
+                if (keyboardState.IsKeyDown(Keys.Up) && player.Position.Y > 0  )
                 {
+                   
                     ushort tx = (ushort)(player.Position.X / _myGame._tiledMap.TileWidth);
                     ushort ty = (ushort)(player.Position.Y / _myGame._tiledMap.TileHeight - 1);
                     animation = "walkNorth";
@@ -111,7 +113,7 @@ namespace Project1
                         player.Position -= new Vector2(0, walkSpeed);
                 }
 
-                if (keyboardState.IsKeyDown(Keys.Down))
+                if (keyboardState.IsKeyDown(Keys.Down) && player.Position.Y < _myGame._tiledMap.HeightInPixels-90)
                 {
                     ushort tx = (ushort)(player.Position.X / _myGame._tiledMap.TileWidth);
                     ushort ty = (ushort)(player.Position.Y / _myGame._tiledMap.TileHeight + 1);
@@ -120,19 +122,19 @@ namespace Project1
                         player.Position += new Vector2(0, walkSpeed);
                 }
 
-            if (keyboardState.IsKeyDown(Keys.Left))
+            if (keyboardState.IsKeyDown(Keys.Left)&& player.Position.X >30)
             {
                 ushort tx = (ushort)(player.Position.X / _myGame._tiledMap.TileWidth - 1);
                 ushort ty = (ushort)(player.Position.Y / _myGame._tiledMap.TileHeight);
-                animation = "walkWest";
+                animation = "walkEast";
                 if (!IsCollision(tx, ty))
                     player.Position -= new Vector2(walkSpeed, 0);
             }
-            if (keyboardState.IsKeyDown(Keys.Right))
+            if (keyboardState.IsKeyDown(Keys.Right) && player.Position.X < _myGame._tiledMap.WidthInPixels-50)
             {
                 ushort tx = (ushort)(player.Position.X / _myGame._tiledMap.TileWidth + 1);
                 ushort ty = (ushort)(player.Position.Y / _myGame._tiledMap.TileHeight);
-                animation = "walkEast";
+                animation = "walkWest";
                 if (!IsCollision(tx, ty))
                     player.Position += new Vector2(walkSpeed, 0);
             }
@@ -181,8 +183,10 @@ namespace Project1
 
                 if(keyboardState.IsKeyDown(Keys.P))
                 { 
-                    
+                   
                     screenpause = true;
+                    pausetemps = 1;
+                   
                    
                 }
                 
