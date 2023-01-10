@@ -33,12 +33,16 @@ namespace Project1
         private Vector2 _pausepos;
         private bool screenpause;
         private double pausetemps=0;
+        
         private bool testpause= false;
+        private bool toucheBalleZombie;
 
         
         List<Bullet> listeBalles;
-
         List<Zombie> listeZomb;
+        
+        
+
         private int chrono = 0;
 
         public GameScreen(Game1 game) : base(game)
@@ -62,26 +66,18 @@ namespace Project1
 
             click = false;
             screenpause = false;
-            
-            
-            
-            
 
             listeBalles = new List<Bullet>();
-
-
             listeZomb = new List<Zombie>();
-
-
+            
+            
         }
         public override void Update(GameTime gameTime)
         {
             KeyboardState keyboardState = Keyboard.GetState();
             MouseState mouseState = Mouse.GetState();
-            //pausetemps =+ 0.1;
-
-            //Debug.WriteLine(pausetemps);
-            while(pausetemps < 10&& pausetemps>0)
+        
+            while(pausetemps < 10 && pausetemps>0)
                 for (int i = 1; i < 10; i++)
                     if (keyboardState.IsKeyDown(Keys.P))
                         screenpause = false;
@@ -92,8 +88,7 @@ namespace Project1
                 float deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds; // DeltaTime
                 float walkSpeed = deltaSeconds * player.Speed; // Vitesse de déplacement du joueur
                 float flySpeed = deltaSeconds * Bullet.SPEED; // Vitesse de déplacement de la balle
-          
-            float zombSpeed = deltaSeconds * Zombie.VITESSE_NORMAL; //Vitesse de déplacement du zomb
+                float zombSpeed = deltaSeconds * Zombie.VITESSE_NORMAL; //Vitesse de déplacement du zomb
                 
                 
 
@@ -109,7 +104,7 @@ namespace Project1
                     ushort tx = (ushort)(player.Position.X / _myGame._tiledMap.TileWidth);
                     ushort ty = (ushort)(player.Position.Y / _myGame._tiledMap.TileHeight - 1);
                     animation = "walkNorth";
-                    if (!IsCollision(tx, ty))
+                    if (!IsCollisionTile(tx, ty))
                         player.Position -= new Vector2(0, walkSpeed);
                 }
 
@@ -118,70 +113,99 @@ namespace Project1
                     ushort tx = (ushort)(player.Position.X / _myGame._tiledMap.TileWidth);
                     ushort ty = (ushort)(player.Position.Y / _myGame._tiledMap.TileHeight + 1);
                     animation = "walkSouth";
-                    if (!IsCollision(tx, ty))
+                    if (!IsCollisionTile(tx, ty))
                         player.Position += new Vector2(0, walkSpeed);
                 }
 
-            if (keyboardState.IsKeyDown(Keys.Left)&& player.Position.X >30)
-            {
-                ushort tx = (ushort)(player.Position.X / _myGame._tiledMap.TileWidth - 1);
-                ushort ty = (ushort)(player.Position.Y / _myGame._tiledMap.TileHeight);
-                animation = "walkEast";
-                if (!IsCollision(tx, ty))
-                    player.Position -= new Vector2(walkSpeed, 0);
-            }
-            if (keyboardState.IsKeyDown(Keys.Right) && player.Position.X < _myGame._tiledMap.WidthInPixels-50)
-            {
-                ushort tx = (ushort)(player.Position.X / _myGame._tiledMap.TileWidth + 1);
-                ushort ty = (ushort)(player.Position.Y / _myGame._tiledMap.TileHeight);
-                animation = "walkWest";
-                if (!IsCollision(tx, ty))
-                    player.Position += new Vector2(walkSpeed, 0);
-            }
+                if (keyboardState.IsKeyDown(Keys.Left)&& player.Position.X >30)
+                {
+                    ushort tx = (ushort)(player.Position.X / _myGame._tiledMap.TileWidth - 1);
+                    ushort ty = (ushort)(player.Position.Y / _myGame._tiledMap.TileHeight);
+                    animation = "walkEast";
+                    if (!IsCollisionTile(tx, ty))
+                        player.Position -= new Vector2(walkSpeed, 0);
+                }
+                if (keyboardState.IsKeyDown(Keys.Right) && player.Position.X < _myGame._tiledMap.WidthInPixels-50)
+                {
+                    ushort tx = (ushort)(player.Position.X / _myGame._tiledMap.TileWidth + 1);
+                    ushort ty = (ushort)(player.Position.Y / _myGame._tiledMap.TileHeight);
+                    animation = "walkWest";
+                    if (!IsCollisionTile(tx, ty))
+                        player.Position += new Vector2(walkSpeed, 0);
+                }
             
            
-            if (listeBalles != null)
-            {
-                foreach (Bullet balle in listeBalles)
+                if (listeBalles != null)
                 {
-                    balle.Position += new Vector2(flySpeed * balle.Direction.X, flySpeed * balle.Direction.Y);
+                    foreach (Bullet balle in listeBalles)
+                    {
+                        balle.Position += new Vector2(flySpeed * balle.Direction.X, flySpeed * balle.Direction.Y);
+                        balle.UpdateHitbox();
+                    
+                    }
                 }
-            }
             
-            if (mouseState.LeftButton == ButtonState.Pressed && click == false)
-            {
-                Bullet balle = new Bullet(this, player, new Vector2(relativeCursor.X, relativeCursor.Y));
-                listeBalles.Add(balle);
-                click = true;
-            }
-            else if (mouseState.LeftButton == ButtonState.Released && click == true)
-            {
-                click = false;
-            }
+                if (mouseState.LeftButton == ButtonState.Pressed && click == false)
+                {
+                    Bullet balle = new Bullet(this, player, new Vector2(relativeCursor.X, relativeCursor.Y));
+                    listeBalles.Add(balle);
+                    click = true;
+                }
+                else if (mouseState.LeftButton == ButtonState.Released && click == true)
+                {
+                    click = false;
+                }
 
 
-            if (listeZomb != null)
-            {
-                foreach (Zombie zombie in listeZomb)
+                if (listeZomb != null)
                 {
-                    zombie.Position += Vector2.Normalize(player.Position - zombie.Position)*5;
+                    foreach (Zombie zombie in listeZomb)
+                    {
+                        zombie.Position += Vector2.Normalize(player.Position - zombie.Position) * 2;
+                        zombie.UpdateHitbox();
+                    
+                    }
                 }
-            }
-            chrono += 1;
+                chrono += 1;
             
-            if (chrono == 1)
-            {
-                chrono = 0;
-                Zombie zombie = new Zombie(this, "Normal");
-                listeZomb.Add(zombie);
+                if (chrono == 1)
+                {
+                    chrono = 0;
+                    Zombie zombie = new Zombie(this, "Normal");
+                    listeZomb.Add(zombie);
                
                 
-            }
+                }
 
-           
-         
 
-                if(keyboardState.IsKeyDown(Keys.P))
+
+                toucheBalleZombie = false;
+                foreach (Bullet balle in listeBalles)
+                {
+                    if (toucheBalleZombie != true)
+                    {
+                        foreach (Zombie zombie in listeZomb)
+                        {
+
+                            if (IsCollision(balle.Hitbox, zombie.Hitbox) == true)
+                            {
+                                listeBalles.Remove(balle);
+                                listeZomb.Remove(zombie);
+                                toucheBalleZombie = true;
+                                break;
+                            }
+
+                        }
+                    }
+                    break;
+                }
+              
+
+
+
+
+
+                if (keyboardState.IsKeyDown(Keys.P))
                 { 
                    
                     screenpause = true;
@@ -194,19 +218,13 @@ namespace Project1
                 player.Apparence.Play(animation);
 
 
-
-
-
-
-
                 _myGame._tiledMapRenderer.Update(gameTime);
 
                 player.Apparence.Update(deltaSeconds); // time écoulé
 
                 camera.Follow(player);
 
-                //player.Position += new Vector2 (6,1);
-                //Console.WriteLine(player.Position);
+             
             }
            
            
@@ -241,7 +259,7 @@ namespace Project1
 
             _myGame._spriteBatch.End();
         }
-        private bool IsCollision(ushort x, ushort y)
+        private bool IsCollisionTile(ushort x, ushort y)
         {
             // définition de tile qui peut être null (?)
 
@@ -250,7 +268,16 @@ namespace Project1
                 return false;
             if (!tile.Value.IsBlank)
             {
-                Console.WriteLine(_myGame.mapLayer.GetTile(x, y).GlobalIdentifier);
+                
+                return true;
+            }
+            return false;
+        }
+
+        private bool IsCollision(Rectangle hitboxSprite1,Rectangle hitboxSprite2)
+        {
+            if(hitboxSprite2.Intersects(hitboxSprite1))
+            {
                 return true;
             }
             return false;
