@@ -16,20 +16,24 @@ using MonoGame.Extended.VectorDraw;
 
 namespace Project1
 {
-    internal class Core
+    internal class Core 
     {
         public int life;
 
         private Vector2 position;
 
         private Rectangle hitbox;
-        private Texture2D apparence;
+       
 
-        public Core(GameScreen gamescreen)
+        private AnimatedSprite apparence;
+        
+
+
+        public Core(GameScreen gamescreen, TiledMap map)
         {
             LoadContent(gamescreen);
-            this.Life = 20;
-            this.Position = new Vector2(500,500);// A REMPLACER PAR LA MOITIE DE LA MAP
+            this.Life = 100;
+            this.Position = new Vector2( (map.Width*map.TileWidth)/2+100,(map.Height* map.TileHeight)/2);
             this.Hitbox = hitbox;
             
 
@@ -74,7 +78,7 @@ namespace Project1
             }
         }
 
-        public Texture2D Apparence
+        public AnimatedSprite Apparence
         {
             get
             {
@@ -88,8 +92,8 @@ namespace Project1
         }
         public void LoadContent(GameScreen gamescreen)
         {
-            Texture2D apparence = gamescreen.Content.Load<Texture2D>("zombie");
-            this.Apparence = apparence;
+            SpriteSheet apparence = gamescreen.Content.Load<SpriteSheet>("heart.sf", new JsonContentLoader());
+            this.Apparence = new AnimatedSprite(apparence);
         }
     }
 }

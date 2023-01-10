@@ -3,16 +3,15 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Tiled;
 using MonoGame.Extended.Tiled.Renderers;
-using MonoGame.Extended.Animations;
 using MonoGame.Extended.Content;
-using MonoGame.Extended.Sprites;
-using MonoGame.Extended.Serialization;
 using MonoGame.Extended.Screens;
 using MonoGame.Extended.Screens.Transitions;
 using System;
 using System.Collections.Generic;
 using MonoGame.Extended.TextureAtlases;
 using System.Diagnostics;
+using MonoGame.Extended.Sprites;
+using MonoGame.Extended.Serialization;
 
 namespace Project1
 {
@@ -26,16 +25,24 @@ namespace Project1
         private Camera camera;
         private Core core;
 
+       
+
         private Vector2 relativeCursor;
         private bool click;
 
         private Texture2D pause;
         private Vector2 _pausepos;
         private bool screenpause;
-        private double pausetemps=0;
+        
         private bool testpause= false;
 
+
+        private SpriteBatch barredeviestatique;
+        private AnimatedSprite barredevie;
+        private Vector2 barredeviepos;
         
+
+
         List<Bullet> listeBalles;
 
         List<Zombie> listeZomb;
@@ -44,24 +51,37 @@ namespace Project1
         public GameScreen(Game1 game) : base(game)
         {
             _myGame = game;
+            
         }
 
         public override void LoadContent()
         {
+            
             _myGame._tiledMap = Content.Load<TiledMap>("map");
             _myGame._tiledMapRenderer = new TiledMapRenderer(GraphicsDevice, _myGame._tiledMap);
             _myGame.mapLayer = _myGame._tiledMap.GetLayer<TiledMapTileLayer>("Cailloux");
 
+            barredeviestatique = new SpriteBatch(GraphicsDevice);
+            barredeviepos = new Vector2(250, 1000);
+           
+           
+
             pause = Content.Load<Texture2D>("pause");
-            _pausepos = new Vector2(0, 0);
-            
+            _pausepos = new Vector2(700,400);
+
+           
+            SpriteSheet sprite = Content.Load<SpriteSheet>("barredevie.sf", new JsonContentLoader());
+            barredevie = new AnimatedSprite(sprite);
+
 
             player = new Player(this);
             camera = new Camera();
-            core = new Core(this);
+            core = new Core(this, _myGame._tiledMap);
 
             click = false;
             screenpause = false;
+
+
             
             
             
@@ -78,13 +98,12 @@ namespace Project1
         {
             KeyboardState keyboardState = Keyboard.GetState();
             MouseState mouseState = Mouse.GetState();
-            //pausetemps =+ 0.1;
+            
 
-            //Debug.WriteLine(pausetemps);
-            while(pausetemps < 10&& pausetemps>0)
-                for (int i = 1; i < 10; i++)
-                    if (keyboardState.IsKeyDown(Keys.P))
-                        screenpause = false;
+
+            if (keyboardState.IsKeyDown(Keys.M))
+                screenpause = false;
+         
                     
 
             if (screenpause == false)
@@ -94,12 +113,14 @@ namespace Project1
                 float flySpeed = deltaSeconds * Bullet.SPEED; // Vitesse de déplacement de la balle
           
             float zombSpeed = deltaSeconds * Zombie.VITESSE_NORMAL; //Vitesse de déplacement du zomb
-                
-                
+           
+
 
                 relativeCursor = Vector2.Transform(new Vector2(mouseState.X, mouseState.Y), Matrix.Invert(camera.Transform));
 
                 string animation = "idle";
+                string animationcore = "idle";
+                string animationbarredevie = "100%";
 
                 //ALL TESTS ///////////////////////////////////////////////////////////////////////////////////
 
@@ -178,20 +199,60 @@ namespace Project1
                 
             }
 
-           
-         
+            switch(core.Life)
+                {
+                    case 90:
+                        animationbarredevie = "90%";
+                        break;
+                    case 80:
+                        animationbarredevie = "80%";
+                        break ;
+                    case 70:
+                        animationbarredevie = "70%";
+                        break;
+                    case 60:
+                        animationbarredevie = "60%";
+                        break;
+                    case 50:
+                        animationbarredevie = "50%";
+                        break;
+                    case 40:
+                        animationbarredevie = "40%";
+                        break;
+                    case 30:
+                        animationbarredevie = "30%";
+                        break;
+                    case 20:
+                        animationbarredevie = "20%";
+                        break;
+                    case 10:
+                        animationbarredevie = "10%";
+                        break;
+                    case 0:
+                        animationbarredevie = "0%";
+                        break;
 
-                if(keyboardState.IsKeyDown(Keys.P))
+
+
+                }
+
+
+
+                if (keyboardState.IsKeyDown(Keys.P))
                 { 
                    
                     screenpause = true;
-                    pausetemps = 1;
-                   
-                   
+                    
                 }
                 
           
                 player.Apparence.Play(animation);
+                core.Apparence.Play(animationcore);
+                barredevie.Play(animationbarredevie);
+                
+                core.Apparence.Update(deltaSeconds);
+                barredevie.Update(deltaSeconds);
+                
 
 
 
@@ -214,10 +275,25 @@ namespace Project1
         }
         public override void Draw(GameTime gameTime)
         {
-            _myGame._tiledMapRenderer.Draw(viewMatrix: camera.Transform);
             
+
+            _myGame._tiledMapRenderer.Draw(viewMatrix: camera.Transform);
+           
             _myGame._spriteBatch.Begin(transformMatrix : camera.Transform);
             _myGame._spriteBatch.Draw(player.Apparence, player.Position);
+            _myGame._spriteBatch.Draw(core.Apparence, core.Position);
+
+
+            barredeviestatique.Begin();
+            barredeviestatique.Draw(barredevie, barredeviepos); 
+            
+            barredeviestatique.End();
+            /*
+            if (screenpause == true)
+            {
+                _myGame._spriteBatch.Draw(pause, _pausepos, Color.White);
+
+            }*/
 
             if (listeBalles != null)
             {
@@ -227,7 +303,7 @@ namespace Project1
                     
                 }
             }
-            _myGame._spriteBatch.Draw(core.Apparence, core.Position, Color.White);
+            _myGame._spriteBatch.Draw(core.Apparence, core.Position);
          
             if (listeZomb != null)
             {
@@ -238,6 +314,7 @@ namespace Project1
 
                 }
             }
+          
 
             _myGame._spriteBatch.End();
         }

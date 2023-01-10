@@ -23,7 +23,7 @@ namespace Project1
         
 
         
-        public enum Etats { StartScreen, GameScreen, EndScreen };
+        public enum Etats { StartScreen, GameScreen, EndScreen, ControlsScreen };
 
 
         private Etats etat;
@@ -46,6 +46,7 @@ namespace Project1
         StartScreen startscreen;
         GameScreen gamescreen;
         EndScreen endscreen;
+        ControlsScreen controlsscreen;
 
 
         public TiledMap _tiledMap;
@@ -74,23 +75,25 @@ namespace Project1
             startscreen = new StartScreen(this);
             gamescreen = new GameScreen(this);
             endscreen = new EndScreen(this);
+            controlsscreen = new ControlsScreen(this); 
 
+            
 
-        }
+    }
 
         protected override void Initialize()
         {
 
             // TODO: Add your initialization logic here
             
-            _graphics.IsFullScreen = true;
+            _graphics.IsFullScreen = false;
             _graphics.ApplyChanges();
 
             // Zombie
             //Zombie zombie1 = new Zombie("Normal");
             //zombie1.Initialize();
-            
 
+           
             //Joueur
             
 
@@ -108,7 +111,7 @@ namespace Project1
 
             _screenManager.LoadScreen(gamescreen, new FadeTransition(GraphicsDevice, Color.Black));
 
-
+            _screenManager.LoadScreen(controlsscreen, new FadeTransition(GraphicsDevice, Color.Black));
 
         }
 
@@ -119,27 +122,34 @@ namespace Project1
 
 
 
-            
-
-                // TODO: Add your update logic here
 
 
+            // TODO: Add your update logic here
 
-                if (_mouseState.LeftButton == ButtonState.Pressed)
-                {
+
+
+            if (_mouseState.LeftButton == ButtonState.Pressed)
+            {
                 // Attention, l'état a été mis à jour directement par l'écran en question
                 if (this.Etat == Etats.EndScreen)
                     Exit();
 
                 else if (this.Etat == Etats.GameScreen && startscreen.clickMenu == true)
-                        _screenManager.LoadScreen(gamescreen, new FadeTransition(GraphicsDevice, Color.Black));
+                    _screenManager.LoadScreen(gamescreen, new FadeTransition(GraphicsDevice, Color.Black));
+                else if (this.Etat == Etats.ControlsScreen && startscreen.clickMenu == true)
+                    _screenManager.LoadScreen(controlsscreen, new FadeTransition(GraphicsDevice, Color.Black));
+            }
 
-                }
+
+
+
+            
 
 
             if (keyboardState.IsKeyDown(Keys.Escape))
             {
-                if (this.Etat == Etats.GameScreen)
+                
+                if (this.Etat == Etats.GameScreen || this.Etat == Etats.ControlsScreen)
                 {
                     {
                         this.Etat = Etats.StartScreen;
@@ -149,19 +159,15 @@ namespace Project1
 
                     }
 
-
-
                 }
-
-
 
             }
 
-                // TODO: Add your update logic here
+            // TODO: Add your update logic here
 
 
 
-                base.Update(gameTime);
+            base.Update(gameTime);
             }
        
             
