@@ -98,7 +98,7 @@ namespace Project1
 
                 relativeCursor = Vector2.Transform(new Vector2(mouseState.X, mouseState.Y), Matrix.Invert(camera.Transform));
 
-                string animation = "walkWest";
+                string animation = "idle";
 
                 //ALL TESTS ///////////////////////////////////////////////////////////////////////////////////
 
