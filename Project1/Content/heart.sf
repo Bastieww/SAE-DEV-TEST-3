@@ -1,0 +1,15 @@
+{
+  "textureAtlas": {
+    "texture": "heart.png",
+    "regionWidth": 200,
+    "regionHeight": 200
+  },
+  "cycles": {
+    "idle": {
+      "frames": [ 0,0, 1 ],
+      "isLooping": true,
+      "frameDuration": 0.5
+    }
+   
+  }
+}

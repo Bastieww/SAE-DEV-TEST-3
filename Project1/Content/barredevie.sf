@@ -1,0 +1,64 @@
+{
+  "textureAtlas": {
+    "texture": "barredevie.png",
+    "regionWidth": 499,
+    "regionHeight": 146
+  },
+  "cycles": {
+    "100%": {
+      "frames": [0],
+      "isLooping": false,
+      "frameDuration": 0.2
+    },
+    "90%": {
+      "frames": [1],
+      "isLooping": false,
+      "frameDuration": 0.2
+    },
+    "80%": {
+      "frames": [2],
+      "isLooping": false,
+      "frameDuration": 0.2
+    },
+    "70%": {
+      "frames": [3],
+      "isLooping": false,
+      "frameDuration": 0.2
+    },
+    "60%": {
+      "frames": [4],
+      "isLooping": false,
+      "frameDuration": 0.2
+    },
+    "50%": {
+      "frames": [5],
+      "isLooping": false,
+      "frameDuration": 0.2
+    },
+    "40%": {
+      "frames": [6],
+      "isLooping": false,
+      "frameDuration": 0.2
+    },
+    "30%": {
+      "frames": [7],
+      "isLooping": false,
+      "frameDuration": 0.2
+    },
+    "20%": {
+      "frames": [8],
+      "isLooping": false,
+      "frameDuration": 0.2
+    },
+    "10%": {
+      "frames": [9],
+      "isLooping": false,
+      "frameDuration": 0.2
+    },
+    "0%": {
+      "frames": [10],
+      "isLooping": false,
+      "frameDuration": 0.09999997
+    }
+  }
+}

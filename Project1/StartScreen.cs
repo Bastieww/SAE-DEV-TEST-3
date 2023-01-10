@@ -44,9 +44,10 @@ namespace Project1
             _posbuttons = new Vector2(Game1.WIDTH / 2 - _textButtons.Width / 2, Game1.HEIGHT / 2 - _textButtons.Height / 2);
             _fond = Content.Load<Texture2D>("fond");
             _posfond = new Vector2(0, 0);
-            buttons = new Rectangle[2];
-            buttons[0] = new Rectangle(719,315, 461, 150);
-            buttons[1] = new Rectangle(719, 670, 461, 150);
+            buttons = new Rectangle[3];
+            buttons[0] = new Rectangle(719,275, 320, 135);
+            buttons[1] = new Rectangle(719, 670, 320, 135);
+            buttons[2] = new Rectangle(719, 467, 320, 135);
            
         }
 
@@ -71,11 +72,15 @@ namespace Project1
                             _myGame.Etat = Game1.Etats.GameScreen;
                         else if(i == 1)
                             _myGame.Etat = Game1.Etats.EndScreen;
-                        
+                        else if(i == 2)
+                            _myGame.Etat = Game1.Etats.ControlsScreen;
+
+
                     }
 
                 }
             }
+
             /*
             if (Keyboard.GetState().IsKeyDown(Keys.P))
             {
