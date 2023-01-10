@@ -23,8 +23,8 @@ namespace Project1
 
         //ATTENTION : JE NE SAVAIS PAS COMMENT RECUPERER LA TAILLE D'UNE SEULE TUILE SUR UNE SPRITE SHEET
         //DONC JE L'AI MESURE A LA MAIN; IL FAUT DONC MODIFIER CES VALEURS EN CAS DE CHANGEMENT DE SPRITE
-        private int width = 31;
-        private int height = 57;
+        private int width = 91;
+        private int height = 177;
 
       
         private AnimatedSprite apparence;

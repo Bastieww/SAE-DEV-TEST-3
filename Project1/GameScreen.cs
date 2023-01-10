@@ -32,7 +32,7 @@ namespace Project1
         private Texture2D pause;
         private Vector2 _pausepos;
         private bool screenpause;
-        private double pausetemps=0;
+      
         
         private bool testpause= false;
         private bool toucheBalleZombie;
@@ -43,7 +43,7 @@ namespace Project1
         
         
 
-        private int chrono = 0;
+     
 
         public GameScreen(Game1 game) : base(game)
         {
@@ -55,6 +55,7 @@ namespace Project1
             _myGame._tiledMap = Content.Load<TiledMap>("map");
             _myGame._tiledMapRenderer = new TiledMapRenderer(GraphicsDevice, _myGame._tiledMap);
             _myGame.mapLayer = _myGame._tiledMap.GetLayer<TiledMapTileLayer>("Cailloux");
+            
 
             pause = Content.Load<Texture2D>("pause");
             _pausepos = new Vector2(0, 0);
@@ -76,12 +77,9 @@ namespace Project1
         {
             KeyboardState keyboardState = Keyboard.GetState();
             MouseState mouseState = Mouse.GetState();
-        
-            while(pausetemps < 10 && pausetemps>0)
-                for (int i = 1; i < 10; i++)
-                    if (keyboardState.IsKeyDown(Keys.P))
-                        screenpause = false;
-                    
+
+            
+            
 
             if (screenpause == false)
             {
@@ -98,39 +96,35 @@ namespace Project1
 
                 //ALL TESTS ///////////////////////////////////////////////////////////////////////////////////
 
-                if (keyboardState.IsKeyDown(Keys.Up) && player.Position.Y > 0  )
+                if (keyboardState.IsKeyDown(Keys.Up) && player.Position.Y > player.Hitbox.Height/2)
                 {
                    
-                    ushort tx = (ushort)(player.Position.X / _myGame._tiledMap.TileWidth);
-                    ushort ty = (ushort)(player.Position.Y / _myGame._tiledMap.TileHeight - 1);
+                   
                     animation = "walkNorth";
-                    if (!IsCollisionTile(tx, ty))
+                   
                         player.Position -= new Vector2(0, walkSpeed);
                 }
 
-                if (keyboardState.IsKeyDown(Keys.Down) && player.Position.Y < _myGame._tiledMap.HeightInPixels-90)
+                if (keyboardState.IsKeyDown(Keys.Down) && player.Position.Y < _myGame._tiledMap.HeightInPixels-player.Hitbox.Height/2)
                 {
-                    ushort tx = (ushort)(player.Position.X / _myGame._tiledMap.TileWidth);
-                    ushort ty = (ushort)(player.Position.Y / _myGame._tiledMap.TileHeight + 1);
+                   
                     animation = "walkSouth";
-                    if (!IsCollisionTile(tx, ty))
+                    
                         player.Position += new Vector2(0, walkSpeed);
                 }
 
-                if (keyboardState.IsKeyDown(Keys.Left)&& player.Position.X >30)
+                if (keyboardState.IsKeyDown(Keys.Left)&& player.Position.X > player.Hitbox.Width/2)
                 {
-                    ushort tx = (ushort)(player.Position.X / _myGame._tiledMap.TileWidth - 1);
-                    ushort ty = (ushort)(player.Position.Y / _myGame._tiledMap.TileHeight);
+               
                     animation = "walkEast";
-                    if (!IsCollisionTile(tx, ty))
+              
                         player.Position -= new Vector2(walkSpeed, 0);
                 }
-                if (keyboardState.IsKeyDown(Keys.Right) && player.Position.X < _myGame._tiledMap.WidthInPixels-50)
+                if (keyboardState.IsKeyDown(Keys.Right) && player.Position.X < _myGame._tiledMap.WidthInPixels-player.Hitbox.Width/2)
                 {
-                    ushort tx = (ushort)(player.Position.X / _myGame._tiledMap.TileWidth + 1);
-                    ushort ty = (ushort)(player.Position.Y / _myGame._tiledMap.TileHeight);
+               
                     animation = "walkWest";
-                    if (!IsCollisionTile(tx, ty))
+                
                         player.Position += new Vector2(walkSpeed, 0);
                 }
             
@@ -166,23 +160,17 @@ namespace Project1
                     
                     }
                 }
-                chrono += 1;
-            
-                if (chrono == 1)
-                {
-                    chrono = 0;
-                    Zombie zombie = new Zombie(this, "Normal");
-                    listeZomb.Add(zombie);
-               
                 
-                }
+            
+       
 
 
 
                 toucheBalleZombie = false;
+                
                 foreach (Bullet balle in listeBalles)
                 {
-                    if (toucheBalleZombie != true)
+                    if (toucheBalleZombie == false)
                     {
                         foreach (Zombie zombie in listeZomb)
                         {
@@ -192,6 +180,7 @@ namespace Project1
                                 listeBalles.Remove(balle);
                                 listeZomb.Remove(zombie);
                                 toucheBalleZombie = true;
+                                
                                 break;
                             }
 
@@ -209,7 +198,7 @@ namespace Project1
                 { 
                    
                     screenpause = true;
-                    pausetemps = 1;
+                    
                    
                    
                 }
@@ -236,7 +225,7 @@ namespace Project1
             
             _myGame._spriteBatch.Begin(transformMatrix : camera.Transform);
             _myGame._spriteBatch.Draw(player.Apparence, player.Position);
-
+            
             if (listeBalles != null)
             {
                 foreach (Bullet balle in listeBalles)
@@ -268,7 +257,6 @@ namespace Project1
                 return false;
             if (!tile.Value.IsBlank)
             {
-                
                 return true;
             }
             return false;

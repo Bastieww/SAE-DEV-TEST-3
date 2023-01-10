@@ -75,14 +75,16 @@ namespace Project1
             gamescreen = new GameScreen(this);
             endscreen = new EndScreen(this);
 
+            
+
 
         }
 
         protected override void Initialize()
         {
 
-            // TODO: Add your initialization logic here
-            
+        // TODO: Add your initialization logic here
+        
             _graphics.IsFullScreen = true;
             _graphics.ApplyChanges();
 
@@ -100,6 +102,7 @@ namespace Project1
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+           
 
             _screenManager.LoadScreen(startscreen, new FadeTransition(GraphicsDevice, Color.Black));
 
