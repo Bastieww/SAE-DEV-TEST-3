@@ -45,7 +45,6 @@ namespace Project1
             
             this.Position = new Vector2(300, 300);
             this.Hitbox = new Rectangle((int)Position.X, (int)Position.Y, this.width, this.height);
-            
         }
 
 

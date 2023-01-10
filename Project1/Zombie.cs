@@ -27,6 +27,8 @@ namespace Project1
 
         private AnimatedSprite textureZomb;
 
+        private Rectangle hitbox;
+
         private Vector2 position;
 
         private Vector2 cible;
@@ -55,6 +57,8 @@ namespace Project1
             this.Position = new Vector2(XposZomb,YposZomb);
 
             this.Cible = new Vector2(0, 0);
+
+            
             
             LoadContent(gamescreen);
         }
@@ -124,6 +128,20 @@ namespace Project1
                 this.cible = value;
             }
         }
+
+        public Rectangle Hitbox
+        {
+            get
+            {
+                return this.hitbox;
+            }
+
+            set
+            {
+                this.hitbox = value;
+            }
+        }
+
         private void LoadContent(GameScreen gamescreen)
         {
             // Type du zombie
@@ -134,6 +152,10 @@ namespace Project1
                     this.TextureZomb = new AnimatedSprite(apparence);
                     break;
             }
+        }
+        public void UpdateHitbox()
+        {
+            this.Hitbox = new Rectangle((int)Position.X, (int)Position.Y, 200, 200);
         }
     }
 }
