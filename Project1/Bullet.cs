@@ -108,7 +108,7 @@ namespace Project1
         
         public void LoadContent(GameScreen gamescreen)
         {
-            Texture2D apparence = gamescreen.Content.Load<Texture2D>("zombie");
+            Texture2D apparence = gamescreen.Content.Load<Texture2D>("bullet");
             this.Apparence = apparence;
         }
     }

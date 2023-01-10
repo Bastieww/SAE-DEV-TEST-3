@@ -17,7 +17,7 @@ namespace Project1
     public class Zombie
     {
         public const int VIE_NORMAL = 25, VIE_GROS = 50, VIE_RAPIDE = 10;
-        public const int VITESSE_NORMAL = 25, VITESSE_GROS = 10, VITESSE_RAPIDE = 50;
+        public const int VITESSE_NORMAL = 2, VITESSE_GROS = 1, VITESSE_RAPIDE = 4;
 
         private int vieZombie, vitesseZombie, XposZomb, YposZomb, nbzombie = 0;
 

@@ -92,7 +92,7 @@ namespace Project1
                 float walkSpeed = deltaSeconds * player.Speed; // Vitesse de déplacement du joueur
                 float flySpeed = deltaSeconds * Bullet.SPEED; // Vitesse de déplacement de la balle
           
-            float zombSpeed = deltaSeconds * Zombie.VITESSE_NORMAL; //Vitesse de déplacement du zomb
+                float zombSpeed = deltaSeconds * Zombie.VITESSE_NORMAL; //Vitesse de déplacement du zomb
                 
                 
 
@@ -120,60 +120,60 @@ namespace Project1
                         player.Position += new Vector2(0, walkSpeed);
                 }
 
-            if (keyboardState.IsKeyDown(Keys.Left))
-            {
-                ushort tx = (ushort)(player.Position.X / _myGame._tiledMap.TileWidth - 1);
-                ushort ty = (ushort)(player.Position.Y / _myGame._tiledMap.TileHeight);
-                animation = "walkWest";
-                if (!IsCollision(tx, ty))
-                    player.Position -= new Vector2(walkSpeed, 0);
-            }
-            if (keyboardState.IsKeyDown(Keys.Right))
-            {
-                ushort tx = (ushort)(player.Position.X / _myGame._tiledMap.TileWidth + 1);
-                ushort ty = (ushort)(player.Position.Y / _myGame._tiledMap.TileHeight);
-                animation = "walkEast";
-                if (!IsCollision(tx, ty))
-                    player.Position += new Vector2(walkSpeed, 0);
-            }
+                if (keyboardState.IsKeyDown(Keys.Left))
+                {
+                    ushort tx = (ushort)(player.Position.X / _myGame._tiledMap.TileWidth - 1);
+                    ushort ty = (ushort)(player.Position.Y / _myGame._tiledMap.TileHeight);
+                    animation = "walkWest";
+                    if (!IsCollision(tx, ty))
+                        player.Position -= new Vector2(walkSpeed, 0);
+                }
+                if (keyboardState.IsKeyDown(Keys.Right))
+                {
+                    ushort tx = (ushort)(player.Position.X / _myGame._tiledMap.TileWidth + 1);
+                    ushort ty = (ushort)(player.Position.Y / _myGame._tiledMap.TileHeight);
+                    animation = "walkEast";
+                    if (!IsCollision(tx, ty))
+                        player.Position += new Vector2(walkSpeed, 0);
+                }
             
            
-            if (listeBalles != null)
-            {
-                foreach (Bullet balle in listeBalles)
+                if (listeBalles != null)
                 {
-                    balle.Position += new Vector2(flySpeed * balle.Direction.X, flySpeed * balle.Direction.Y);
+                    foreach (Bullet balle in listeBalles)
+                    {
+                        balle.Position += new Vector2(flySpeed * balle.Direction.X, flySpeed * balle.Direction.Y);
+                    }
                 }
-            }
             
-            if (mouseState.LeftButton == ButtonState.Pressed && click == false)
-            {
-                Bullet balle = new Bullet(this, player, new Vector2(relativeCursor.X, relativeCursor.Y));
-                listeBalles.Add(balle);
-                click = true;
-            }
-            else if (mouseState.LeftButton == ButtonState.Released && click == true)
-            {
-                click = false;
-            }
-
-
-            if (listeZomb != null)
-            {
-                foreach (Zombie zombie in listeZomb)
+                if (mouseState.LeftButton == ButtonState.Pressed && click == false)
                 {
-                    zombie.Position += new Vector2((player.Position.X - zombie.Position.X), (player.Position.Y - zombie.Position.Y));
+                    Bullet balle = new Bullet(this, player, new Vector2(relativeCursor.X, relativeCursor.Y));
+                    listeBalles.Add(balle);
+                    click = true;
                 }
-            }
-            chrono += 1;
-            Console.WriteLine(chrono);
-            if (chrono == 1)
-            {
-                chrono = 0;
-                Zombie zombie = new Zombie(this, "Normal");
-                listeZomb.Add(zombie);
+                else if (mouseState.LeftButton == ButtonState.Released && click == true)
+                {
+                    click = false;
+                }
+
+
+                if (listeZomb != null)
+                {
+                    foreach (Zombie zombie in listeZomb)
+                    {
+                        zombie.Position += new Vector2((player.Position.X - zombie.Position.X), (player.Position.Y - zombie.Position.Y));
+                    }
+                }
+                chrono += 1;
+                Console.WriteLine(chrono);
+                if (chrono == 1)
+                {
+                    chrono = 0;
+                    Zombie zombie = new Zombie(this, "Normal");
+                    listeZomb.Add(zombie);
                 
-            }
+                }
 
            
          
@@ -191,7 +191,7 @@ namespace Project1
 
 
 
-
+                ///////////////////////////////////////////////////////////////////////////////////////////////
 
 
                 _myGame._tiledMapRenderer.Update(gameTime);

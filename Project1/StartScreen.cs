@@ -48,11 +48,12 @@ namespace Project1
 
         public override void Update(GameTime gameTime)
         {
-           MouseState mouseState = Mouse.GetState();
-           Rectangle mouserect = new Rectangle(mouseState.X, mouseState.Y, 1,1);
+            MouseState mouseState = Mouse.GetState();
+            Rectangle mouserect = new Rectangle(mouseState.X, mouseState.Y, 1,1);
             
             if (mouseState.LeftButton == ButtonState.Pressed)
             {
+
                 for (int i = 0; i < buttons.Length; i++)
                 {
                     // si le clic correspond à un des 3 boutons
@@ -67,7 +68,6 @@ namespace Project1
                     }
 
                 }
-
             }
 
             if (Keyboard.GetState().IsKeyDown(Keys.P))

@@ -110,7 +110,7 @@ namespace Project1
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
 
-            _screenManager.LoadScreen(startscreen, new FadeTransition(GraphicsDevice, Color.Black));
+            //_screenManager.LoadScreen(startscreen, new FadeTransition(GraphicsDevice, Color.Black));
          
 
             _screenManager.LoadScreen(gamescreen, new FadeTransition(GraphicsDevice, Color.Black));
@@ -138,12 +138,12 @@ namespace Project1
                     if (this.Etat == Etats.EndScreen)
                         Exit();
 
-                    else if (this.Etat == Etats.GameScreen)
-                        _screenManager.LoadScreen(gamescreen, new FadeTransition(GraphicsDevice, Color.Black));
+                    //else if (this.Etat == Etats.GameScreen)
+                       // _screenManager.LoadScreen(gamescreen, new FadeTransition(GraphicsDevice, Color.Black));
 
 
                 }
-
+               
 
                 if (keyboardState.IsKeyDown(Keys.Escape))
                 {
