@@ -22,6 +22,11 @@ namespace Project1
         private Rectangle[] buttons;
         private Vector2 _posbuttons;
 
+        public bool clickMenu;
+
+        private Texture2D _fond;
+        private Vector2 _posfond;
+
 
 
 
@@ -37,7 +42,8 @@ namespace Project1
             _myGame._tiledMapRenderer = new TiledMapRenderer(GraphicsDevice, _myGame._tiledMap);
             _textButtons = Content.Load<Texture2D>("buttons");
             _posbuttons = new Vector2(Game1.WIDTH / 2 - _textButtons.Width / 2, Game1.HEIGHT / 2 - _textButtons.Height / 2);
-
+            _fond = Content.Load<Texture2D>("fond");
+            _posfond = new Vector2(0, 0);
             buttons = new Rectangle[2];
             buttons[0] = new Rectangle(719,315, 461, 150);
             buttons[1] = new Rectangle(719, 670, 461, 150);
@@ -48,17 +54,18 @@ namespace Project1
 
         public override void Update(GameTime gameTime)
         {
-            MouseState mouseState = Mouse.GetState();
-            Rectangle mouserect = new Rectangle(mouseState.X, mouseState.Y, 1,1);
-            
+           MouseState mouseState = Mouse.GetState();
+           Rectangle mouserect = new Rectangle(mouseState.X, mouseState.Y, 1,1);
+            clickMenu = false;
             if (mouseState.LeftButton == ButtonState.Pressed)
             {
-
+                
                 for (int i = 0; i < buttons.Length; i++)
                 {
                     // si le clic correspond à un des 3 boutons
                     if (buttons[i].Contains(Mouse.GetState().X, Mouse.GetState().Y))
                     {
+                        clickMenu = true;
                         // on change l'état défini dans Game1 en fonction du bouton cliqué
                         if (i == 0)
                             _myGame.Etat = Game1.Etats.GameScreen;
@@ -69,12 +76,12 @@ namespace Project1
 
                 }
             }
-
+            /*
             if (Keyboard.GetState().IsKeyDown(Keys.P))
             {
                 if (_myGame.Etat == Game1.Etats.GameScreen)
                     _myGame.Etat = Game1.Etats.StartScreen;
-            }
+            }*/
            
 
         }
@@ -86,7 +93,7 @@ namespace Project1
             //_myGame._tiledMapRenderer.Draw();
 
             _myGame._spriteBatch.Begin();
-            
+            _myGame._spriteBatch.Draw(_fond, _posfond, Color.White);
             _myGame._spriteBatch.Draw(_textButtons, _posbuttons, Color.Red);
           
 

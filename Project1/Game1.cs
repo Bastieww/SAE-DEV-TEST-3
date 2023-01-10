@@ -53,14 +53,6 @@ namespace Project1
         public TiledMapTileLayer mapLayer;
 
        
-        
-
-       
-
-        
-        
-
-
 
         public Game1()
         {
@@ -109,6 +101,7 @@ namespace Project1
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            _screenManager.LoadScreen(startscreen, new FadeTransition(GraphicsDevice, Color.Black));
 
             //_screenManager.LoadScreen(startscreen, new FadeTransition(GraphicsDevice, Color.Black));
          
@@ -134,27 +127,35 @@ namespace Project1
 
                 if (_mouseState.LeftButton == ButtonState.Pressed)
                 {
-                    // Attention, l'état a été mis à jour directement par l'écran en question
-                    if (this.Etat == Etats.EndScreen)
-                        Exit();
+                // Attention, l'état a été mis à jour directement par l'écran en question
+                if (this.Etat == Etats.EndScreen)
+                    Exit();
 
-                    //else if (this.Etat == Etats.GameScreen)
-                       // _screenManager.LoadScreen(gamescreen, new FadeTransition(GraphicsDevice, Color.Black));
-
+                else if (this.Etat == Etats.GameScreen && startscreen.clickMenu == true)
+                        _screenManager.LoadScreen(gamescreen, new FadeTransition(GraphicsDevice, Color.Black));
 
                 }
                
 
-                if (keyboardState.IsKeyDown(Keys.Escape))
+            if (keyboardState.IsKeyDown(Keys.Escape))
+            {
+                if (this.Etat == Etats.GameScreen)
                 {
-                    if (this.Etat == Etats.GameScreen)
+                    {
+                        this.Etat = Etats.StartScreen;
+                       
                         _screenManager.LoadScreen(startscreen, new FadeTransition(GraphicsDevice, Color.Black));
+                        
+
+                    }
+
+
 
                 }
 
-              
 
 
+            }
 
                 // TODO: Add your update logic here
 
@@ -169,7 +170,7 @@ namespace Project1
         protected override void Draw(GameTime gameTime)
         {
             // TODO: Add your drawing code here
-           
+            GraphicsDevice.Clear(Color.Black);
             base.Draw(gameTime);
         }
 

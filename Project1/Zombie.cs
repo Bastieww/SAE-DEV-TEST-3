@@ -29,12 +29,31 @@ namespace Project1
 
         private Vector2 position;
 
+        private Vector2 cible;
+
 
         public Zombie(GameScreen gamescreen, string typeZombie)
         {
             this.TypeZombie = typeZombie;
             this.TextureZomb = textureZomb;
-            this.Position = new Vector2(0, 0);
+            
+            int XspawnGauche = rd.Next(-250, -10);
+            int XspawnDroite = rd.Next(Game1.WIDTH, Game1.WIDTH + 250);
+            int YspawnHaut = rd.Next(-250, -30);
+            int YspawnBas = rd.Next(Game1.HEIGHT, Game1.HEIGHT + 250);
+            if (XspawnGauche < XspawnDroite)
+                XposZomb = XspawnDroite;
+            else
+                XposZomb = XspawnGauche;
+            if (YspawnBas < YspawnHaut)
+                YposZomb = YspawnHaut;
+            else
+                YposZomb = YspawnBas;
+           
+            this.Position = new Vector2(XposZomb,YposZomb);
+
+            this.Cible = new Vector2(0, 0);
+            
             LoadContent(gamescreen);
         }
 
@@ -87,22 +106,23 @@ namespace Project1
 
             set
             {
-                int XspawnGauche = rd.Next(-250, -10);
-                int XspawnDroite = rd.Next(Game1.WIDTH , Game1.WIDTH + 250);
-                int YspawnHaut = rd.Next(-250, -30);
-                int YspawnBas = rd.Next(Game1.HEIGHT, Game1.HEIGHT + 250);
-                if (XspawnGauche < XspawnDroite)
-                    XposZomb = XspawnDroite;
-                else
-                    XposZomb = XspawnGauche;
-                if (YspawnBas < YspawnHaut)
-                    YposZomb = YspawnHaut;
-                else
-                    YposZomb = YspawnBas;
-
-                this.position = new Vector2(XposZomb, YposZomb);
+                this.position = value;
             }
         }
+
+        public Vector2 Cible
+        {
+            get
+            {
+                return this.cible;
+            }
+
+            set
+            {
+                this.cible = value;
+            }
+        }
+
         private void LoadContent(GameScreen gamescreen)
         {
             // Type du zombie
