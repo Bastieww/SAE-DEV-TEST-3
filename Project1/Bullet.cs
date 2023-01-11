@@ -34,7 +34,7 @@ namespace Project1
         {
             this.Position = player.Position;
             this.CoordClick = coordClick;
-            
+            this.Hitbox = hitbox;
             this.Apparence = apparence;
             this.Direction = Vector2.Normalize(coordClick - Position);
             //Code non opti, il faudrait charger la texture qu'une seule fois pas à chaque balle

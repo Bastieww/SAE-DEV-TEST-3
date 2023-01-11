@@ -18,6 +18,8 @@ namespace Project1
         private readonly ScreenManager _screenManager;
         public SpriteBatch _spriteBatch { get; set; }
         public const int WIDTH = 1920, HEIGHT = 1080;
+
+
         
 
         
@@ -83,8 +85,9 @@ namespace Project1
 
         // TODO: Add your initialization logic here
         
-            _graphics.IsFullScreen = true;
+            _graphics.IsFullScreen = false;
             _graphics.ApplyChanges();
+           
 
             // Zombie
             //Zombie zombie1 = new Zombie("Normal");
@@ -100,24 +103,23 @@ namespace Project1
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-           
+            
 
             _screenManager.LoadScreen(startscreen, new FadeTransition(GraphicsDevice, Color.Black));
-
-            //_screenManager.LoadScreen(startscreen, new FadeTransition(GraphicsDevice, Color.Black));
-         
 
             _screenManager.LoadScreen(gamescreen, new FadeTransition(GraphicsDevice, Color.Black));
 
             _screenManager.LoadScreen(controlsscreen, new FadeTransition(GraphicsDevice, Color.Black));
+
+
+         
 
         }
 
         protected override void Update(GameTime gameTime)
         {   
             KeyboardState keyboardState = Keyboard.GetState();
-            MouseState _mouseState = Mouse.GetState();
-
+            MouseState mouseState = Mouse.GetState();
 
 
 
@@ -126,7 +128,7 @@ namespace Project1
 
 
 
-            if (_mouseState.LeftButton == ButtonState.Pressed)
+            if (mouseState.LeftButton == ButtonState.Pressed)
             {
                 // Attention, l'état a été mis à jour directement par l'écran en question
                 if (this.Etat == Etats.EndScreen)
@@ -136,10 +138,16 @@ namespace Project1
                     _screenManager.LoadScreen(gamescreen, new FadeTransition(GraphicsDevice, Color.Black));
                 else if (this.Etat == Etats.ControlsScreen && startscreen.clickMenu == true)
                     _screenManager.LoadScreen(controlsscreen, new FadeTransition(GraphicsDevice, Color.Black));
+                else if (this.Etat == Etats.StartScreen)
+                    _screenManager.LoadScreen(startscreen, new FadeTransition(GraphicsDevice, Color.Black));
             }
 
 
-
+            if(keyboardState.IsKeyDown(Keys.S))
+                {
+                gamescreen.shopoui = true;
+                gamescreen.screenpause=true;
+            }
 
             
 
@@ -160,7 +168,7 @@ namespace Project1
 
             }
 
-            // TODO: Add your update logic here
+           
 
 
 
@@ -173,7 +181,9 @@ namespace Project1
         protected override void Draw(GameTime gameTime)
         {
             // TODO: Add your drawing code here
+            
             GraphicsDevice.Clear(Color.Black);
+
             base.Draw(gameTime);
         }
 
