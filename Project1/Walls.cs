@@ -89,7 +89,6 @@ namespace Project1
             }
             
             int idTile = 0;
-            Console.WriteLine(_myGame._tiledMap.Width);
             foreach (char c in mapDescripteur)
             {
                 if (c.ToString() == "5")
@@ -100,7 +99,7 @@ namespace Project1
                         _myGame._tiledMap.TileHeight * (idTile / _myGame._tiledMap.Width),
                         _myGame._tiledMap.TileWidth,
                         _myGame._tiledMap.TileHeight);
-                    Console.WriteLine(rectangle);
+      
                     Walls wall = new Walls(_myGame, rectangle);
                     
                     listeWalls.Add(wall);

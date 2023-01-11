@@ -54,9 +54,6 @@ namespace Project1
             }
 
             foreach (Bullet bullet in bulletsToRemove) bullets.Remove(bullet);
-
-
-            Console.WriteLine(touche);
         }
 
         public bool CollisionBalleOutside(Bullet bullet,TiledMap map, Player player)

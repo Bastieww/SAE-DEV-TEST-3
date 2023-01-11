@@ -35,7 +35,9 @@ namespace Project1
 
         private Texture2D pause;
         private Vector2 _pausepos;
+        private Rectangle[] buttonsPause;
         public bool screenpause;
+
 
 
         private bool testpause = false;
@@ -84,8 +86,11 @@ namespace Project1
 
 
 
-            pause = Content.Load<Texture2D>("pause");
-            _pausepos = new Vector2(700, 400);
+            pause = Content.Load<Texture2D>("fondpause");
+            _pausepos = new Vector2(0, 0);
+            buttonsPause = new Rectangle[2];
+            buttonsPause[0] = new Rectangle(618, 314, 621, 154);
+            buttonsPause[1] = new Rectangle(618, 625, 621, 154);
 
 
             SpriteSheet sprite = Content.Load<SpriteSheet>("barredevie.sf", new JsonContentLoader());
@@ -137,12 +142,6 @@ namespace Project1
             MouseState mouseState = Mouse.GetState();
 
 
-
-            if (keyboardState.IsKeyDown(Keys.P))
-            {
-                screenpause = false;
-                Console.WriteLine("play");
-            }
 
 
 
@@ -361,47 +360,73 @@ namespace Project1
 
 
             }
+             
+            //PAUSE
+            if(screenpause == true)
+            {
+                if(mouseState.LeftButton== ButtonState.Pressed)
+                {
+                    for (int i = 0; i < buttonsPause.Length; i++)
+                    {
+                        if(buttonsPause[i].Contains(Mouse.GetState().X, Mouse.GetState().Y))
+                        {
+                            if(i == 0)
+                            {
+                                screenpause = false;
+                            }
+                            else if(i == 1)
+                            {
+                                _myGame.Etat = Game1.Etats.StartScreen;
+                            }
+                        }                            
 
+                      
+                    }
+                }
+            }
 
             //SHOP
-            
-            if (mouseState.LeftButton == ButtonState.Pressed)
+
+            if (shopoui == true)
             {
-                for (int i = 0; i < buttons.Length; i++)
+                if (mouseState.LeftButton == ButtonState.Pressed)
                 {
-                    if (buttons[i].Contains(Mouse.GetState().X, Mouse.GetState().Y))
+                    for (int i = 0; i < buttons.Length; i++)
                     {
-                        if (i == 0)
+                        if (buttons[i].Contains(Mouse.GetState().X, Mouse.GetState().Y))
                         {
-                            if (player.Gold >= 0)
-                                player.Life += 10;
-                        }
-                        else if (i == 1)
-                        {
-                            if (player.Gold >= 0)
-                                speedsup += 100;
+                            if (i == 0)
+                            {
+                                if (player.Gold >= 0)
+                                    player.Life += 10;
+                            }
+                            else if (i == 1)
+                            {
+                                if (player.Gold >= 0)
+                                    speedsup += 100;
+
+                            }
+
+                            else if (i == 2)
+                            {
+                                if (player.Gold >= 0)
+                                    player.Speed += 10;
+                            }
+
+                            else if (i == 3)
+                            {
+                                if (player.Gold >= 0)
+                                    player.Speed += 100;
+                            }
+                            else if (i == 4)
+                            {
+                                shopoui = false;
+                                screenpause = false;
+
+                            }
+
 
                         }
-
-                        else if (i == 2)
-                        {
-                            if (player.Gold >= 0)
-                                player.Speed += 10;
-                        }
-
-                        else if (i == 3)
-                        {
-                            if (player.Gold >= 0)
-                                player.Speed += 100;
-                        }
-                        else if (i == 4)
-                        {
-                            shopoui = false;
-                            screenpause = false;
-                        
-                        }
-                            
-
                     }
                 }
             }
@@ -413,10 +438,6 @@ namespace Project1
         }
         public override void Draw(GameTime gameTime)
         {
-
-
-            
-
 
             if (shopoui == true)
             {
@@ -470,7 +491,18 @@ namespace Project1
                 
             }
 
+            if (screenpause == true && shopoui== false)
+            {
+                Console.WriteLine("test");
+
+                _myGame._spriteBatch.Begin();
+                _myGame._spriteBatch.Draw(pause, _pausepos, Color.White);
+                _myGame._spriteBatch.End();
+            }
+
         }
+
+
     }
 }
 

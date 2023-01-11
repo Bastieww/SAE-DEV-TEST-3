@@ -30,7 +30,7 @@ namespace Project1
 
         private Etats etat;
         
-            public Etats Etat
+        public Etats Etat
         {
             get
             {
@@ -40,6 +40,22 @@ namespace Project1
             set
             {
                 this.etat = value;
+
+                Console.WriteLine(value + " SET");
+                Console.WriteLine(controlsscreen.clickControls);
+
+                if (value == Etats.EndScreen)
+                    Exit();
+
+                else if (value == Etats.GameScreen && startscreen.clickMenu == true)
+                    _screenManager.LoadScreen(gamescreen, new FadeTransition(GraphicsDevice, Color.Black));
+                else if (value == Etats.ControlsScreen && startscreen.clickMenu == true)
+                    _screenManager.LoadScreen(controlsscreen, new FadeTransition(GraphicsDevice, Color.Black));
+                else if (value == Etats.StartScreen)
+                {
+                    Console.WriteLine("TEST START");
+                    _screenManager.LoadScreen(startscreen, new FadeTransition(GraphicsDevice, Color.Black));
+                }
             }
         }
 
@@ -70,14 +86,11 @@ namespace Project1
             _screenManager = new ScreenManager();
             Components.Add(_screenManager);
 
-            // Par défaut, le 1er état flèche l'écran de menu
-            Etat = Etats.StartScreen;
-
             // on charge les 3 écrans 
             startscreen = new StartScreen(this);
             gamescreen = new GameScreen(this);
             endscreen = new EndScreen(this);
-            controlsscreen = new ControlsScreen(this); 
+            controlsscreen = new ControlsScreen(this);
         }
 
         protected override void Initialize()
@@ -102,14 +115,17 @@ namespace Project1
 
         protected override void LoadContent()
         {
+            // Par défaut, le 1er état flèche l'écran de menu
+            Etat = Etats.StartScreen;
+
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             
 
-            _screenManager.LoadScreen(startscreen, new FadeTransition(GraphicsDevice, Color.Black));
+            //_screenManager.LoadScreen(startscreen, new FadeTransition(GraphicsDevice, Color.Black));
 
-            _screenManager.LoadScreen(gamescreen, new FadeTransition(GraphicsDevice, Color.Black));
+            //_screenManager.LoadScreen(gamescreen, new FadeTransition(GraphicsDevice, Color.Black));
 
-            _screenManager.LoadScreen(controlsscreen, new FadeTransition(GraphicsDevice, Color.Black));
+            //_screenManager.LoadScreen(controlsscreen, new FadeTransition(GraphicsDevice, Color.Black));
 
 
          
@@ -128,19 +144,19 @@ namespace Project1
 
 
 
-            if (mouseState.LeftButton == ButtonState.Pressed)
-            {
-                // Attention, l'état a été mis à jour directement par l'écran en question
-                if (this.Etat == Etats.EndScreen)
-                    Exit();
+            //if (mouseState.LeftButton == ButtonState.Pressed)
+            //{
+            //    // Attention, l'état a été mis à jour directement par l'écran en question
+            //    if (this.Etat == Etats.EndScreen)
+            //        Exit();
 
-                else if (this.Etat == Etats.GameScreen && startscreen.clickMenu == true)
-                    _screenManager.LoadScreen(gamescreen, new FadeTransition(GraphicsDevice, Color.Black));
-                else if (this.Etat == Etats.ControlsScreen && startscreen.clickMenu == true)
-                    _screenManager.LoadScreen(controlsscreen, new FadeTransition(GraphicsDevice, Color.Black));
-                else if (this.Etat == Etats.StartScreen && controlsscreen.clickControls == true)
-                    _screenManager.LoadScreen(startscreen, new FadeTransition(GraphicsDevice, Color.Black));
-            }
+            //    else if (this.Etat == Etats.GameScreen && startscreen.clickMenu == true)
+            //        _screenManager.LoadScreen(gamescreen, new FadeTransition(GraphicsDevice, Color.Black));
+            //    else if (this.Etat == Etats.ControlsScreen && startscreen.clickMenu == true)
+            //        _screenManager.LoadScreen(controlsscreen, new FadeTransition(GraphicsDevice, Color.Black));
+            //    else if (this.Etat == Etats.StartScreen && controlsscreen.clickControls == true)
+            //        _screenManager.LoadScreen(startscreen, new FadeTransition(GraphicsDevice, Color.Black));
+            //}
 
 
             if(keyboardState.IsKeyDown(Keys.S))
@@ -154,18 +170,13 @@ namespace Project1
 
             if (keyboardState.IsKeyDown(Keys.Escape))
             {
-                
-                if (this.Etat == Etats.GameScreen || this.Etat == Etats.ControlsScreen)
+                if (this.Etat == Etats.GameScreen)
                 {
                     {
-                        this.Etat = Etats.StartScreen;
+                        gamescreen.screenpause = true;
                        
-                        _screenManager.LoadScreen(startscreen, new FadeTransition(GraphicsDevice, Color.Black));
-
                     }
-
                 }
-
             }
 
            
@@ -196,7 +207,6 @@ namespace Project1
                 return false;
             if (!tile.Value.IsBlank)
             {
-                Console.WriteLine(mapLayer.GetTile(x, y).GlobalIdentifier);
                 return true;
             }
 
