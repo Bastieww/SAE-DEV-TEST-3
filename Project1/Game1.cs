@@ -76,10 +76,6 @@ namespace Project1
             gamescreen = new GameScreen(this);
             endscreen = new EndScreen(this);
             controlsscreen = new ControlsScreen(this); 
-
-            
-
-
         }
 
         protected override void Initialize()
