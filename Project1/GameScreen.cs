@@ -25,17 +25,17 @@ namespace Project1
         private Camera camera;
         private Core core;
 
-       
+
 
         private Vector2 relativeCursor;
         private bool click;
 
         private Texture2D pause;
         private Vector2 _pausepos;
-        private bool screenpause;
-      
-        
-        private bool testpause= false;
+        public bool screenpause;
+
+
+        private bool testpause = false;
         private bool toucheBalleZombie;
 
 
@@ -46,10 +46,16 @@ namespace Project1
         private Collisions collisions;
 
         List<Bullet> listeBalles;
-
         List<Zombie> listeZomb;
         private int nbZombie = 0, numVague = 1, zombMaxVague = 10;
         private bool vagueFinie = false;
+
+
+        private Texture2D shop;
+        private Vector2 _shopPos;
+        private Rectangle[] buttons;
+        public bool shopoui;
+
 
         Walls wallReference;
         List<Walls> listeWalls;
@@ -58,25 +64,25 @@ namespace Project1
         public GameScreen(Game1 game) : base(game)
         {
             _myGame = game;
-            
+
         }
 
         public override void LoadContent()
         {
-            
+
             _myGame._tiledMap = Content.Load<TiledMap>("map");
             _myGame._tiledMapRenderer = new TiledMapRenderer(GraphicsDevice, _myGame._tiledMap);
             _myGame.mapLayer = _myGame._tiledMap.GetLayer<TiledMapTileLayer>("Cailloux");
 
-            barredeviestatique = new SpriteBatch(GraphicsDevice);
+            
             barredeviepos = new Vector2(250, 1000);
-           
-           
+
+
 
             pause = Content.Load<Texture2D>("pause");
-            _pausepos = new Vector2(700,400);
+            _pausepos = new Vector2(700, 400);
 
-           
+
             SpriteSheet sprite = Content.Load<SpriteSheet>("barredevie.sf", new JsonContentLoader());
             barredevie = new AnimatedSprite(sprite);
 
@@ -91,39 +97,53 @@ namespace Project1
             listeBalles = new List<Bullet>();
             listeZomb = new List<Zombie>();
 
-            wallReference = new Walls(_myGame,new Rectangle(0,0,0,0));
+            listeBalles = new List<Bullet>();
+            listeZomb = new List<Zombie>();
+
+            shopoui = false;
+            shop = Content.Load<Texture2D>("fondshop");
+            _shopPos = new Vector2(0, 0);
+            buttons = new Rectangle[5];
+            buttons[0] = new Rectangle(329, 196, 564, 325);
+            buttons[1] = new Rectangle(962, 203, 564, 325);
+            buttons[2] = new Rectangle(329, 571, 564, 325);
+            buttons[3] = new Rectangle(962, 571, 564, 325);
+            buttons[4] = new Rectangle(56, 927, 438, 132);
+
+
+            wallReference = new Walls(_myGame, new Rectangle(0, 0, 0, 0));
             invTexRectangle = new Texture2D(GraphicsDevice, 200, 200);
 
             listeWalls = new List<Walls>();
             listeWalls = wallReference.ChargementMap();
-            
+
 
             collisions = new Collisions();
-            
-            
-            
+
+
+
         }
         public override void Update(GameTime gameTime)
         {
             KeyboardState keyboardState = Keyboard.GetState();
             MouseState mouseState = Mouse.GetState();
-            
+
 
 
             if (keyboardState.IsKeyDown(Keys.M))
                 screenpause = false;
-         
-                    
+
+
 
             if (screenpause == false)
             {
                 float deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds; // DeltaTime
                 float walkSpeed = deltaSeconds * player.Speed; // Vitesse de déplacement du joueur
                 float flySpeed = deltaSeconds * Bullet.SPEED; // Vitesse de déplacement de la balle
-          
+
                 float zombSpeed = deltaSeconds * Zombie.VITESSE_NORMAL; //Vitesse de déplacement du zomb
-                
-                
+
+
 
                 relativeCursor = Vector2.Transform(new Vector2(mouseState.X, mouseState.Y), Matrix.Invert(camera.Transform));
 
@@ -133,54 +153,55 @@ namespace Project1
 
                 //ALL TESTS ///////////////////////////////////////////////////////////////////////////////////
 
-                
-                if (keyboardState.IsKeyDown(Keys.Up) && player.Position.Y > player.Hitbox.Height/2)
+
+                if (keyboardState.IsKeyDown(Keys.Up) && player.Position.Y > player.Hitbox.Height / 2)
                 {
-                   
-                   
+
+
                     animation = "walkNorth";
-                   
+
                     player.Position -= new Vector2(0, walkSpeed);
                     player.UpdateHitbox();
-                    if (collisions.CollisionPlayerWall( player, listeWalls))
+                    if (collisions.CollisionPlayerWall(player, listeWalls))
                     {
                         player.Position += new Vector2(0, walkSpeed);
                         player.UpdateHitbox();
                     }
-                    
+
                 }
 
-                if (keyboardState.IsKeyDown(Keys.Down) && player.Position.Y < _myGame._tiledMap.HeightInPixels-player.Hitbox.Height/2)
+                if (keyboardState.IsKeyDown(Keys.Down) && player.Position.Y < _myGame._tiledMap.HeightInPixels - player.Hitbox.Height / 2)
                 {
-                   
+
                     animation = "walkSouth";
-                    
-                        player.Position += new Vector2(0, walkSpeed);
+
+                    player.Position += new Vector2(0, walkSpeed);
                     player.UpdateHitbox();
-                    if (collisions.CollisionPlayerWall( player, listeWalls))
+                    if (collisions.CollisionPlayerWall(player, listeWalls))
                     {
                         player.Position -= new Vector2(0, walkSpeed);
                         player.UpdateHitbox();
                     }
                 }
 
-                if (keyboardState.IsKeyDown(Keys.Left)&& player.Position.X > player.Hitbox.Width/2)
+                if (keyboardState.IsKeyDown(Keys.Left) && player.Position.X > player.Hitbox.Width / 2)
                 {
-               
+
                     animation = "walkEast";
                         player.Position -= new Vector2(walkSpeed, 0);
                     player.UpdateHitbox();
-                    if (collisions.CollisionPlayerWall( player,  listeWalls))
+                    if (collisions.CollisionPlayerWall(player, listeWalls))
                     {
                         player.Position += new Vector2(walkSpeed, 0);
                         player.UpdateHitbox();
                     }
                 }
-                if (keyboardState.IsKeyDown(Keys.Right) && player.Position.X < _myGame._tiledMap.WidthInPixels-player.Hitbox.Width/2)
+                if (keyboardState.IsKeyDown(Keys.Right) && player.Position.X < _myGame._tiledMap.WidthInPixels - player.Hitbox.Width / 2)
                 {
-               
+
                     animation = "walkWest";
-                        player.Position += new Vector2(walkSpeed, 0);
+
+                    player.Position += new Vector2(walkSpeed, 0);
                     player.UpdateHitbox();
                     if (collisions.CollisionPlayerWall(player, listeWalls))
                     {
@@ -190,18 +211,20 @@ namespace Project1
                 }
 
 
-                
+
+
                 foreach (Bullet balle in listeBalles)
                 {
                     balle.Position += new Vector2(flySpeed * balle.Direction.X, flySpeed * balle.Direction.Y);
                     balle.UpdateHitbox();
-                if (collisions.CollisionBulletWall(balle, listeWalls))
+                    if (collisions.CollisionBulletWall(balle, listeWalls))
                     {
-                    listeBalles.Remove(balle);
-                    break;
+                        listeBalles.Remove(balle);
+                        break;
                     }
-                    
+
                 }
+
 
                 if (mouseState.LeftButton == ButtonState.Pressed && click == false)
                 {
@@ -217,7 +240,7 @@ namespace Project1
                 }
 
 
-               
+
                 foreach (Zombie zombie in listeZomb)
                 {
                     zombie.Position += Vector2.Normalize((player.Position - zombie.Position) * 9);
@@ -252,12 +275,12 @@ namespace Project1
                 {
                     collisions.CollisionZombiePlayer(ref listeZomb, ref player);
                     collisions.CollisionZombieCore(ref listeZomb, ref core);
-                    if(listeBalles.Count >=1)
+                    if (listeBalles.Count >= 1)
                     {
                         collisions.CollisionBalleZombie(ref listeBalles, ref listeZomb);
                     }
                 }
-                
+
 
                 
 
@@ -269,7 +292,7 @@ namespace Project1
                         break;
                     case 80:
                         animationbarredevie = "80%";
-                        break ;
+                        break;
                     case 70:
                         animationbarredevie = "70%";
                         break;
@@ -299,69 +322,116 @@ namespace Project1
 
 
                 if (keyboardState.IsKeyDown(Keys.P))
-                { 
-                   
+                {
+
                     screenpause = true;
                 }
-                
-          
+
+
                 player.Apparence.Play(animation);
                 core.Apparence.Play(animationcore);
                 barredevie.Play(animationbarredevie);
-                
-                
+
+
                 core.Apparence.Update(deltaSeconds);
                 barredevie.Update(deltaSeconds);
-      
+
                 _myGame._tiledMapRenderer.Update(gameTime);
 
-                player.Apparence.Update(deltaSeconds); 
+                player.Apparence.Update(deltaSeconds);
 
-                
+
                 camera.Follow(player, _myGame);
 
-             
+
             }
+
+
+            //SHOP  
+            if (mouseState.LeftButton == ButtonState.Pressed)
+            {
+                for (int i = 0; i < buttons.Length; i++)
+                {
+                    if (buttons[i].Contains(Mouse.GetState().X, Mouse.GetState().Y))
+                    {
+                        if (i == 0)
+                            Console.WriteLine("shop1");
+                        else if (i == 1)
+                            Console.WriteLine("shop2");
+                        else if (i == 2)
+                            Console.WriteLine("shop3");
+                        else if (i == 3)
+                            Console.WriteLine("shop4");
+                        else if (i == 4)
+                            shopoui = false;
+                        screenpause = false;
+                        Console.WriteLine("go back");
+
+                    }
+                }
+            }
+
+
 
 
 
         }
         public override void Draw(GameTime gameTime)
         {
-            _myGame._tiledMapRenderer.Draw(viewMatrix: camera.Transform);
-            _myGame._spriteBatch.Begin(transformMatrix : camera.Transform);
-            _myGame._spriteBatch.Draw(core.Apparence, core.Position);
-            _myGame._spriteBatch.Draw(player.Apparence, player.Position);
 
-            _myGame._spriteBatch.Draw(pause, player.Hitbox, Color.White);  
+
             
-            //if (screenpause == true)
-            foreach (Bullet balle in listeBalles)
+
+
+            if (shopoui == true)
             {
-                _myGame._spriteBatch.Draw(balle.Apparence, balle.Position, Color.White);
-                _myGame._spriteBatch.Draw(pause, balle.Hitbox, Color.White);
-
+                _myGame._spriteBatch.Begin();
+                _myGame._spriteBatch.Draw(shop, _shopPos, Color.White);
+                _myGame._spriteBatch.End();
             }
-
-            foreach (Zombie zombie in listeZomb)
+            else
             {
-                _myGame._spriteBatch.Draw(zombie.TextureZomb, zombie.Position);
-                _myGame._spriteBatch.Draw(pause,zombie.Hitbox, Color.White);
+               
 
-            }
-
-            foreach (Walls wall in listeWalls)
-            {
-                _myGame._spriteBatch.Draw(pause,wall.Hitbox,Color.White);
-            }
-
-            _myGame._spriteBatch.End();
+                _myGame._spriteBatch.Begin(transformMatrix: camera.Transform);
+                _myGame._spriteBatch.Draw(core.Apparence, core.Position);
+                _myGame._spriteBatch.Draw(player.Apparence, player.Position);
             
-            barredeviestatique.Begin();
-            barredeviestatique.Draw(barredevie, barredeviepos);
-            barredeviestatique.End();
+                _myGame._tiledMapRenderer.Draw(viewMatrix: camera.Transform);
+
+                _myGame._spriteBatch.Draw(player.Apparence, player.Position);
+                _myGame._spriteBatch.Draw(pause, player.Hitbox, Color.White);
+                _myGame._spriteBatch.Draw(core.Apparence, core.Position);
+
+
+
+
+                foreach (Bullet balle in listeBalles)
+                {
+                    _myGame._spriteBatch.Draw(balle.Apparence, balle.Position, Color.White);
+                }
+
+
+                foreach (Zombie zombie in listeZomb)
+                {
+                    _myGame._spriteBatch.Draw(zombie.TextureZomb, zombie.Position);
+                }
+
+                foreach (Walls wall in listeWalls)
+                {
+                    _myGame._spriteBatch.Draw(pause, wall.Hitbox, Color.White);
+                }
+   
+
+                _myGame._spriteBatch.End();
+             
+                _myGame._spriteBatch.Begin();
+                _myGame._spriteBatch.Draw(barredevie, barredeviepos);
+                _myGame._spriteBatch.End();
+                
+            }
+
         }
-  
     }
 }
 
