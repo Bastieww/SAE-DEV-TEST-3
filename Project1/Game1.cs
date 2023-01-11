@@ -18,13 +18,13 @@ namespace Project1
         private readonly ScreenManager _screenManager;
         public SpriteBatch _spriteBatch { get; set; }
         public const int WIDTH = 1920, HEIGHT = 1080;
+        public SpriteFont font;
 
 
-        
 
-        
 
-        
+
+
         public enum Etats { StartScreen, GameScreen, EndScreen, ControlsScreen };
 
 
@@ -115,7 +115,7 @@ namespace Project1
 
             _screenManager.LoadScreen(controlsscreen, new FadeTransition(GraphicsDevice, Color.Black));
 
-
+            font = Content.Load<SpriteFont>("Font");
          
 
         }
