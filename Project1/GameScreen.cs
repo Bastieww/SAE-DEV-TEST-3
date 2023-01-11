@@ -38,7 +38,7 @@ namespace Project1
         private bool testpause= false;
         private bool toucheBalleZombie;
         
-        private bool testpause= false;
+        
 
 
         private SpriteBatch barredeviestatique;
@@ -49,7 +49,7 @@ namespace Project1
 
         List<Bullet> listeBalles;
 
-        List<Bullet> listeBalles;
+        
         List<Zombie> listeZomb;
         private int nbZombie = 0, numVague = 1, zombMaxVague = 5;
 
@@ -175,6 +175,8 @@ namespace Project1
                     Bullet balle = new Bullet(this, player, new Vector2(relativeCursor.X, relativeCursor.Y));
                     listeBalles.Add(balle);
                     click = true;
+                    //A EFFACER
+                    core.Life -= 5;
                 }
                 else if (mouseState.LeftButton == ButtonState.Released && click == true)
                 {
@@ -290,7 +292,7 @@ namespace Project1
 
             }*/
 
-            _myGame._spriteBatch.Draw(core.Apparence, core.Position, Color.White);
+            _myGame._spriteBatch.Draw(core.Apparence, core.Position);
             if (listeBalles != null)
             {
                 foreach (Bullet balle in listeBalles)
