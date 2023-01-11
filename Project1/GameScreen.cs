@@ -26,6 +26,7 @@ namespace Project1
         private Player player;
         public Camera camera;
         private Core core;
+        private Collisions collisions;
 
 
 
@@ -231,7 +232,7 @@ namespace Project1
 
                 foreach (Bullet balle in listeBalles)
                 {
-                    float flySpeed = deltaSeconds * balle.speed; // Vitesse de déplacement de la balle
+                    flySpeed = deltaSeconds * balle.speed; // Vitesse de déplacement de la balle
 
                     balle.Position += new Vector2(flySpeed * balle.Direction.X, flySpeed * balle.Direction.Y);
                     balle.UpdateHitbox();
@@ -274,7 +275,7 @@ namespace Project1
                     
                 }
 
-                if (vagueFinie == true)
+              /*  if (vagueFinie == true)
                 {
                     nbZombie = 0;
                     while (nbZombie < zombMaxVague)
@@ -287,22 +288,45 @@ namespace Project1
                 }
                 if (listeZomb.Count == 0)
                     vagueFinie = true;
+              */
 
 
+                Console.WriteLine(listeZomb.Count);
+                // Verif collision Zombie/Joueur , Zombie/Coeur , Zombie/Balle
+                if (listeZomb.Count >= 1)
+                {
+                    collisions.CollisionZombiePlayer(ref listeZomb, ref player);
+                    collisions.CollisionZombieCore(ref listeZomb, ref core);
+                    if (listeBalles.Count >= 1)
+                    {
+                        collisions.CollisionBalleZombie(ref listeBalles, ref listeZomb);
+                    }
+                }
+                    }
+                }
 
-
-               
                 
-                    collisions.CollisionZombiePlayer(listeZomb, player);
-                    collisions.CollisionZombieCore(listeZomb, core);
-                
-                    
-                        collisions.CollisionBalleZombie(listeBalles, listeZomb); 
-                    
-                
+                // Systeme de vague
+                if public override void Draw(GameTime gameTime)
+        {
+            throw new NotImplementedException();
+        }
 
-
-                
+        (listeZomb.Count == 0)
+                    chrono += deltaSeconds;
+                if (chrono >= 5)
+                {
+                    chrono = 0;
+                    nbZombie = 0;
+                    while (nbZombie < zombMaxVague)
+                    {
+                        nbZombie += 1;
+                        Zombie zombie = new Zombie(this, "Normal", _myGame._tiledMap);
+                        listeZomb.Add(zombie);
+                    }
+                    numVague += 1;
+                    zombMaxVague += 25;
+                }
 
 
                 switch(core.Life)
