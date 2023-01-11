@@ -26,9 +26,7 @@ namespace Project1
         private Player player;
         public Camera camera;
         private Core core;
-
-
-
+        private Collisions collisions;
 
         private Vector2 relativeCursor;
         private bool click;
@@ -38,11 +36,11 @@ namespace Project1
         private Rectangle[] buttonsPause;
         public bool screenpause;
 
-
-
         private bool testpause = false;
         private bool toucheBalleZombie;
 
+        // Barre de vie du coeur
+        private SpriteBatch barredeviestatique;
 
         private int speedsup;
 
@@ -50,20 +48,20 @@ namespace Project1
         private AnimatedSprite barredevie;
         private Vector2 barredeviepos;
 
-        private Collisions collisions;
 
+        // Zombies
         List<Bullet> listeBalles;
         List<Zombie> listeZomb;
         private int nbZombie = 0, numVague = 1, zombMaxVague = 10;
-        private bool vagueFinie = false;
+        private float chrono = 0;
 
-
+        // Shop
         private Texture2D shop;
         private Vector2 _shopPos;
         private Rectangle[] buttons;
         public bool shopoui;
 
-
+        // Murs
         Walls wallReference;
         List<Walls> listeWalls;
        
@@ -71,17 +69,14 @@ namespace Project1
         public GameScreen(Game1 game) : base(game)
         {
             _myGame = game;
-
         }
 
         public override void LoadContent()
         {
-
             _myGame._tiledMap = Content.Load<TiledMap>("map");
             _myGame._tiledMapRenderer = new TiledMapRenderer(GraphicsDevice, _myGame._tiledMap);
             _myGame.mapLayer = _myGame._tiledMap.GetLayer<TiledMapTileLayer>("Cailloux");
 
-            
             barredeviepos = new Vector2(250, 1000);
 
 
@@ -92,10 +87,8 @@ namespace Project1
             buttonsPause[0] = new Rectangle(618, 314, 621, 154);
             buttonsPause[1] = new Rectangle(618, 625, 621, 154);
 
-
             SpriteSheet sprite = Content.Load<SpriteSheet>("barredevie.sf", new JsonContentLoader());
             barredevie = new AnimatedSprite(sprite);
-
 
             player = new Player(this);
             camera = new Camera();
@@ -110,9 +103,7 @@ namespace Project1
             listeBalles = new List<Bullet>();
             listeZomb = new List<Zombie>();
 
-            listeBalles = new List<Bullet>();
-            listeZomb = new List<Zombie>();
-
+            // Shop
             shopoui = false;
             shop = Content.Load<Texture2D>("fondshop");
             _shopPos = new Vector2(0, 0);
@@ -123,13 +114,11 @@ namespace Project1
             buttons[3] = new Rectangle(962, 571, 564, 325);
             buttons[4] = new Rectangle(56, 927, 438, 132);
 
-
             wallReference = new Walls(_myGame, new Rectangle(0, 0, 0, 0));
             
 
             listeWalls = new List<Walls>();
             listeWalls = wallReference.ChargementMap();
-
 
             collisions = new Collisions();
 
@@ -143,16 +132,11 @@ namespace Project1
 
 
 
-
-
-
             if (screenpause == false)
             {
                 float deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds; // DeltaTime
                 float walkSpeed = deltaSeconds * player.Speed; // Vitesse de déplacement du joueur
-
                 float zombSpeed = deltaSeconds * Zombie.VITESSE_NORMAL; //Vitesse de déplacement du zomb
-
 
 
                 relativeCursor = Vector2.Transform(new Vector2(mouseState.X, mouseState.Y), Matrix.Invert(camera.Transform));
@@ -163,13 +147,10 @@ namespace Project1
 
                 //ALL TESTS ///////////////////////////////////////////////////////////////////////////////////
 
-
+                // Deplacement du Joueur
                 if (keyboardState.IsKeyDown(Keys.Up) && player.Position.Y > player.Hitbox.Height / 2)
                 {
-
-
                     animation = "walkNorth";
-
                     player.Position -= new Vector2(0, walkSpeed);
                     player.UpdateHitbox();
                     if (collisions.CollisionPlayerWall(player, listeWalls))
@@ -179,12 +160,9 @@ namespace Project1
                     }
 
                 }
-
                 if (keyboardState.IsKeyDown(Keys.Down) && player.Position.Y < _myGame._tiledMap.HeightInPixels - player.Hitbox.Height / 2)
                 {
-
                     animation = "walkSouth";
-
                     player.Position += new Vector2(0, walkSpeed);
                     player.UpdateHitbox();
                     if (collisions.CollisionPlayerWall(player, listeWalls))
@@ -193,12 +171,11 @@ namespace Project1
                         player.UpdateHitbox();
                     }
                 }
-
                 if (keyboardState.IsKeyDown(Keys.Left) && player.Position.X > player.Hitbox.Width / 2)
                 {
 
                     animation = "walkEast";
-                        player.Position -= new Vector2(walkSpeed, 0);
+                    player.Position -= new Vector2(walkSpeed, 0);
                     player.UpdateHitbox();
                     if (collisions.CollisionPlayerWall(player, listeWalls))
                     {
@@ -208,9 +185,7 @@ namespace Project1
                 }
                 if (keyboardState.IsKeyDown(Keys.Right) && player.Position.X < _myGame._tiledMap.WidthInPixels - player.Hitbox.Width / 2)
                 {
-
                     animation = "walkWest";
-
                     player.Position += new Vector2(walkSpeed, 0);
                     player.UpdateHitbox();
                     if (collisions.CollisionPlayerWall(player, listeWalls))
@@ -260,7 +235,21 @@ namespace Project1
                 }
 
 
+                // Verif collision Bullet/Mur
+                foreach (Bullet balle in listeBalles)
+                {
+                    float flySpeed = deltaSeconds * balle.speed; // Vitesse de déplacement de la balle
 
+                    balle.Position += new Vector2(flySpeed * balle.Direction.X, flySpeed * balle.Direction.Y);
+                    balle.UpdateHitbox();
+                    if (collisions.CollisionBulletWall(balle, listeWalls))
+                    {
+                        listeBalles.Remove(balle);
+                        break;
+                    }
+                }
+
+                // Verif collision Zombie/Mur
                 foreach (Zombie zombie in listeZomb)
                 {
                     zombie.Position += Vector2.Normalize((player.Position - zombie.Position) * 9);
@@ -270,11 +259,29 @@ namespace Project1
                         zombie.Position -= Vector2.Normalize((player.Position - zombie.Position) * 9);
                         zombie.UpdateHitbox();
                     }
-                    
                 }
 
-                if (vagueFinie == true)
+
+
+                Console.WriteLine(listeZomb.Count);
+                // Verif collision Zombie/Joueur , Zombie/Coeur , Zombie/Balle
+                if (listeZomb.Count >= 1)
                 {
+                    collisions.CollisionZombiePlayer( listeZomb,  player);
+                    collisions.CollisionZombieCore( listeZomb,  core);
+                    if (listeBalles.Count >= 1)
+                    {
+                        collisions.CollisionBalleZombie( listeBalles,  listeZomb);
+                    }
+                }
+            
+
+                // Systeme de vague
+                if (listeZomb.Count == 0)
+                    chrono += deltaSeconds;
+                if (chrono >= 5)
+                {
+                    chrono = 0;
                     nbZombie = 0;
                     while (nbZombie < zombMaxVague)
                     {
@@ -282,28 +289,11 @@ namespace Project1
                         Zombie zombie = new Zombie(this, "Normal", _myGame._tiledMap);
                         listeZomb.Add(zombie);
                     }
-                    vagueFinie = false;
+                    numVague += 1;
+                    zombMaxVague += 25;
                 }
-                if (listeZomb.Count == 0)
-                    vagueFinie = true;
 
-
-
-
-               
-                
-                    collisions.CollisionZombiePlayer(listeZomb, player);
-                    collisions.CollisionZombieCore(listeZomb, core);
-                
-                    
-                        collisions.CollisionBalleZombie(listeBalles, listeZomb); 
-                    
-                
-
-
-                
-
-
+                // Affichage de la vie du Coeur
                 switch(core.Life)
                 {
                     case 90:
@@ -339,26 +329,14 @@ namespace Project1
                 }
 
 
-
-
-
-
                 player.Apparence.Play(animation);
                 core.Apparence.Play(animationcore);
                 barredevie.Play(animationbarredevie);
-
-
                 core.Apparence.Update(deltaSeconds);
                 barredevie.Update(deltaSeconds);
-
                 _myGame._tiledMapRenderer.Update(gameTime);
-
                 player.Apparence.Update(deltaSeconds);
-
-
                 camera.Follow(player, _myGame);
-
-
             }
              
             //PAUSE
@@ -450,41 +428,34 @@ namespace Project1
                 Texture2D rect = new Texture2D(GraphicsDevice, 1, 1);
                 rect.SetData(new Color[] { Color.Blue });
 
-
                 _myGame._spriteBatch.Begin(transformMatrix: camera.Transform);
                 _myGame._tiledMapRenderer.Draw(viewMatrix: camera.Transform);
-
                 _myGame._spriteBatch.Draw(rect, player.Hitbox, Color.White);
 
                 _myGame._spriteBatch.Draw(core.Apparence, core.Position);
                 _myGame._spriteBatch.Draw(player.Apparence, player.Position);
-            
-                
-                
-   
 
 
                 foreach (Bullet balle in listeBalles)
                 {
                     _myGame._spriteBatch.DrawRectangle(balle.Hitbox, Color.Cyan, 7);
                     _myGame._spriteBatch.Draw(balle.Apparence, balle.Position, Color.White);
+                    _myGame._spriteBatch.Draw(pause, balle.Hitbox, Color.White);
                 }
-
 
                 foreach (Zombie zombie in listeZomb)
                 {
                     _myGame._spriteBatch.Draw(rect, zombie.Hitbox, Color.White);
                     _myGame._spriteBatch.Draw(zombie.TextureZomb, zombie.Position);
+                    _myGame._spriteBatch.Draw(pause, zombie.Hitbox, Color.White);
                 }
 
                 foreach (Walls wall in listeWalls)
                 {
                     _myGame._spriteBatch.Draw(rect, wall.Hitbox, Color.White);
                 }
-   
-
                 _myGame._spriteBatch.End();
-             
+
                 _myGame._spriteBatch.Begin();
                 _myGame._spriteBatch.Draw(barredevie, barredeviepos);
                 _myGame._spriteBatch.End();
@@ -499,10 +470,10 @@ namespace Project1
                 _myGame._spriteBatch.Draw(pause, _pausepos, Color.White);
                 _myGame._spriteBatch.End();
             }
-
         }
 
 
     }
 }
+
 

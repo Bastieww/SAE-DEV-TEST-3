@@ -131,23 +131,6 @@
 /processor:TiledMapProcessor
 /build:map.tmx
 
-#begin mapGenerale.tmx
-/importer:TiledMapImporter
-/processor:TiledMapProcessor
-/build:mapGenerale.tmx
-
-#begin mapGeneraleTuiles.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:mapGeneraleTuiles.png
-
 #begin pause.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -159,18 +142,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:pause.png
-
-#begin perso.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:perso.png
 
 #begin playerdebase.png
 /importer:TextureImporter
