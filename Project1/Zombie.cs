@@ -20,6 +20,8 @@ namespace Project1
         public const int VITESSE_NORMAL = 2, VITESSE_GROS = 1, VITESSE_RAPIDE = 4;
 
         private int vieZombie, vitesseZombie, XposZomb, YposZomb, nbzombie = 0;
+        private int width = 91;
+        private int height = 177;
 
         private string typeZombie;
 
@@ -38,6 +40,7 @@ namespace Project1
         {
             this.TypeZombie = typeZombie;
             this.TextureZomb = textureZomb;
+            LoadContent(gamescreen);
             
             int XspawnGauche = rd.Next(-300, -10);
             int XspawnDroite = rd.Next((map.Width * map.TileWidth), (map.Width * map.TileWidth) + 300);
@@ -59,8 +62,6 @@ namespace Project1
             this.Cible = new Vector2(0, 0);
 
             
-            
-            LoadContent(gamescreen);
         }
 
 
@@ -155,7 +156,7 @@ namespace Project1
         }
         public void UpdateHitbox()
         {
-            this.Hitbox = new Rectangle((int)Position.X, (int)Position.Y, 200, 200);
+            this.Hitbox = new Rectangle((int)Position.X - width / 2, (int)Position.Y - height / 2, width, height);
         }
     }
 }

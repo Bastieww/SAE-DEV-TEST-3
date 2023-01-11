@@ -25,8 +25,7 @@ namespace Project1
         private Rectangle hitbox;
        
 
-        private AnimatedSprite apparence;
-        
+        private AnimatedSprite apparence;    
 
 
         public Core(GameScreen gamescreen, TiledMap map)

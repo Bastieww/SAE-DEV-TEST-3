@@ -51,7 +51,8 @@ namespace Project1
 
         List<Bullet> listeBalles;
         List<Zombie> listeZomb;
-        private int nbZombie = 0, numVague = 1, zombMaxVague = 5;
+        private int nbZombie = 0, numVague = 1, zombMaxVague = 10;
+        private bool vagueFinie = false;
 
 
         private Texture2D shop;
@@ -197,8 +198,7 @@ namespace Project1
                 {
 
                     animation = "walkEast";
-
-                    player.Position -= new Vector2(walkSpeed, 0);
+                        player.Position -= new Vector2(walkSpeed, 0);
                     player.UpdateHitbox();
                     if (collisions.CollisionPlayerWall(player, listeWalls))
                     {
@@ -271,16 +271,24 @@ namespace Project1
                     }
                 }
 
-
-                while (nbZombie < zombMaxVague)
+                if (vagueFinie == true)
                 {
-                    nbZombie += 1;
-                    Zombie zombie = new Zombie(this, "Normal", _myGame._tiledMap);
-                    listeZomb.Add(zombie);
+                    nbZombie = 0;
+                    while (nbZombie < zombMaxVague)
+                    {
+                        nbZombie += 1;
+                        Zombie zombie = new Zombie(this, "Normal", _myGame._tiledMap);
+                        listeZomb.Add(zombie);
+                    }
+                    vagueFinie = false;
                 }
+                if (listeZomb.Count == 0)
+                    vagueFinie = true;
 
 
 
+                Console.WriteLine(listeZomb.Count);
+                Console.WriteLine(listeBalles.Count);
 
                 if (listeZomb.Count >= 1)
                 {
@@ -293,16 +301,10 @@ namespace Project1
                 }
 
 
+                
 
 
-
-
-
-
-
-
-
-                switch (core.Life)
+                switch(core.Life)
                 {
                     case 90:
                         animationbarredevie = "90%";
