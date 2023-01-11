@@ -23,7 +23,7 @@ namespace Project1
 
         private Vector2 direction;
 
-        public const int SPEED = 100;
+        
         private int width = 20, height = 20;
 
         public int speed=700;
