@@ -40,7 +40,7 @@ namespace Project1
             this.Direction = Vector2.Normalize(coordClick - Position);
             //Code non opti, il faudrait charger la texture qu'une seule fois pas à chaque balle
             LoadContent(gamescreen);
-            UpdateHitbox();
+            
         }
 
         public Vector2 Position

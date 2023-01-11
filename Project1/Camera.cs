@@ -18,7 +18,7 @@ namespace Project1
 
         public void Follow (Player player, Game1 gameScreen)
         {
-            // Verif de la pos de la du player
+            // Verif pos de la du player
             if (player.Position.X <= Game1.WIDTH / 2 - player.Hitbox.Width / 2)
                 gaucheDroite = -Game1.WIDTH / 2;
             else if (player.Position.X >= (gameScreen._tiledMap.Width * gameScreen._tiledMap.TileWidth) - Game1.WIDTH / 2 - player.Hitbox.Width / 2)

@@ -2,6 +2,8 @@
 using MonoGame.Extended.Screens;
 using MonoGame.Extended.Sprites;
 using System;
+using MonoGame.Extended.Tiled;
+using MonoGame.Extended.Tiled.Renderers;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -22,28 +24,46 @@ namespace Project1
         
 
         
-        public void CollisionBalleZombie(ref List<Bullet> bullets, ref List<Zombie> zombies)
+        public void CollisionBalleZombie(List<Bullet> bullets, List<Zombie> zombies)
         {
-            toucheBalleZombie = false;
+            bool touche = false;
             foreach (Bullet bullet in bullets)
             {
-                if (toucheBalleZombie == false)
+                if (touche == false)
                 {
+
                     foreach (Zombie zombie in zombies)
                     {
                         if (zombie.Hitbox.Intersects(bullet.Hitbox))
                         {
+                            Console.WriteLine("Intersect");
+
                             bullets.Remove(bullet);
                             zombies.Remove(zombie);
-                            toucheBalleZombie = true;
+
+                            touche = true;
                             break;
+
                         }
                     }
                 }
                 break;
             }
+           
         }
-        public void CollisionZombiePlayer(ref List<Zombie> zombies, ref Player player)
+
+        public bool CollisionBalleOutside(Bullet bullet,TiledMap map, Player player)
+        {
+            if(bullet.Position.X < player.Position.X - Game1.WIDTH / 2 || 
+                bullet.Position.X > player.Position.X + Game1.WIDTH/2 ||
+                bullet.Position.Y < player.Position.Y - Game1.WIDTH / 2 ||
+                bullet.Position.Y > player.Position.Y + Game1.WIDTH / 2)
+            {
+                return true;
+            }
+            return false;
+        }
+        public void CollisionZombiePlayer(List<Zombie> zombies, Player player)
         {
             foreach (Zombie zombie in zombies)
             {
@@ -53,7 +73,7 @@ namespace Project1
                 }
             }
         }
-        public void CollisionZombieCore(ref List<Zombie> zombies, ref Core core)
+        public void CollisionZombieCore(List<Zombie> zombies, Core core)
         {
             foreach (Zombie zombie in zombies)
             {
@@ -64,7 +84,7 @@ namespace Project1
             }
         }
 
-        public bool CollisionZombieWall( Zombie zombie,  List<Walls> walls)
+        public bool CollisionZombieWall(Zombie zombie,  List<Walls> walls)
         {
             foreach (Walls wall in walls)
             {
@@ -77,7 +97,7 @@ namespace Project1
             return false;
         }
 
-        public bool CollisionPlayerWall( Player player, List<Walls> walls)
+        public bool CollisionPlayerWall(Player player, List<Walls> walls)
         {
             
             foreach (Walls wall in walls)
@@ -92,7 +112,7 @@ namespace Project1
             return false;
         }
 
-        public bool CollisionBulletWall( Bullet bullet,  List<Walls> walls)
+        public bool CollisionBulletWall(Bullet bullet, List<Walls> walls)
         {
             foreach (Walls wall in walls)
             {
