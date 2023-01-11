@@ -115,7 +115,7 @@ namespace Project1
         }
         public void UpdateHitbox()
         {
-            this.Hitbox = new Rectangle((int)Position.X - width / 2, (int)Position.Y - height / 2, width, height);
+            this.Hitbox = new Rectangle((int)Position.X, (int)Position.Y, width, height);
         }
     }
 }
