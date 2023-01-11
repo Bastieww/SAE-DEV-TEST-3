@@ -42,21 +42,29 @@ namespace Project1
             this.TextureZomb = textureZomb;
             LoadContent(gamescreen);
             
-            int XspawnHaut = rd.Next(0, map.WidthInPixels);
-            int XspawnBas = rd.Next(0, map.WidthInPixels);
-            int YspawnGauche = rd.Next(0, map.HeightInPixels);
-            int YspawnDroit = rd.Next(0, map.WidthInPixels);
-            int hautBas = rd.Next(2);
-            int gaucheDroite = rd.Next(2);
-            if (gaucheDroite == 1)
-            {   XposZomb = XspawnBas;
-                YposZomb = 0;  }
-            else if (gaucheDroite == 2)
-                XposZomb = XspawnHaut;
-            else if (hautBas == 1)
-                YposZomb = YspawnGauche;
+            int Xspawn = rd.Next(0, map.WidthInPixels);
+            int Yspawn = rd.Next(0, map.WidthInPixels);
+            int coteSpawn = rd.Next(4);
+            if (coteSpawn == 0)
+            {   
+                XposZomb = Xspawn;
+                YposZomb = - 180;
+            }
+            else if (coteSpawn == 1)
+            {
+                XposZomb = Xspawn;
+                YposZomb = map.HeightInPixels;
+            }
+            else if (coteSpawn == 2)
+            {
+                XposZomb = -90;
+                YposZomb = Yspawn;
+            }
             else
-                YposZomb = YspawnDroit;
+            {
+                XposZomb = map.WidthInPixels;
+                YposZomb = Yspawn;
+            }
 
             this.Position = new Vector2(XposZomb,YposZomb);
 
