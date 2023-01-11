@@ -102,25 +102,6 @@
 /processorParam:TextureFormat=Color
 /build:fondshop.png
 
-#begin Font.spritefont
-/importer:FontDescriptionImporter
-/processor:LocalizedFontProcessor
-/processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/build:Font.spritefont
-
-#begin Font.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/build:Font.spritefont
-
-#begin Font.ttf
-/importer:
-/processor:
-/build:Font.ttf
-
 #begin heart.png
 /importer:TextureImporter
 /processor:TextureProcessor

@@ -111,7 +111,7 @@ namespace Project1
 
             _screenManager.LoadScreen(controlsscreen, new FadeTransition(GraphicsDevice, Color.Black));
 
-            font = Content.Load<SpriteFont>("Font");
+           // font = Content.Load<SpriteFont>("Font");
          
 
         }

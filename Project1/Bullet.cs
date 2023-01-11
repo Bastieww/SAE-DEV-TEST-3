@@ -26,7 +26,7 @@ namespace Project1
         
         private int width = 20, height = 20;
 
-        public int speed=700;
+        public int speed = 700;
         
         private Rectangle hitbox;
         private Texture2D apparence;

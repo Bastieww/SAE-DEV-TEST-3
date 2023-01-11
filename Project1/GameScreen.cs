@@ -27,7 +27,6 @@ namespace Project1
         public Camera camera;
         private Core core;
         private Collisions collisions;
-        private Player player;
 
         private Vector2 relativeCursor;
         private bool click;
@@ -137,7 +136,6 @@ namespace Project1
             {
                 float deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds; // DeltaTime
                 float walkSpeed = deltaSeconds * player.Speed; // Vitesse de déplacement du joueur
-                float flySpeed = deltaSeconds * Bullet.SPEED; // Vitesse de déplacement de la balle
                 float zombSpeed = deltaSeconds * Zombie.VITESSE_NORMAL; //Vitesse de déplacement du zomb
 
 
@@ -240,6 +238,8 @@ namespace Project1
                 // Verif collision Bullet/Mur
                 foreach (Bullet balle in listeBalles)
                 {
+                    float flySpeed = deltaSeconds * balle.speed; // Vitesse de déplacement de la balle
+
                     balle.Position += new Vector2(flySpeed * balle.Direction.X, flySpeed * balle.Direction.Y);
                     balle.UpdateHitbox();
                     if (collisions.CollisionBulletWall(balle, listeWalls))
@@ -261,37 +261,21 @@ namespace Project1
                     }
                 }
 
-                if (vagueFinie == true)
-                {
-                    nbZombie = 0;
-                    while (nbZombie < zombMaxVague)
-                    {
-                        nbZombie += 1;
-                        Zombie zombie = new Zombie(this, "Normal", _myGame._tiledMap);
-                        listeZomb.Add(zombie);
-                    }
-                    vagueFinie = false;
-                }
-                if (listeZomb.Count == 0)
-                    vagueFinie = true;
-
 
 
                 Console.WriteLine(listeZomb.Count);
                 // Verif collision Zombie/Joueur , Zombie/Coeur , Zombie/Balle
                 if (listeZomb.Count >= 1)
                 {
-                    collisions.CollisionZombiePlayer(ref listeZomb, ref player);
-                    collisions.CollisionZombieCore(ref listeZomb, ref core);
+                    collisions.CollisionZombiePlayer( listeZomb,  player);
+                    collisions.CollisionZombieCore( listeZomb,  core);
                     if (listeBalles.Count >= 1)
                     {
-                        collisions.CollisionBalleZombie(ref listeBalles, ref listeZomb);
+                        collisions.CollisionBalleZombie( listeBalles,  listeZomb);
                     }
                 }
-                    }
-                }
+            
 
-                
                 // Systeme de vague
                 if (listeZomb.Count == 0)
                     chrono += deltaSeconds;
@@ -308,7 +292,6 @@ namespace Project1
                     numVague += 1;
                     zombMaxVague += 25;
                 }
-
 
                 // Affichage de la vie du Coeur
                 switch(core.Life)
@@ -346,31 +329,18 @@ namespace Project1
                 }
 
 
-
-
-
-
                 player.Apparence.Play(animation);
                 core.Apparence.Play(animationcore);
                 barredevie.Play(animationbarredevie);
-
-
                 core.Apparence.Update(deltaSeconds);
                 barredevie.Update(deltaSeconds);
-
                 _myGame._tiledMapRenderer.Update(gameTime);
-
                 player.Apparence.Update(deltaSeconds);
-
-
                 camera.Follow(player, _myGame);
-
-
             }
 
 
             //SHOP
-            
             if (mouseState.LeftButton == ButtonState.Pressed)
             {
                 for (int i = 0; i < buttons.Length; i++)
@@ -406,8 +376,6 @@ namespace Project1
                             screenpause = false;
                         
                         }
-                            
-
                     }
                 }
             }
@@ -420,23 +388,17 @@ namespace Project1
                 _myGame._spriteBatch.Draw(shop, _shopPos, Color.White);
                 _myGame._spriteBatch.End();
             }
+            else
+            {
                 Texture2D rect = new Texture2D(GraphicsDevice, 1, 1);
                 rect.SetData(new Color[] { Color.Blue });
 
-
-               
+                _myGame._spriteBatch.Begin(transformMatrix: camera.Transform);
                 _myGame._tiledMapRenderer.Draw(viewMatrix: camera.Transform);
-
                 _myGame._spriteBatch.Draw(rect, player.Hitbox, Color.White);
 
                 _myGame._spriteBatch.Draw(core.Apparence, core.Position);
                 _myGame._spriteBatch.Draw(player.Apparence, player.Position);
-            
-                
-                
-   
-
-
 
 
                 foreach (Bullet balle in listeBalles)
@@ -457,13 +419,14 @@ namespace Project1
                 {
                     _myGame._spriteBatch.Draw(rect, wall.Hitbox, Color.White);
                 }
-   
                 _myGame._spriteBatch.End();
+
                 _myGame._spriteBatch.Begin();
                 _myGame._spriteBatch.Draw(barredevie, barredeviepos);
-                _myGame._spriteBatch.End(); 
+                _myGame._spriteBatch.End();
             }
         }
     }
 }
+
 
