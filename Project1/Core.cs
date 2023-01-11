@@ -32,8 +32,8 @@ namespace Project1
         {
             LoadContent(gamescreen);
             this.Life = 100;
-            this.Position = new Vector2( (map.Width*map.TileWidth)/2+100,(map.Height* map.TileHeight)/2);
-            this.Hitbox = hitbox;
+            this.Position = new Vector2((map.Width*map.TileWidth)/2+100,(map.Height* map.TileHeight)/2);
+            this.Hitbox = new Rectangle((int)Position.X, (int)Position.Y,200,200);
             
 
         }
