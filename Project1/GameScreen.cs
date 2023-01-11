@@ -38,11 +38,6 @@ namespace Project1
         private bool testpause= false;
         private bool toucheBalleZombie;
 
-        private bool testpause= false;
-
-
-
-
 
         private SpriteBatch barredeviestatique;
         private AnimatedSprite barredevie;
@@ -53,7 +48,8 @@ namespace Project1
         List<Bullet> listeBalles;
 
         List<Zombie> listeZomb;
-        private int nbZombie = 0, numVague = 1, zombMaxVague = 5;
+        private int nbZombie = 0, numVague = 1, zombMaxVague = 10;
+        private bool vagueFinie = false;
 
         Walls wallReference;
         List<Walls> listeWalls;
@@ -195,20 +191,18 @@ namespace Project1
 
 
                 
-                
-                    foreach (Bullet balle in listeBalles)
+                foreach (Bullet balle in listeBalles)
+                {
+                    balle.Position += new Vector2(flySpeed * balle.Direction.X, flySpeed * balle.Direction.Y);
+                    balle.UpdateHitbox();
+                if (collisions.CollisionBulletWall(balle, listeWalls))
                     {
-                        balle.Position += new Vector2(flySpeed * balle.Direction.X, flySpeed * balle.Direction.Y);
-                        balle.UpdateHitbox();
-                    if (collisions.CollisionBulletWall(balle, listeWalls))
-                        {
-                        listeBalles.Remove(balle);
-                        break;
-                        }
-                    
+                    listeBalles.Remove(balle);
+                    break;
                     }
-                
-            
+                    
+                }
+
                 if (mouseState.LeftButton == ButtonState.Pressed && click == false)
                 {
                     Bullet balle = new Bullet(this, player, new Vector2(relativeCursor.X, relativeCursor.Y));
@@ -234,18 +228,26 @@ namespace Project1
                         zombie.UpdateHitbox();
                     }
                 }
-                
 
-                while (nbZombie < zombMaxVague)
+                if (vagueFinie == true)
                 {
-                    nbZombie += 1;
-                    Zombie zombie = new Zombie(this, "Normal", _myGame._tiledMap);
-                    listeZomb.Add(zombie);
+                    nbZombie = 0;
+                    while (nbZombie < zombMaxVague)
+                    {
+                        nbZombie += 1;
+                        Zombie zombie = new Zombie(this, "Normal", _myGame._tiledMap);
+                        listeZomb.Add(zombie);
+                    }
+                    vagueFinie = false;
                 }
+                if (listeZomb.Count == 0)
+                    vagueFinie = true;
 
 
 
-                
+                Console.WriteLine(listeZomb.Count);
+                Console.WriteLine(listeBalles.Count);
+
                 if (listeZomb.Count >= 1)
                 {
                     collisions.CollisionZombiePlayer(ref listeZomb, ref player);
@@ -258,15 +260,9 @@ namespace Project1
                 
 
                 
-                
 
 
-
-
-
-
-
-            switch(core.Life)
+                switch(core.Life)
                 {
                     case 90:
                         animationbarredevie = "90%";
@@ -306,7 +302,6 @@ namespace Project1
                 { 
                    
                     screenpause = true;
-                    
                 }
                 
           
@@ -333,33 +328,32 @@ namespace Project1
         }
         public override void Draw(GameTime gameTime)
         {
+            _myGame._tiledMapRenderer.Draw(viewMatrix: camera.Transform);
             _myGame._spriteBatch.Begin(transformMatrix : camera.Transform);
             _myGame._spriteBatch.Draw(core.Apparence, core.Position);
+            _myGame._spriteBatch.Draw(player.Apparence, player.Position);
 
-
-          
-
-            if (screenpause == true)
+            _myGame._spriteBatch.Draw(pause, player.Hitbox, Color.White);  
+            
+            //if (screenpause == true)
             foreach (Bullet balle in listeBalles)
             {
                 _myGame._spriteBatch.Draw(balle.Apparence, balle.Position, Color.White);
-             }
-            
-         
+                _myGame._spriteBatch.Draw(pause, balle.Hitbox, Color.White);
+
+            }
+
             foreach (Zombie zombie in listeZomb)
             {
                 _myGame._spriteBatch.Draw(zombie.TextureZomb, zombie.Position);
+                _myGame._spriteBatch.Draw(pause,zombie.Hitbox, Color.White);
+
             }
 
             foreach (Walls wall in listeWalls)
             {
                 _myGame._spriteBatch.Draw(pause,wall.Hitbox,Color.White);
             }
-            _myGame._spriteBatch.Draw(pause, player.Hitbox, Color.White);
-
-                }
-            }
-          
 
             _myGame._spriteBatch.End();
             

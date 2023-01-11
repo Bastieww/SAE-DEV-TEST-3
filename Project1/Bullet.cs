@@ -23,8 +23,9 @@ namespace Project1
 
         private Vector2 direction;
 
-        public const int SPEED = 700;
-        
+        public const int SPEED = 100;
+        private int width = 20, height = 20;
+
         private Rectangle hitbox;
         private Texture2D apparence;
 
@@ -114,7 +115,7 @@ namespace Project1
         }
         public void UpdateHitbox()
         {
-            this.Hitbox = new Rectangle((int)Position.X, (int)Position.Y, 200, 200);
+            this.Hitbox = new Rectangle((int)Position.X - width / 2, (int)Position.Y - height / 2, width, height);
         }
     }
 }

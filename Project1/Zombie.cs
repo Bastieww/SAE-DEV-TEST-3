@@ -20,6 +20,8 @@ namespace Project1
         public const int VITESSE_NORMAL = 2, VITESSE_GROS = 1, VITESSE_RAPIDE = 4;
 
         private int vieZombie, vitesseZombie, XposZomb, YposZomb, nbzombie = 0;
+        private int width = 91;
+        private int height = 177;
 
         private string typeZombie;
 
@@ -154,7 +156,7 @@ namespace Project1
         }
         public void UpdateHitbox()
         {
-            this.Hitbox = new Rectangle((int)Position.X, (int)Position.Y, 200, 200);
+            this.Hitbox = new Rectangle((int)Position.X - width / 2, (int)Position.Y - height / 2, width, height);
         }
     }
 }
