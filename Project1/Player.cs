@@ -44,7 +44,7 @@ namespace Project1
             this.Damage = damage;
             
             this.Position = new Vector2(800, 175);
-            this.Hitbox = new Rectangle((int)Position.X, (int)Position.Y, this.width, this.height);
+            this.Hitbox = new Rectangle((int)Position.X - width / 2, (int)Position.Y - height / 2, this.width, this.height);
         }
 
 
@@ -148,7 +148,7 @@ namespace Project1
         }
         public void UpdateHitbox()
         {
-            this.Hitbox = new Rectangle((int)Position.X, (int)Position.Y, this.width, this.height);
+            this.Hitbox = new Rectangle((int)Position.X - width / 2, (int)Position.Y - height / 2, this.width, this.height);
         }
 
     }

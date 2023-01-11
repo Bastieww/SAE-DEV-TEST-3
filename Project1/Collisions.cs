@@ -36,7 +36,6 @@ namespace Project1
                             bullets.Remove(bullet);
                             zombies.Remove(zombie);
                             toucheBalleZombie = true;
-                            Console.WriteLine("ifzeoj");
                             break;
                         }
                     }

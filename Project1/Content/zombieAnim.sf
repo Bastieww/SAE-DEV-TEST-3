@@ -1,8 +1,8 @@
 {
   "textureAtlas": {
     "texture": "zombie.png",
-    "regionWidth": 30,
-    "regionHeight": 60
+    "regionWidth": 90,
+    "regionHeight": 180
   },
   "cycles": {
     "walkWest": {
