@@ -38,6 +38,7 @@ namespace Project1
         {
             this.TypeZombie = typeZombie;
             this.TextureZomb = textureZomb;
+            LoadContent(gamescreen);
             
             int XspawnGauche = rd.Next(-300, -10);
             int XspawnDroite = rd.Next((map.Width * map.TileWidth), (map.Width * map.TileWidth) + 300);
@@ -59,8 +60,6 @@ namespace Project1
             this.Cible = new Vector2(0, 0);
 
             
-            
-            LoadContent(gamescreen);
         }
 
 

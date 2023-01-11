@@ -37,8 +37,6 @@ namespace Project1
         
         private bool testpause= false;
         private bool toucheBalleZombie;
-        
-        private bool testpause= false;
 
 
         private SpriteBatch barredeviestatique;
@@ -46,10 +44,8 @@ namespace Project1
         private Vector2 barredeviepos;
         
 
-
         List<Bullet> listeBalles;
 
-        List<Bullet> listeBalles;
         List<Zombie> listeZomb;
         private int nbZombie = 0, numVague = 1, zombMaxVague = 5;
 
@@ -148,14 +144,12 @@ namespace Project1
                 {
                
                     animation = "walkEast";
-                    if (!IsCollisionTile(tx, ty))
                         player.Position -= new Vector2(walkSpeed, 0);
                 }
                 if (keyboardState.IsKeyDown(Keys.Right) && player.Position.X < _myGame._tiledMap.WidthInPixels-player.Hitbox.Width/2)
                 {
                
                     animation = "walkWest";
-                    if (!IsCollisionTile(tx, ty))
                         player.Position += new Vector2(walkSpeed, 0);
                 }
 
@@ -275,22 +269,19 @@ namespace Project1
             _myGame._spriteBatch.Begin(transformMatrix : camera.Transform);
             _myGame._tiledMapRenderer.Draw(viewMatrix: camera.Transform);
             
-            _myGame._spriteBatch.Draw(player.Apparence, player.Position);
             _myGame._spriteBatch.Draw(core.Apparence, core.Position);
-
+            _myGame._spriteBatch.Draw(player.Apparence, player.Position);
 
             barredeviestatique.Begin();
             barredeviestatique.Draw(barredevie, barredeviepos); 
-            
             barredeviestatique.End();
+
             /*
             if (screenpause == true)
             {
                 _myGame._spriteBatch.Draw(pause, _pausepos, Color.White);
 
             }*/
-
-            _myGame._spriteBatch.Draw(core.Apparence, core.Position, Color.White);
             if (listeBalles != null)
             {
                 foreach (Bullet balle in listeBalles)
@@ -298,7 +289,6 @@ namespace Project1
                     _myGame._spriteBatch.Draw(balle.Apparence, balle.Position, Color.White);
                 }
             }
-            _myGame._spriteBatch.Draw(core.Apparence, core.Position);
          
             if (listeZomb != null)
             {
