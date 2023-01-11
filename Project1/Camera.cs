@@ -9,7 +9,7 @@ using System.Threading.Tasks.Dataflow;
 
 namespace Project1
 {
-    // Ce code est largement inspiré d'un tutoriel sur YouTube : 
+    // Ce code est inspiré, pour la partie "Translation", d'un tutoriel sur YouTube : 
     // https://www.youtube.com/watch?v=ceBCDKU_mNw
     public class Camera
     {

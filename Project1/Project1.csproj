@@ -46,6 +46,9 @@
     <None Update="Content\heart.sf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Content\map.tmx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Content\perso.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
