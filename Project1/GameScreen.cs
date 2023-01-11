@@ -48,6 +48,7 @@ namespace Project1
         List<Bullet> listeBalles;
         List<Zombie> listeZomb;
         private int nbZombie = 0, numVague = 1, zombMaxVague = 10;
+        private float chrono = 0;
         private bool vagueFinie = false;
 
 
@@ -252,24 +253,28 @@ namespace Project1
                     }
                 }
 
-                if (vagueFinie == true)
+
+                if (listeZomb.Count == 0)
+                    chrono += deltaSeconds;
+
+                if (chrono >= 5)
                 {
+                    chrono = 0;
                     nbZombie = 0;
+                    numVague += 1;
                     while (nbZombie < zombMaxVague)
                     {
                         nbZombie += 1;
                         Zombie zombie = new Zombie(this, "Normal", _myGame._tiledMap);
                         listeZomb.Add(zombie);
                     }
-                    vagueFinie = false;
+                    zombMaxVague += 25;
                 }
-                if (listeZomb.Count == 0)
-                    vagueFinie = true;
 
 
 
-                Console.WriteLine(listeZomb.Count);
-                Console.WriteLine(listeBalles.Count);
+               // Console.WriteLine(listeZomb.Count);
+               // Console.WriteLine(listeBalles.Count);
 
                 if (listeZomb.Count >= 1)
                 {
@@ -379,10 +384,6 @@ namespace Project1
         public override void Draw(GameTime gameTime)
         {
 
-
-            
-
-
             if (shopoui == true)
             {
                 _myGame._spriteBatch.Begin();
@@ -394,9 +395,6 @@ namespace Project1
                
 
                 _myGame._spriteBatch.Begin(transformMatrix: camera.Transform);
-                _myGame._spriteBatch.Draw(core.Apparence, core.Position);
-                _myGame._spriteBatch.Draw(player.Apparence, player.Position);
-            
                 _myGame._tiledMapRenderer.Draw(viewMatrix: camera.Transform);
 
                 _myGame._spriteBatch.Draw(player.Apparence, player.Position);
@@ -404,17 +402,17 @@ namespace Project1
                 _myGame._spriteBatch.Draw(core.Apparence, core.Position);
 
 
-
-
                 foreach (Bullet balle in listeBalles)
                 {
                     _myGame._spriteBatch.Draw(balle.Apparence, balle.Position, Color.White);
+                    _myGame._spriteBatch.Draw(pause, balle.Hitbox, Color.White);
                 }
 
 
                 foreach (Zombie zombie in listeZomb)
                 {
                     _myGame._spriteBatch.Draw(zombie.TextureZomb, zombie.Position);
+                    _myGame._spriteBatch.Draw(pause, zombie.Hitbox, Color.White);
                 }
 
                 foreach (Walls wall in listeWalls)
