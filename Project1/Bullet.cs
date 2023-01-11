@@ -44,7 +44,7 @@ namespace Project1
            
             //Code non opti, il faudrait charger la texture qu'une seule fois pas à chaque balle
             LoadContent(gamescreen);
-            UpdateHitbox();
+            
         }
 
         public Vector2 Position

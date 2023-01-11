@@ -13,6 +13,7 @@ using System.Diagnostics;
 using MonoGame.Extended.Sprites;
 using MonoGame.Extended.Serialization;
 using System.Threading;
+using MonoGame.Extended;
 
 namespace Project1
 {
@@ -23,7 +24,7 @@ namespace Project1
         // défini dans Game1;
 
         private Player player;
-        private Camera camera;
+        public Camera camera;
         private Core core;
 
 
@@ -63,7 +64,7 @@ namespace Project1
 
         Walls wallReference;
         List<Walls> listeWalls;
-        Texture2D invTexRectangle;
+       
 
         public GameScreen(Game1 game) : base(game)
         {
@@ -119,7 +120,7 @@ namespace Project1
 
 
             wallReference = new Walls(_myGame, new Rectangle(0, 0, 0, 0));
-            invTexRectangle = new Texture2D(GraphicsDevice, 200, 200);
+            
 
             listeWalls = new List<Walls>();
             listeWalls = wallReference.ChargementMap();
@@ -234,7 +235,8 @@ namespace Project1
 
                     balle.Position += new Vector2(flySpeed * balle.Direction.X, flySpeed * balle.Direction.Y);
                     balle.UpdateHitbox();
-                    if (collisions.CollisionBulletWall(balle, listeWalls))
+                    
+                    if (collisions.CollisionBulletWall(balle, listeWalls) || collisions.CollisionBalleOutside(balle,_myGame._tiledMap, player))
                     {
                         listeBalles.Remove(balle);
                         break;
@@ -269,6 +271,7 @@ namespace Project1
                         zombie.Position -= Vector2.Normalize((player.Position - zombie.Position) * 9);
                         zombie.UpdateHitbox();
                     }
+                    
                 }
 
                 if (vagueFinie == true)
@@ -287,18 +290,16 @@ namespace Project1
 
 
 
-                Console.WriteLine(listeZomb.Count);
-                Console.WriteLine(listeBalles.Count);
 
-                if (listeZomb.Count >= 1)
-                {
-                    collisions.CollisionZombiePlayer(ref listeZomb, ref player);
-                    collisions.CollisionZombieCore(ref listeZomb, ref core);
-                    if (listeBalles.Count >= 1)
-                    {
-                        collisions.CollisionBalleZombie(ref listeBalles, ref listeZomb);
-                    }
-                }
+               
+                
+                    collisions.CollisionZombiePlayer(listeZomb, player);
+                    collisions.CollisionZombieCore(listeZomb, core);
+                
+                    
+                        collisions.CollisionBalleZombie(listeBalles, listeZomb); 
+                    
+                
 
 
                 
@@ -362,7 +363,8 @@ namespace Project1
             }
 
 
-            //SHOP  
+            //SHOP
+            
             if (mouseState.LeftButton == ButtonState.Pressed)
             {
                 for (int i = 0; i < buttons.Length; i++)
@@ -424,35 +426,39 @@ namespace Project1
             }
             else
             {
-               
+                Texture2D rect = new Texture2D(GraphicsDevice, 1, 1);
+                rect.SetData(new Color[] { Color.Blue });
+
 
                 _myGame._spriteBatch.Begin(transformMatrix: camera.Transform);
+                _myGame._tiledMapRenderer.Draw(viewMatrix: camera.Transform);
+
+                _myGame._spriteBatch.Draw(rect, player.Hitbox, Color.White);
+
                 _myGame._spriteBatch.Draw(core.Apparence, core.Position);
                 _myGame._spriteBatch.Draw(player.Apparence, player.Position);
             
-                _myGame._tiledMapRenderer.Draw(viewMatrix: camera.Transform);
-
-                _myGame._spriteBatch.Draw(player.Apparence, player.Position);
-                _myGame._spriteBatch.Draw(pause, player.Hitbox, Color.White);
-                _myGame._spriteBatch.Draw(core.Apparence, core.Position);
-
-
+                
+                
+   
 
 
                 foreach (Bullet balle in listeBalles)
                 {
+                    _myGame._spriteBatch.DrawRectangle(balle.Hitbox, Color.Cyan, 7);
                     _myGame._spriteBatch.Draw(balle.Apparence, balle.Position, Color.White);
                 }
 
 
                 foreach (Zombie zombie in listeZomb)
                 {
+                    _myGame._spriteBatch.Draw(rect, zombie.Hitbox, Color.White);
                     _myGame._spriteBatch.Draw(zombie.TextureZomb, zombie.Position);
                 }
 
                 foreach (Walls wall in listeWalls)
                 {
-                    _myGame._spriteBatch.Draw(pause, wall.Hitbox, Color.White);
+                    _myGame._spriteBatch.Draw(rect, wall.Hitbox, Color.White);
                 }
    
 
