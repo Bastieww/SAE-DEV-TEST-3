@@ -142,7 +142,7 @@ namespace Project1
                     _screenManager.LoadScreen(gamescreen, new FadeTransition(GraphicsDevice, Color.Black));
                 else if (this.Etat == Etats.ControlsScreen && startscreen.clickMenu == true)
                     _screenManager.LoadScreen(controlsscreen, new FadeTransition(GraphicsDevice, Color.Black));
-                else if (this.Etat == Etats.StartScreen)
+                else if (this.Etat == Etats.StartScreen && controlsscreen.clickControls == true)
                     _screenManager.LoadScreen(startscreen, new FadeTransition(GraphicsDevice, Color.Black));
             }
 
