@@ -12,6 +12,8 @@ using MonoGame.Extended.TextureAtlases;
 using System.Diagnostics;
 using MonoGame.Extended.Sprites;
 using MonoGame.Extended.Serialization;
+using System.Threading;
+using MonoGame.Extended;
 
 namespace Project1
 {
@@ -21,7 +23,8 @@ namespace Project1
         // pour récupérer une référence à l’objet game pour avoir accès à tout ce qui est
         // défini dans Game1;
 
-        private Camera camera;
+        private Player player;
+        public Camera camera;
         private Core core;
         private Collisions collisions;
         private Player player;
@@ -38,6 +41,10 @@ namespace Project1
 
         // Barre de vie du coeur
         private SpriteBatch barredeviestatique;
+
+        private int speedsup;
+
+        
         private AnimatedSprite barredevie;
         private Vector2 barredeviepos;
 
@@ -57,7 +64,7 @@ namespace Project1
         // Murs
         Walls wallReference;
         List<Walls> listeWalls;
-        Texture2D invTexRectangle;
+       
 
         public GameScreen(Game1 game) : base(game)
         {
@@ -81,6 +88,9 @@ namespace Project1
             player = new Player(this);
             camera = new Camera();
             core = new Core(this, _myGame._tiledMap);
+            
+
+
 
             click = false;
             screenpause = false;
@@ -100,20 +110,28 @@ namespace Project1
             buttons[4] = new Rectangle(56, 927, 438, 132);
 
             wallReference = new Walls(_myGame, new Rectangle(0, 0, 0, 0));
-            invTexRectangle = new Texture2D(GraphicsDevice, 200, 200);
+            
 
             listeWalls = new List<Walls>();
             listeWalls = wallReference.ChargementMap();
 
             collisions = new Collisions();
+
+            speedsup = 0;
+
         }
         public override void Update(GameTime gameTime)
         {
             KeyboardState keyboardState = Keyboard.GetState();
             MouseState mouseState = Mouse.GetState();
 
-            if (keyboardState.IsKeyDown(Keys.M))
+
+
+            if (keyboardState.IsKeyDown(Keys.P))
+            {
                 screenpause = false;
+                Console.WriteLine("play");
+            }
 
             if (screenpause == false)
             {
@@ -179,12 +197,36 @@ namespace Project1
                     }
                 }
 
+                //if (keyboardState.IsKeyDown(Keys.R))
+                //{
 
-                // Creation Bullet
+                //    screenpause = true;
+                //    Console.WriteLine("pause");
+                //}
+
+
+                foreach (Bullet balle in listeBalles)
+                {
+                    float flySpeed = deltaSeconds * balle.speed; // Vitesse de déplacement de la balle
+
+                    balle.Position += new Vector2(flySpeed * balle.Direction.X, flySpeed * balle.Direction.Y);
+                    balle.UpdateHitbox();
+                    
+                    if (collisions.CollisionBulletWall(balle, listeWalls) || collisions.CollisionBalleOutside(balle,_myGame._tiledMap, player))
+                    {
+                        listeBalles.Remove(balle);
+                        break;
+                    }
+
+                }
+
+
                 if (mouseState.LeftButton == ButtonState.Pressed && click == false)
                 {
                     Bullet balle = new Bullet(this, player, new Vector2(relativeCursor.X, relativeCursor.Y));
+                    balle.Speed += speedsup;
                     listeBalles.Add(balle);
+
                     click = true;
                     //A EFFACER
                     core.Life -= 5;
@@ -219,6 +261,23 @@ namespace Project1
                     }
                 }
 
+                if (vagueFinie == true)
+                {
+                    nbZombie = 0;
+                    while (nbZombie < zombMaxVague)
+                    {
+                        nbZombie += 1;
+                        Zombie zombie = new Zombie(this, "Normal", _myGame._tiledMap);
+                        listeZomb.Add(zombie);
+                    }
+                    vagueFinie = false;
+                }
+                if (listeZomb.Count == 0)
+                    vagueFinie = true;
+
+
+
+                Console.WriteLine(listeZomb.Count);
                 // Verif collision Zombie/Joueur , Zombie/Coeur , Zombie/Balle
                 if (listeZomb.Count >= 1)
                 {
@@ -227,6 +286,8 @@ namespace Project1
                     if (listeBalles.Count >= 1)
                     {
                         collisions.CollisionBalleZombie(ref listeBalles, ref listeZomb);
+                    }
+                }
                     }
                 }
 
@@ -286,11 +347,7 @@ namespace Project1
 
 
 
-                if (keyboardState.IsKeyDown(Keys.P))
-                {
 
-                    screenpause = true;
-                }
 
 
                 player.Apparence.Play(animation);
@@ -312,7 +369,8 @@ namespace Project1
             }
 
 
-            //SHOP  
+            //SHOP
+            
             if (mouseState.LeftButton == ButtonState.Pressed)
             {
                 for (int i = 0; i < buttons.Length; i++)
@@ -320,17 +378,35 @@ namespace Project1
                     if (buttons[i].Contains(Mouse.GetState().X, Mouse.GetState().Y))
                     {
                         if (i == 0)
-                            Console.WriteLine("shop1");
+                        {
+                            if (player.Gold >= 0)
+                                player.Life += 10;
+                        }
                         else if (i == 1)
-                            Console.WriteLine("shop2");
+                        {
+                            if (player.Gold >= 0)
+                                speedsup += 100;
+
+                        }
+
                         else if (i == 2)
-                            Console.WriteLine("shop3");
+                        {
+                            if (player.Gold >= 0)
+                                player.Speed += 10;
+                        }
+
                         else if (i == 3)
-                            Console.WriteLine("shop4");
+                        {
+                            if (player.Gold >= 0)
+                                player.Speed += 100;
+                        }
                         else if (i == 4)
+                        {
                             shopoui = false;
-                        screenpause = false;
-                        Console.WriteLine("go back");
+                            screenpause = false;
+                        
+                        }
+                            
 
                     }
                 }
@@ -344,30 +420,42 @@ namespace Project1
                 _myGame._spriteBatch.Draw(shop, _shopPos, Color.White);
                 _myGame._spriteBatch.End();
             }
-            else
-            {
-                _myGame._spriteBatch.Begin(transformMatrix: camera.Transform);
+                Texture2D rect = new Texture2D(GraphicsDevice, 1, 1);
+                rect.SetData(new Color[] { Color.Blue });
+
+
+               
                 _myGame._tiledMapRenderer.Draw(viewMatrix: camera.Transform);
-                _myGame._spriteBatch.Draw(player.Apparence, player.Position);
-                _myGame._spriteBatch.Draw(pause, player.Hitbox, Color.White);
+
+                _myGame._spriteBatch.Draw(rect, player.Hitbox, Color.White);
+
                 _myGame._spriteBatch.Draw(core.Apparence, core.Position);
-                _myGame._spriteBatch.DrawString(_myGame.font, "Some Text", new Vector2(100, 100), Color.Red);
+                _myGame._spriteBatch.Draw(player.Apparence, player.Position);
+            
+                
+                
+   
+
+
+
 
                 foreach (Bullet balle in listeBalles)
                 {
+                    _myGame._spriteBatch.DrawRectangle(balle.Hitbox, Color.Cyan, 7);
                     _myGame._spriteBatch.Draw(balle.Apparence, balle.Position, Color.White);
                     _myGame._spriteBatch.Draw(pause, balle.Hitbox, Color.White);
                 }
 
                 foreach (Zombie zombie in listeZomb)
                 {
+                    _myGame._spriteBatch.Draw(rect, zombie.Hitbox, Color.White);
                     _myGame._spriteBatch.Draw(zombie.TextureZomb, zombie.Position);
                     _myGame._spriteBatch.Draw(pause, zombie.Hitbox, Color.White);
                 }
 
                 foreach (Walls wall in listeWalls)
                 {
-                    _myGame._spriteBatch.Draw(pause, wall.Hitbox, Color.White);
+                    _myGame._spriteBatch.Draw(rect, wall.Hitbox, Color.White);
                 }
    
                 _myGame._spriteBatch.End();

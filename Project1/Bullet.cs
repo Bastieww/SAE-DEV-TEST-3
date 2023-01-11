@@ -23,9 +23,11 @@ namespace Project1
 
         private Vector2 direction;
 
-        public const int SPEED = 100;
+        
         private int width = 20, height = 20;
 
+        public int speed=700;
+        
         private Rectangle hitbox;
         private Texture2D apparence;
 
@@ -38,9 +40,11 @@ namespace Project1
             this.Hitbox = hitbox;
             this.Apparence = apparence;
             this.Direction = Vector2.Normalize(coordClick - Position);
+            this.Speed = speed;
+           
             //Code non opti, il faudrait charger la texture qu'une seule fois pas à chaque balle
             LoadContent(gamescreen);
-            UpdateHitbox();
+            
         }
 
         public Vector2 Position
@@ -107,7 +111,20 @@ namespace Project1
                 this.direction = value;
             }
         }
-        
+
+        public int Speed
+        {
+            get
+            {
+                return this.speed;
+            }
+
+            set
+            {
+                this.speed = value;
+            }
+        }
+
         public void LoadContent(GameScreen gamescreen)
         {
             Texture2D apparence = gamescreen.Content.Load<Texture2D>("bullet");
