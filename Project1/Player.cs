@@ -43,7 +43,7 @@ namespace Project1
             this.Speed = speed;
             this.Damage = damage;
             
-            this.Position = new Vector2(300, 300);
+            this.Position = new Vector2(800, 175);
             this.Hitbox = new Rectangle((int)Position.X, (int)Position.Y, this.width, this.height);
         }
 
@@ -146,7 +146,10 @@ namespace Project1
             SpriteSheet apparence = gamescreen.Content.Load<SpriteSheet>("playerbase.sf", new JsonContentLoader());
             this.Apparence = new AnimatedSprite(apparence);
         }
-        
-        
+        public void UpdateHitbox()
+        {
+            this.Hitbox = new Rectangle((int)Position.X, (int)Position.Y, this.width, this.height);
+        }
+
     }
 }

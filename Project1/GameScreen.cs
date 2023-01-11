@@ -38,20 +38,22 @@ namespace Project1
         private bool testpause= false;
         private bool toucheBalleZombie;
         
-        private bool testpause= false;
 
 
         private SpriteBatch barredeviestatique;
         private AnimatedSprite barredevie;
         private Vector2 barredeviepos;
-        
 
-
-        List<Bullet> listeBalles;
+        private Collisions collisions;
 
         List<Bullet> listeBalles;
+
         List<Zombie> listeZomb;
         private int nbZombie = 0, numVague = 1, zombMaxVague = 5;
+
+        Walls wallReference;
+        List<Walls> listeWalls;
+        Texture2D invTexRectangle;
 
         public GameScreen(Game1 game) : base(game)
         {
@@ -86,14 +88,18 @@ namespace Project1
             click = false;
             screenpause = false;
 
-
-            
-            
-            
-            
-
             listeBalles = new List<Bullet>();
             listeZomb = new List<Zombie>();
+
+            wallReference = new Walls(_myGame,new Rectangle(0,0,0,0));
+            invTexRectangle = new Texture2D(GraphicsDevice, 200, 200);
+
+            listeWalls = new List<Walls>();
+            listeWalls = wallReference.ChargementMap();
+            
+
+            collisions = new Collisions();
+            
             
             
         }
@@ -127,13 +133,21 @@ namespace Project1
 
                 //ALL TESTS ///////////////////////////////////////////////////////////////////////////////////
 
+                
                 if (keyboardState.IsKeyDown(Keys.Up) && player.Position.Y > player.Hitbox.Height/2)
                 {
                    
                    
                     animation = "walkNorth";
                    
-                        player.Position -= new Vector2(0, walkSpeed);
+                    player.Position -= new Vector2(0, walkSpeed);
+                    player.UpdateHitbox();
+                    if (collisions.CollisionPlayerWall( player, listeWalls))
+                    {
+                        player.Position += new Vector2(0, walkSpeed);
+                        player.UpdateHitbox();
+                    }
+                    
                 }
 
                 if (keyboardState.IsKeyDown(Keys.Down) && player.Position.Y < _myGame._tiledMap.HeightInPixels-player.Hitbox.Height/2)
@@ -142,6 +156,12 @@ namespace Project1
                     animation = "walkSouth";
                     
                         player.Position += new Vector2(0, walkSpeed);
+                    player.UpdateHitbox();
+                    if (collisions.CollisionPlayerWall( player, listeWalls))
+                    {
+                        player.Position -= new Vector2(0, walkSpeed);
+                        player.UpdateHitbox();
+                    }
                 }
 
                 if (keyboardState.IsKeyDown(Keys.Left)&& player.Position.X > player.Hitbox.Width/2)
@@ -150,6 +170,12 @@ namespace Project1
                     animation = "walkEast";
               
                         player.Position -= new Vector2(walkSpeed, 0);
+                    player.UpdateHitbox();
+                    if (collisions.CollisionPlayerWall( player,  listeWalls))
+                    {
+                        player.Position += new Vector2(walkSpeed, 0);
+                        player.UpdateHitbox();
+                    }
                 }
                 if (keyboardState.IsKeyDown(Keys.Right) && player.Position.X < _myGame._tiledMap.WidthInPixels-player.Hitbox.Width/2)
                 {
@@ -157,18 +183,29 @@ namespace Project1
                     animation = "walkWest";
                 
                         player.Position += new Vector2(walkSpeed, 0);
+                    player.UpdateHitbox();
+                    if (collisions.CollisionPlayerWall(player, listeWalls))
+                    {
+                        player.Position -= new Vector2(walkSpeed, 0);
+                        player.UpdateHitbox();
+                    }
                 }
 
-           
-                if (listeBalles != null)
-                {
+
+                
+                
                     foreach (Bullet balle in listeBalles)
                     {
                         balle.Position += new Vector2(flySpeed * balle.Direction.X, flySpeed * balle.Direction.Y);
                         balle.UpdateHitbox();
+                    if (collisions.CollisionBulletWall(balle, listeWalls))
+                        {
+                        listeBalles.Remove(balle);
+                        break;
+                        }
                     
                     }
-                }
+                
             
                 if (mouseState.LeftButton == ButtonState.Pressed && click == false)
                 {
@@ -182,13 +219,18 @@ namespace Project1
                 }
 
 
-                if (listeZomb != null)
+               
+                foreach (Zombie zombie in listeZomb)
                 {
-                    foreach (Zombie zombie in listeZomb)
+                    zombie.Position += Vector2.Normalize((player.Position - zombie.Position) * 9);
+                    zombie.UpdateHitbox();
+                    if (collisions.CollisionZombieWall(zombie, listeWalls))
                     {
-                        zombie.Position += Vector2.Normalize((player.Position - zombie.Position) * 2);
+                        zombie.Position -= Vector2.Normalize((player.Position - zombie.Position) * 9);
+                        zombie.UpdateHitbox();
                     }
                 }
+                
 
                 while (nbZombie < zombMaxVague)
                 {
@@ -196,6 +238,29 @@ namespace Project1
                     Zombie zombie = new Zombie(this, "Normal", _myGame._tiledMap);
                     listeZomb.Add(zombie);
                 }
+
+
+
+                
+                if (listeZomb.Count >= 1)
+                {
+                    collisions.CollisionZombiePlayer(ref listeZomb, ref player);
+                    collisions.CollisionZombieCore(ref listeZomb, ref core);
+                    if(listeBalles.Count >=1)
+                    {
+                        collisions.CollisionBalleZombie(ref listeBalles, ref listeZomb);
+                    }
+                }
+                
+
+                
+                
+
+
+
+
+
+
 
             switch(core.Life)
                 {
@@ -229,9 +294,6 @@ namespace Project1
                     case 0:
                         animationbarredevie = "0%";
                         break;
-
-
-
                 }
 
 
@@ -248,20 +310,15 @@ namespace Project1
                 core.Apparence.Play(animationcore);
                 barredevie.Play(animationbarredevie);
                 
+                
                 core.Apparence.Update(deltaSeconds);
                 barredevie.Update(deltaSeconds);
-                
-
-
-
-
-
-
-
+      
                 _myGame._tiledMapRenderer.Update(gameTime);
 
-                player.Apparence.Update(deltaSeconds); // time écoulé
+                player.Apparence.Update(deltaSeconds); 
 
+                
                 camera.Follow(player, _myGame);
 
              
@@ -272,69 +329,41 @@ namespace Project1
         }
         public override void Draw(GameTime gameTime)
         {
-            _myGame._spriteBatch.Begin(transformMatrix : camera.Transform);
+
             _myGame._tiledMapRenderer.Draw(viewMatrix: camera.Transform);
             
+            _myGame._spriteBatch.Begin(transformMatrix : camera.Transform);
+            _myGame._spriteBatch.Draw(core.Apparence, core.Position);
             _myGame._spriteBatch.Draw(player.Apparence, player.Position);
-            _myGame._spriteBatch.Draw(core.Apparence, core.Position);
 
-
-            barredeviestatique.Begin();
-            barredeviestatique.Draw(barredevie, barredeviepos); 
-            
-            barredeviestatique.End();
-            /*
-            if (screenpause == true)
-            {
-                _myGame._spriteBatch.Draw(pause, _pausepos, Color.White);
-
-            }*/
-
-            _myGame._spriteBatch.Draw(core.Apparence, core.Position, Color.White);
-            if (listeBalles != null)
-            {
-                foreach (Bullet balle in listeBalles)
-                {
-                    _myGame._spriteBatch.Draw(balle.Apparence, balle.Position, Color.White);
-                }
-            }
-            _myGame._spriteBatch.Draw(core.Apparence, core.Position);
-         
-            if (listeZomb != null)
-            {
-                foreach (Zombie zombie in listeZomb)
-                {
-                    _myGame._spriteBatch.Draw(zombie.TextureZomb, zombie.Position);
-                 
-
-                }
-            }
           
 
+
+            foreach (Bullet balle in listeBalles)
+            {
+                _myGame._spriteBatch.Draw(balle.Apparence, balle.Position, Color.White);
+             }
+            
+         
+            foreach (Zombie zombie in listeZomb)
+            {
+                _myGame._spriteBatch.Draw(zombie.TextureZomb, zombie.Position);
+            }
+
+            foreach (Walls wall in listeWalls)
+            {
+                _myGame._spriteBatch.Draw(pause,wall.Hitbox,Color.White);
+            }
+            _myGame._spriteBatch.Draw(pause, player.Hitbox, Color.White);
+
+
             _myGame._spriteBatch.End();
+            
+            barredeviestatique.Begin();
+            barredeviestatique.Draw(barredevie, barredeviepos);
+            barredeviestatique.End();
         }
-        private bool IsCollisionTile(ushort x, ushort y)
-        {
-            // définition de tile qui peut être null (?)
-
-            TiledMapTile? tile;
-            if (_myGame.mapLayer.TryGetTile(x, y, out tile) == false)
-                return false;
-            if (!tile.Value.IsBlank)
-            {
-                return true;
-            }
-            return false;
-        }
-
-        private bool IsCollision(Rectangle hitboxSprite1,Rectangle hitboxSprite2)
-        {
-            if(hitboxSprite2.Intersects(hitboxSprite1))
-            {
-                return true;
-            }
-            return false;
-        }
+  
     }
 }
 
