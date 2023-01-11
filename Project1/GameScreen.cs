@@ -12,6 +12,7 @@ using MonoGame.Extended.TextureAtlases;
 using System.Diagnostics;
 using MonoGame.Extended.Sprites;
 using MonoGame.Extended.Serialization;
+using System.Threading;
 
 namespace Project1
 {
@@ -27,6 +28,7 @@ namespace Project1
 
 
 
+
         private Vector2 relativeCursor;
         private bool click;
 
@@ -39,7 +41,9 @@ namespace Project1
         private bool toucheBalleZombie;
 
 
-        private SpriteBatch barredeviestatique;
+        private int speedsup;
+
+        
         private AnimatedSprite barredevie;
         private Vector2 barredeviepos;
 
@@ -90,6 +94,9 @@ namespace Project1
             player = new Player(this);
             camera = new Camera();
             core = new Core(this, _myGame._tiledMap);
+            
+
+
 
             click = false;
             screenpause = false;
@@ -120,7 +127,7 @@ namespace Project1
 
             collisions = new Collisions();
 
-
+            speedsup = 0;
 
         }
         public override void Update(GameTime gameTime)
@@ -130,8 +137,12 @@ namespace Project1
 
 
 
-            if (keyboardState.IsKeyDown(Keys.M))
+            if (keyboardState.IsKeyDown(Keys.P))
+            {
                 screenpause = false;
+                Console.WriteLine("play");
+            }
+
 
 
 
@@ -139,7 +150,6 @@ namespace Project1
             {
                 float deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds; // DeltaTime
                 float walkSpeed = deltaSeconds * player.Speed; // Vitesse de déplacement du joueur
-                float flySpeed = deltaSeconds * Bullet.SPEED; // Vitesse de déplacement de la balle
 
                 float zombSpeed = deltaSeconds * Zombie.VITESSE_NORMAL; //Vitesse de déplacement du zomb
 
@@ -210,8 +220,18 @@ namespace Project1
                     }
                 }
 
+                //if (keyboardState.IsKeyDown(Keys.R))
+                //{
+
+                //    screenpause = true;
+                //    Console.WriteLine("pause");
+                //}
+
+
                 foreach (Bullet balle in listeBalles)
                 {
+                    float flySpeed = deltaSeconds * balle.speed; // Vitesse de déplacement de la balle
+
                     balle.Position += new Vector2(flySpeed * balle.Direction.X, flySpeed * balle.Direction.Y);
                     balle.UpdateHitbox();
                     
@@ -227,7 +247,9 @@ namespace Project1
                 if (mouseState.LeftButton == ButtonState.Pressed && click == false)
                 {
                     Bullet balle = new Bullet(this, player, new Vector2(relativeCursor.X, relativeCursor.Y));
+                    balle.Speed += speedsup;
                     listeBalles.Add(balle);
+
                     click = true;
                     //A EFFACER
                     core.Life -= 5;
@@ -318,11 +340,7 @@ namespace Project1
 
 
 
-                if (keyboardState.IsKeyDown(Keys.P))
-                {
 
-                    screenpause = true;
-                }
 
 
                 player.Apparence.Play(animation);
@@ -353,17 +371,35 @@ namespace Project1
                     if (buttons[i].Contains(Mouse.GetState().X, Mouse.GetState().Y))
                     {
                         if (i == 0)
-                            Console.WriteLine("shop1");
+                        {
+                            if (player.Gold >= 0)
+                                player.Life += 10;
+                        }
                         else if (i == 1)
-                            Console.WriteLine("shop2");
+                        {
+                            if (player.Gold >= 0)
+                                speedsup += 100;
+
+                        }
+
                         else if (i == 2)
-                            Console.WriteLine("shop3");
+                        {
+                            if (player.Gold >= 0)
+                                player.Speed += 10;
+                        }
+
                         else if (i == 3)
-                            Console.WriteLine("shop4");
+                        {
+                            if (player.Gold >= 0)
+                                player.Speed += 100;
+                        }
                         else if (i == 4)
+                        {
                             shopoui = false;
-                        screenpause = false;
-                        Console.WriteLine("go back");
+                            screenpause = false;
+                        
+                        }
+                            
 
                     }
                 }

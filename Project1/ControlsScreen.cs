@@ -19,7 +19,9 @@ namespace Project1
         private Texture2D _fondcontrols;
         private Vector2 _fondpos;
         private Rectangle goback;
-        
+        public bool clickControls;
+
+
 
         public ControlsScreen(Game1 game) : base(game)
         {
@@ -33,6 +35,7 @@ namespace Project1
             _fondcontrols = Content.Load<Texture2D>("fondcontrols");
             _fondpos = new Vector2(0,0);
             goback = new Rectangle(87,919,419,101);
+            clickControls = false;
         }
 
 
@@ -45,8 +48,11 @@ namespace Project1
             {
                 if (goback.Contains(Mouse.GetState().X, Mouse.GetState().Y))
                 {
+                    clickControls = true;
                     _mygame.Etat = Game1.Etats.StartScreen;
                 }
+                else
+                    clickControls = false;
             }
         
         }
