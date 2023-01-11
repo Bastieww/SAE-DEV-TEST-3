@@ -27,19 +27,21 @@ namespace Project1
         public void CollisionBalleZombie(List<Bullet> bullets, List<Zombie> zombies)
         {
             bool touche = false;
+            List<Bullet> bulletsToRemove = new List<Bullet>();
+
             foreach (Bullet bullet in bullets)
             {
-                if (touche == false)
+                List<Zombie> zombiesToRemove = new List<Zombie>();
+                if (!touche)
                 {
-
                     foreach (Zombie zombie in zombies)
                     {
                         if (zombie.Hitbox.Intersects(bullet.Hitbox))
                         {
                             Console.WriteLine("Intersect");
 
-                            bullets.Remove(bullet);
-                            zombies.Remove(zombie);
+                            bulletsToRemove.Add(bullet);
+                            zombiesToRemove.Add(zombie);
 
                             touche = true;
                             break;
@@ -47,9 +49,14 @@ namespace Project1
                         }
                     }
                 }
-                break;
+                zombiesToRemove.ForEach(zombie => zombies.Remove(zombie));
+
             }
-           
+
+            foreach (Bullet bullet in bulletsToRemove) bullets.Remove(bullet);
+
+
+            Console.WriteLine(touche);
         }
 
         public bool CollisionBalleOutside(Bullet bullet,TiledMap map, Player player)

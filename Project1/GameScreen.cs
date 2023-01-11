@@ -13,6 +13,7 @@ using System.Diagnostics;
 using MonoGame.Extended.Sprites;
 using MonoGame.Extended.Serialization;
 using System.Threading;
+using MonoGame.Extended;
 
 namespace Project1
 {
@@ -290,15 +291,15 @@ namespace Project1
 
 
 
-                if (listeZomb.Count >= 1)
-                {
+               
+                
                     collisions.CollisionZombiePlayer(listeZomb, player);
                     collisions.CollisionZombieCore(listeZomb, core);
-                    if (listeBalles.Count >= 1)
-                    {
+                
+                    
                         collisions.CollisionBalleZombie(listeBalles, listeZomb); 
-                    }
-                }
+                    
+                
 
 
                 
@@ -444,7 +445,7 @@ namespace Project1
 
                 foreach (Bullet balle in listeBalles)
                 {
-                    _myGame._spriteBatch.Draw(rect, balle.Hitbox, Color.White);
+                    _myGame._spriteBatch.DrawRectangle(balle.Hitbox, Color.Cyan, 7);
                     _myGame._spriteBatch.Draw(balle.Apparence, balle.Position, Color.White);
                 }
 
