@@ -17,7 +17,7 @@ namespace Project1
     public class Zombie
     {
         public const int VIE_NORMAL = 25, VIE_GROS = 50, VIE_RAPIDE = 10;
-        public const int VITESSE_NORMAL = 200, VITESSE_GROS = 100, VITESSE_RAPIDE = 300;
+        public const int VITESSE_NORMAL = 4, VITESSE_GROS = 2, VITESSE_RAPIDE = 8;
         public const int PUISSANCE_NORMAl = 3, PUISSANCE_RAPIDE = 8, PUISSANCE_GROS = 11;
 
         private int vieZombie, vitesseZombie, XposZomb, YposZomb;
@@ -171,19 +171,19 @@ namespace Project1
                 case "Normal":
                     this.VieZombie = Zombie.VIE_NORMAL;
                     this.VitesseZombie = Zombie.VITESSE_NORMAL;
-                    SpriteSheet apparence = gamescreen.Content.Load<SpriteSheet>("zombieAnim.sf", new JsonContentLoader());
+                    SpriteSheet apparence = gamescreen.Content.Load<SpriteSheet>("zombie-NormalAnim.sf", new JsonContentLoader());
                     this.TextureZomb = new AnimatedSprite(apparence);
                     break;
                 case "Rapide":
                     this.VieZombie = Zombie.VIE_RAPIDE;
                     this.VitesseZombie = Zombie.VITESSE_RAPIDE;
-                    apparence = gamescreen.Content.Load<SpriteSheet>("heart.sf", new JsonContentLoader());
+                    apparence = gamescreen.Content.Load<SpriteSheet>("zombie-NinjaAnim.sf", new JsonContentLoader());
                     this.TextureZomb = new AnimatedSprite(apparence);
                     break;
                 case "Gros":
                     this.VieZombie = Zombie.VIE_GROS;
                     this.VitesseZombie = Zombie.VITESSE_GROS;
-                    apparence = gamescreen.Content.Load<SpriteSheet>("playerbase.sf", new JsonContentLoader());
+                    apparence = gamescreen.Content.Load<SpriteSheet>("zombie-CasquetteAnim.sf", new JsonContentLoader());
                     this.TextureZomb = new AnimatedSprite(apparence);
                     break;
             }

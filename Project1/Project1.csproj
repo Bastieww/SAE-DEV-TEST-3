@@ -77,6 +77,15 @@
     <None Update="Content\playerdebase.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Content\zombie-CasquetteAnim.sf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\zombie-NinjaAnim.sf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\zombie-NormalAnim.sf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Content\zombie.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
