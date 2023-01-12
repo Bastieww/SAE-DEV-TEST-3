@@ -234,6 +234,13 @@
 /processorParam:TextureFormat=Color
 /build:fondshop.png
 
+#begin font.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:font.spritefont
+
 #begin fondshop.png
 /importer:TextureImporter
 /processor:TextureProcessor

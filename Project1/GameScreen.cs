@@ -46,10 +46,20 @@ namespace Project1
         private Texture2D buttonmenupressed;
         private Texture2D buttonmenureleased;
         private Vector2 buttonmenupos;
+        // Barre de vie du coeur
+        private SpriteBatch barredeviestatiqueCore;
+        private AnimatedSprite barredevieCore;
+        private Vector2 barredevieposCore;
 
+        // Barre de vie du joueur
+        private SpriteBatch barredeviestatiquePlayer;
+        private AnimatedSprite barredeviePlayer;
+        private Vector2 barredevieposPlayer;
 
-        private bool toucheBalleZombie;
         private int speedsup;
+
+        // Texte
+        Vector2 positionText;
 
 
         private AnimatedSprite barredevie;
@@ -59,7 +69,7 @@ namespace Project1
         // Zombies
         List<Bullet> listeBalles;
         List<Zombie> listeZomb;
-        private int nbZombie = 0, numVague = 1, zombMaxVague = 10;
+        private int nbZombie = 0, numVague = 0, zombMaxVague = 10;
         private float chrono = 0;
 
         // Shop
@@ -109,11 +119,8 @@ namespace Project1
             _myGame._tiledMapRenderer = new TiledMapRenderer(GraphicsDevice, _myGame._tiledMap);
             _myGame.mapLayer = _myGame._tiledMap.GetLayer<TiledMapTileLayer>("Cailloux");
 
-            barredeviepos = new Vector2(250, 1000);
-
-
-            //PAUSE
-            pause = Content.Load<Texture2D>("fond");
+            // Boutons
+            pause = Content.Load<Texture2D>("fondpause");
             _pausepos = new Vector2(0, 0);
 
             buttonresume = Content.Load<Texture2D>("buttonresume");
@@ -131,22 +138,31 @@ namespace Project1
             buttonsPause[1] = new Rectangle(690, 625, 500, 150);
 
 
+            // Barre de vie Coeur
+            barredevieposCore = new Vector2(250, Game1.HEIGHT - 80);
+            SpriteSheet spriteCore = Content.Load<SpriteSheet>("barredevie.sf", new JsonContentLoader());
+            barredevieCore = new AnimatedSprite(spriteCore);
 
-            SpriteSheet sprite = Content.Load<SpriteSheet>("barredevie.sf", new JsonContentLoader());
-            barredevie = new AnimatedSprite(sprite);
+            // Barre de vie du joueur
+            barredevieposPlayer = new Vector2(Game1.WIDTH - 400, Game1.HEIGHT - 80);
+            SpriteSheet spriteVieJoueur = Content.Load<SpriteSheet>("barredevie.sf", new JsonContentLoader());
+            barredeviePlayer = new AnimatedSprite(spriteVieJoueur);
 
             player = new Player(this);
             camera = new Camera();
             core = new Core(this, _myGame._tiledMap);
 
 
-
-
             click = false;
             screenpause = false;
 
+            wallReference = new Walls(_myGame, new Rectangle(0, 0, 0, 0));
+            
+            // Listes
             listeBalles = new List<Bullet>();
             listeZomb = new List<Zombie>();
+            listeWalls = new List<Walls>();
+            listeWalls = wallReference.ChargementMap();
 
             // SHOP
             shopoui = false;
@@ -180,12 +196,7 @@ namespace Project1
             buttons[3] = new Rectangle(961, 545, 608, 353);
             buttons[4] = new Rectangle(36, 937, 438, 132);
 
-            wallReference = new Walls(_myGame, new Rectangle(0, 0, 0, 0));
-
-
-            listeWalls = new List<Walls>();
-            listeWalls = wallReference.ChargementMap();
-
+            
             collisions = new Collisions();
 
             speedsup = 0;
@@ -197,7 +208,7 @@ namespace Project1
             MouseState mouseState = Mouse.GetState();
 
 
-
+            // Si screen de pause
             if (screenpause == false)
             {
                 float deltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds; // DeltaTime
@@ -209,7 +220,9 @@ namespace Project1
 
                 string animation = "idle";
                 string animationcore = "idle";
-                string animationbarredevie = "100%";
+                string animationbarredevieCore = "100%";
+                string animationbarredeviePlayer = "100%";
+
 
                 //ALL TESTS ///////////////////////////////////////////////////////////////////////////////////
 
@@ -269,6 +282,7 @@ namespace Project1
                 //}
 
 
+                // Disparition du bullet
                 foreach (Bullet balle in listeBalles)
                 {
                     float flySpeed = deltaSeconds * balle.speed; // Vitesse de déplacement de la balle
@@ -284,7 +298,7 @@ namespace Project1
 
                 }
 
-
+                // Verif si clique -> ajoute une balle dans liste
                 if (mouseState.LeftButton == ButtonState.Pressed && click == false)
                 {
                     Bullet balle = new Bullet(this, player, new Vector2(relativeCursor.X, relativeCursor.Y));
@@ -292,8 +306,9 @@ namespace Project1
                     listeBalles.Add(balle);
 
                     click = true;
+
                     //A EFFACER
-                    core.Life -= 5;
+                    core.Life -= 10;
                 }
                 else if (mouseState.LeftButton == ButtonState.Released && click == true)
                 {
@@ -328,8 +343,6 @@ namespace Project1
                 }
 
 
-
-                Console.WriteLine(listeZomb.Count);
                 // Verif collision Zombie/Joueur , Zombie/Coeur , Zombie/Balle
                 if (listeZomb.Count >= 1)
                 {
@@ -394,12 +407,19 @@ namespace Project1
 
 
                 player.Apparence.Play(animation);
-                core.Apparence.Play(animationcore);
-                barredevie.Play(animationbarredevie);
-                core.Apparence.Update(deltaSeconds);
-                barredevie.Update(deltaSeconds);
-                _myGame._tiledMapRenderer.Update(gameTime);
                 player.Apparence.Update(deltaSeconds);
+                
+                barredevieCore.Play(animationbarredevieCore);
+                barredevieCore.Update(deltaSeconds);
+
+                barredeviePlayer.Play(animationbarredeviePlayer);
+                barredeviePlayer.Update(deltaSeconds);
+
+                core.Apparence.Play(animationcore);
+                core.Apparence.Update(deltaSeconds);
+               
+                _myGame._tiledMapRenderer.Update(gameTime);
+                
                 camera.Follow(player, _myGame);
             }
 
@@ -421,8 +441,6 @@ namespace Project1
                                 _myGame.Etat = Game1.Etats.StartScreen;
                             }
                         }
-
-
                     }
                 }
                 if (buttonsPause[0].Contains(Mouse.GetState().X, Mouse.GetState().Y))
@@ -436,8 +454,7 @@ namespace Project1
                     buttonmenureleased = buttonmenu;
             }
 
-            //SHOP
-
+            // SHOP
             if (shopoui == true)
             {
 
@@ -500,10 +517,7 @@ namespace Project1
                             {
                                 shopoui = false;
                                 screenpause = false;
-
                             }
-
-
                         }
 
                     }
@@ -513,11 +527,6 @@ namespace Project1
 
 
             }
-
-
-
-
-
         }
         public override void Draw(GameTime gameTime)
         {
@@ -539,12 +548,12 @@ namespace Project1
                 rect.SetData(new Color[] { Color.Blue });
 
                 _myGame._spriteBatch.Begin(transformMatrix: camera.Transform);
-                _myGame._tiledMapRenderer.Draw(viewMatrix: camera.Transform);
-                _myGame._spriteBatch.Draw(rect, player.Hitbox, Color.White);
 
+                _myGame._tiledMapRenderer.Draw(viewMatrix: camera.Transform);
+
+                _myGame._spriteBatch.Draw(rect, player.Hitbox, Color.White);
                 _myGame._spriteBatch.Draw(core.Apparence, core.Position);
                 _myGame._spriteBatch.Draw(player.Apparence, player.Position);
-
 
                 foreach (Bullet balle in listeBalles)
                 {
@@ -567,7 +576,18 @@ namespace Project1
                 _myGame._spriteBatch.End();
 
                 _myGame._spriteBatch.Begin();
-                _myGame._spriteBatch.Draw(barredevie, barredeviepos);
+                _myGame._spriteBatch.Draw(barredevieCore, barredevieposCore);
+                _myGame._spriteBatch.Draw(barredeviePlayer, barredevieposPlayer);
+
+
+                // Texte
+                positionText = new Vector2(Game1.WIDTH - 600, 10);
+                _myGame._spriteBatch.DrawString(_myGame.font, "Zombies Restants : " + listeZomb.Count, positionText, new Color(74, 110, 40));
+                positionText = new Vector2(Game1.WIDTH - 270, 250);
+                _myGame._spriteBatch.DrawString(_myGame.font, "Argent " + player.Gold, positionText, new Color(74, 110, 40));
+                positionText = new Vector2(Game1.WIDTH - 250, 120);
+                _myGame._spriteBatch.DrawString(_myGame.font, "Vague " + numVague, positionText, new Color(74, 110, 40));
+
                 _myGame._spriteBatch.End();
 
             }
@@ -587,5 +607,3 @@ namespace Project1
 
     }
 }
-
-
