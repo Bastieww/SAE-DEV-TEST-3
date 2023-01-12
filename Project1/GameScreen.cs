@@ -69,7 +69,7 @@ namespace Project1
         // Zombies
         List<Bullet> listeBalles;
         List<Zombie> listeZomb;
-        private int nbZombie = 0, numVague = 0, zombMaxVague = 10;
+        private int nbZombie = 0, numVague = 1, zombMaxVague = 20, multiplicateur = 1, puissanceZomb = 1;
         private float chrono = 0, chronoVagueSuivante = 60;
         private string textureZomb;
 
@@ -111,8 +111,6 @@ namespace Project1
         //Musique
         Song gameScreenMusic;
         SoundEffect shootSound;
-        
-       
 
         public GameScreen(Game1 game) : base(game)
         {
@@ -377,15 +375,19 @@ namespace Project1
                     chronoVagueSuivante = 60;
                     chrono = 0;
                     nbZombie = 0;
+
                     while (nbZombie < zombMaxVague)
                     {
+                        multiplicateur = _myGame.rd.Next(1, numVague);
+                        puissanceZomb *= multiplicateur;
+                        Console.WriteLine(puissanceZomb);
+
                         nbZombie += 1;
-                        int puissanceZomb = 1;
-                        if (puissanceZomb == 1)
+                        if (puissanceZomb <= Zombie.PUISSANCE_NORMAl)
                         {
                             textureZomb = "Normal";
                         }
-                        else if (puissanceZomb == 2)
+                        else if (puissanceZomb <= Zombie.PUISSANCE_RAPIDE)
                         {
                             textureZomb = "Rapide";
                         }
@@ -395,9 +397,11 @@ namespace Project1
                         }
                         Zombie zombie = new Zombie(this, textureZomb, _myGame._tiledMap);
                         listeZomb.Add(zombie);
+                        puissanceZomb = 1;
                     }
                     numVague += 1;
-                    zombMaxVague += 25;
+                    zombMaxVague += 3;
+                    
                 }
 
 
@@ -652,14 +656,13 @@ namespace Project1
 
                 // Texte
                 positionText = new Vector2(20, 10);
-                _myGame._spriteBatch.DrawString(_myGame.font, "Temps avant vague suivante: " + Math.Round(chronoVagueSuivante), positionText, Color.YellowGreen);
+                _myGame._spriteBatch.DrawString(_myGame.font, "Time before next wave: " + Math.Round(chronoVagueSuivante), positionText, Color.YellowGreen);
                 positionText = new Vector2(Game1.WIDTH - 500, 10);
-                _myGame._spriteBatch.DrawString(_myGame.font, "Zombies Restants : " + listeZomb.Count, positionText, Color.YellowGreen);
+                _myGame._spriteBatch.DrawString(_myGame.font, "Zombies Left : " + listeZomb.Count, positionText, Color.YellowGreen);
                 positionText = new Vector2(20, 100);
-                _myGame._spriteBatch.DrawString(_myGame.font, "Vague " + numVague, positionText, Color.YellowGreen);
+                _myGame._spriteBatch.DrawString(_myGame.font, "Wave " + (numVague - 1), positionText, Color.YellowGreen);
                 positionText = new Vector2(20, 200);
-                _myGame._spriteBatch.DrawString(_myGame.font, "Argent : " + player.Gold, positionText, Color.YellowGreen);
-
+                _myGame._spriteBatch.DrawString(_myGame.font, "Money : " + player.Gold, positionText, Color.YellowGreen);
                 _myGame._spriteBatch.End();
 
             }

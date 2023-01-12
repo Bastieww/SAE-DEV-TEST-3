@@ -20,6 +20,7 @@ namespace Project1
         public const int WIDTH = 1920, HEIGHT = 1080;
         public SpriteFont font;
         public bool changementMusic;
+        public Random rd = new Random();
 
 
 
