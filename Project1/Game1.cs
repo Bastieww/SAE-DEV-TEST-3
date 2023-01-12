@@ -166,7 +166,6 @@ namespace Project1
             //        _screenManager.LoadScreen(startscreen, new FadeTransition(GraphicsDevice, Color.Black));
             //}
 
-
             if(keyboardState.IsKeyDown(Keys.S))
                 {
                 gamescreen.shopoui = true;
