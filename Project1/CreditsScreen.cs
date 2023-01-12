@@ -32,7 +32,7 @@ namespace Project1
         }
         public override void LoadContent()
         {
-            fondCreditsScreen = Content.Load<Texture2D>("fond");
+            fondCreditsScreen = Content.Load<Texture2D>("fondcredits");
             _posFondControlsScreen = new Vector2(0, 0);
             button = new Rectangle(10, 10, 390, 118);
 

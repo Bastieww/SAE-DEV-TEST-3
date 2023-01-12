@@ -300,6 +300,18 @@
 /processorParam:TextureFormat=Color
 /build:fondcontrols.png
 
+#begin fondcredits.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:fondcredits.png
+
 #begin fondEndscreen.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -504,7 +516,7 @@
 /processorParam:TextureFormat=Color
 /build:zombie-Casquette.png
 
-#begin zombie-Ninja.png
+#begin zombie-ninja.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -514,7 +526,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:zombie-Ninja.png
+/build:zombie-ninja.png
 
 #begin zombie-Normal.png
 /importer:TextureImporter
@@ -527,16 +539,4 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:zombie-Normal.png
-
-#begin zombie-ninja.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:zombie-ninja.png
 

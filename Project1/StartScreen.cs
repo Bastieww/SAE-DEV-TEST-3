@@ -102,7 +102,7 @@ namespace Project1
             buttons[0] = new Rectangle(770, 752, 231, 110);
             buttons[1] = new Rectangle(301, 752, 320, 135);
             buttons[2] = new Rectangle(1239, 752, 320, 135);
-            buttons[3]= new Rectangle(10,10,100,100);
+            buttons[3]= new Rectangle(10,10,186,76);
 
 
 
