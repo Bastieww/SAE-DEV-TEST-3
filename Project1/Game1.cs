@@ -19,6 +19,8 @@ namespace Project1
         public SpriteBatch _spriteBatch { get; set; }
         public const int WIDTH = 1920, HEIGHT = 1080;
         public SpriteFont font;
+        public bool changementMusic;
+        public Random rd = new Random();
 
 
 
@@ -95,6 +97,7 @@ namespace Project1
             gamescreen = new GameScreen(this);
             endscreen = new EndScreen(this);
             controlsscreen = new ControlsScreen(this);
+            changementMusic = true;
             creditsscreen = new CreditsScreen(this);
         }
 
@@ -201,21 +204,6 @@ namespace Project1
             GraphicsDevice.Clear(Color.Black);
 
             base.Draw(gameTime);
-        }
-
-        private bool IsCollision(ushort x, ushort y)
-        {
-            // définition de tile qui peut être null (?)
-
-            TiledMapTile? tile;
-            if (mapLayer.TryGetTile(x, y, out tile) == false)
-                return false;
-            if (!tile.Value.IsBlank)
-            {
-                return true;
-            }
-
-            return false;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using MonoGame.Extended.Tiled;
 using MonoGame.Extended.Tiled.Renderers;
 using MonoGame.Extended.Animations;
@@ -47,6 +48,7 @@ namespace Project1
 
         private Texture2D _fond;
         private Vector2 _posfond;
+        private Song startMenuMusic;
 
 
 
@@ -59,6 +61,14 @@ namespace Project1
         }
         public override void LoadContent()
         {
+            if (_myGame.changementMusic == true)
+            {
+                startMenuMusic = Content.Load<Song>("Partner-of-Doom");
+                MediaPlayer.Play(startMenuMusic);
+                _myGame.changementMusic = false;
+
+            }
+            
 
             buttonplay = Content.Load<Texture2D>("buttonplay");
             buttonplaypressed = Content.Load<Texture2D>("buttonplaypressed");
@@ -103,8 +113,10 @@ namespace Project1
 
         public override void Update(GameTime gameTime)
         {
-            MouseState mouseState = Mouse.GetState();
-            Rectangle mouserect = new Rectangle(mouseState.X, mouseState.Y, 1, 1);
+          
+           
+           MouseState mouseState = Mouse.GetState();
+           Rectangle mouserect = new Rectangle(mouseState.X, mouseState.Y, 1,1);
             clickMenu = false;
             clickQuit = false;
             if (mouseState.LeftButton == ButtonState.Pressed)

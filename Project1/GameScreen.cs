@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
+using Microsoft.Xna.Framework.Audio;
 using MonoGame.Extended.Tiled;
 using MonoGame.Extended.Tiled.Renderers;
 using MonoGame.Extended.Content;
@@ -47,12 +49,10 @@ namespace Project1
         private Texture2D buttonmenureleased;
         private Vector2 _buttonmenupos;
         // Barre de vie du coeur
-        private SpriteBatch barredeviestatiqueCore;
         private AnimatedSprite barredevieCore;
         private Vector2 barredevieposCore;
 
         // Barre de vie du joueur
-        private SpriteBatch barredeviestatiquePlayer;
         private AnimatedSprite barredeviePlayer;
         private Vector2 barredevieposPlayer;
 
@@ -68,8 +68,9 @@ namespace Project1
         // Zombies
         List<Bullet> listeBalles;
         List<Zombie> listeZomb;
-        private int nbZombie = 0, numVague = 0, zombMaxVague = 10;
-        private float chrono = 0;
+        private int nbZombie = 0, numVague = 1, zombMaxVague = 20, multiplicateur = 1, puissanceZomb = 1;
+        private float chrono = 0, chronoVagueSuivante = 5;
+        private string textureZomb;
 
         // Shop
         private Texture2D shop;
@@ -122,6 +123,9 @@ namespace Project1
         Walls wallReference;
         List<Walls> listeWalls;
 
+        //Musique
+        Song gameScreenMusic;
+        SoundEffect shootSound;
 
         public GameScreen(Game1 game) : base(game)
         {
@@ -230,7 +234,13 @@ namespace Project1
             
             collisions = new Collisions();
 
+            gameScreenMusic = Content.Load<Song>("Demon-Slayer");
+            MediaPlayer.Play(gameScreenMusic);
+            shootSound = Content.Load<SoundEffect>("ShootSound");
+            
             speedsup = 0;
+
+            
 
         }
         public override void Update(GameTime gameTime)
@@ -250,6 +260,7 @@ namespace Project1
                 relativeCursor = Vector2.Transform(new Vector2(mouseState.X, mouseState.Y), Matrix.Invert(camera.Transform));
 
                 string animation = "idle";
+                string animationZombie = "walkWest";
                 string animationcore = "idle";
                 string animationbarredevieCore = "100%";
                 string animationbarredeviePlayer = "100%";
@@ -329,6 +340,7 @@ namespace Project1
                     Bullet balle = new Bullet(this, player, new Vector2(relativeCursor.X, relativeCursor.Y));
                     balle.Speed += speedsup;
                     listeBalles.Add(balle);
+                    shootSound.Play();
 
                     click = true;
 
@@ -358,11 +370,11 @@ namespace Project1
                 // Verif collision Zombie/Mur
                 foreach (Zombie zombie in listeZomb)
                 {
-                    zombie.Position += Vector2.Normalize((player.Position - zombie.Position) * 9);
+                    zombie.Position += Vector2.Normalize(player.Position - zombie.Position) * zombie.VitesseZombie;
                     zombie.UpdateHitbox();
                     if (collisions.CollisionZombieWall(zombie, listeWalls))
                     {
-                        zombie.Position -= Vector2.Normalize((player.Position - zombie.Position) * 9);
+                        zombie.Position -= Vector2.Normalize(player.Position - zombie.Position) * zombie.VitesseZombie;
                         zombie.UpdateHitbox();
                     }
                 }
@@ -375,26 +387,47 @@ namespace Project1
                     collisions.CollisionZombieCore(listeZomb, core);
                     if (listeBalles.Count >= 1)
                     {
-                        collisions.CollisionBalleZombie(listeBalles, listeZomb);
+                        collisions.CollisionBalleZombie(listeBalles, listeZomb, player);
                     }
                 }
-
 
                 // Systeme de vague
                 if (listeZomb.Count == 0)
                     chrono += deltaSeconds;
-                if (chrono >= 5)
+                else
+                    chronoVagueSuivante -= deltaSeconds;
+                if (chrono >= 5 || chronoVagueSuivante <= 0)
                 {
+                    chronoVagueSuivante = 5;
                     chrono = 0;
                     nbZombie = 0;
+
                     while (nbZombie < zombMaxVague)
                     {
+                        multiplicateur = _myGame.rd.Next(1, numVague);
+                        puissanceZomb *= multiplicateur;
+                        Console.WriteLine(puissanceZomb);
+
                         nbZombie += 1;
-                        Zombie zombie = new Zombie(this, "Normal", _myGame._tiledMap);
+                        if (puissanceZomb <= Zombie.PUISSANCE_NORMAl)
+                        {
+                            textureZomb = "Normal";
+                        }
+                        else if (puissanceZomb <= Zombie.PUISSANCE_RAPIDE)
+                        {
+                            textureZomb = "Rapide";
+                        }
+                        else
+                        {
+                            textureZomb = "Gros";
+                        }
+                        Zombie zombie = new Zombie(this, textureZomb, _myGame._tiledMap);
                         listeZomb.Add(zombie);
+                        puissanceZomb = 1;
                     }
                     numVague += 1;
-                    zombMaxVague += 25;
+                    zombMaxVague += 3;
+
                 }
 
 
@@ -431,24 +464,76 @@ namespace Project1
 
 
 
+                // Affichage de la vie du joueur
+                //Console.WriteLine(player.Life);
+                switch (player.Life)
+                {
+                    case 900:
+                        animationbarredeviePlayer = "90%";
+                        break;
+                    case 800:
+                        animationbarredeviePlayer = "80%";
+                        break;
+                    case 700:
+                        animationbarredeviePlayer = "70%";
+                        break;
+                    case 600:
+                        animationbarredeviePlayer = "60%";
+                        break;
+                    case 500:
+                        animationbarredeviePlayer = "50%";
+                        break;
+                    case 400:
+                        animationbarredeviePlayer = "40%";
+                        break;
+                    case 300:
+                        animationbarredeviePlayer = "30%";
+                        break;
+                    case 200:
+                        animationbarredeviePlayer = "20%";
+                        break;
+                    case 100:
+                        animationbarredeviePlayer = "10%";
+                        break;
+                    case 0:
+                        {
+                            animationbarredeviePlayer = "0%";
+                            //_myGame.Etat = Game1.Etats.EndScreen;
+                        }
+                        break;
+                }
 
-
+                // Anime Player
                 player.Apparence.Play(animation);
                 player.Apparence.Update(deltaSeconds);
-                
+
+                // Anime barre de vie Core
                 barredevieCore.Play(animationbarredevieCore);
                 barredevieCore.Update(deltaSeconds);
 
+                // Anime barre vie player
                 barredeviePlayer.Play(animationbarredeviePlayer);
                 barredeviePlayer.Update(deltaSeconds);
 
+                // Anime core
                 core.Apparence.Play(animationcore);
                 core.Apparence.Update(deltaSeconds);
-               
-                _myGame._tiledMapRenderer.Update(gameTime);
-                
-                camera.Follow(player, _myGame);
-            }
+
+                // Anime Zombie
+                foreach (Zombie zombie in listeZomb)
+                {
+                    zombie.TextureZomb.Play(animationZombie);
+                    zombie.TextureZomb.Update(deltaSeconds);
+                    
+                  /*  if (zombie.Position.X > player.Position.X)
+                        animationZombie = "walkWest";
+                    else
+                        animationZombie = "walkEast";   */
+                }
+
+                    _myGame._tiledMapRenderer.Update(gameTime);
+
+                    camera.Follow(player, _myGame);
 
             //PAUSE
             if (screenpause == true && shopoui == false)
@@ -475,15 +560,15 @@ namespace Project1
                 else
                     buttonresumereleased = buttonresume;
 
-                if (buttonsPause[1].Contains(Mouse.GetState().X, Mouse.GetState().Y))
-                    buttonmenureleased = buttonmenupressed;
-                else
-                    buttonmenureleased = buttonmenu;
-            }
+                    if (buttonsPause[1].Contains(Mouse.GetState().X, Mouse.GetState().Y))
+                        buttonmenureleased = buttonmenupressed;
+                    else
+                        buttonmenureleased = buttonmenu;
+                }
 
-            // SHOP
-            if (shopoui == true)
-            {
+                // SHOP
+                if (shopoui == true)
+                {
 
                 shop1released = shop1;
                 shop2released = shop2;
@@ -507,7 +592,7 @@ namespace Project1
                                     nbshop1 += 1;
                                     Console.WriteLine(player.Life);
 
-                                }
+                                    }
 
 
 
@@ -525,7 +610,7 @@ namespace Project1
                                 }
 
 
-                            }
+                                }
 
                             else if (i == 2)
                             {
@@ -539,7 +624,7 @@ namespace Project1
                                     nbshop3 += 1;
                                 }
 
-                            }
+                                }
 
                             else if (i == 3)
                             {
@@ -565,7 +650,7 @@ namespace Project1
 
                         }
 
-                    }
+                        }
 
                 }
                 else if (mouseState.LeftButton == ButtonState.Released && clickshop == true)
@@ -606,28 +691,28 @@ namespace Project1
                 _myGame._spriteBatch.Begin(transformMatrix: camera.Transform);
 
                 _myGame._tiledMapRenderer.Draw(viewMatrix: camera.Transform);
-
-                _myGame._spriteBatch.Draw(rect, player.Hitbox, Color.White);
                 _myGame._spriteBatch.Draw(core.Apparence, core.Position);
+
+                //_myGame._spriteBatch.Draw(rect, player.Hitbox, Color.White);
                 _myGame._spriteBatch.Draw(player.Apparence, player.Position);
 
                 foreach (Bullet balle in listeBalles)
                 {
-                    _myGame._spriteBatch.DrawRectangle(balle.Hitbox, Color.Cyan, 7);
+                    //_myGame._spriteBatch.Draw(pause, balle.Hitbox, Color.White);
+                    //_myGame._spriteBatch.DrawRectangle(balle.Hitbox, Color.Cyan, 7);
                     _myGame._spriteBatch.Draw(balle.Apparence, balle.Position, Color.White);
-                    _myGame._spriteBatch.Draw(pause, balle.Hitbox, Color.White);
                 }
 
                 foreach (Zombie zombie in listeZomb)
                 {
-                    _myGame._spriteBatch.Draw(rect, zombie.Hitbox, Color.White);
+                    //_myGame._spriteBatch.Draw(pause, zombie.Hitbox, Color.White);
+                    //_myGame._spriteBatch.Draw(rect, zombie.Hitbox, Color.White);
                     _myGame._spriteBatch.Draw(zombie.TextureZomb, zombie.Position);
-                    _myGame._spriteBatch.Draw(pause, zombie.Hitbox, Color.White);
                 }
 
                 foreach (Walls wall in listeWalls)
                 {
-                    _myGame._spriteBatch.Draw(rect, wall.Hitbox, Color.White);
+                    //_myGame._spriteBatch.Draw(rect, wall.Hitbox, Color.White);
                 }
                 _myGame._spriteBatch.End();
 
@@ -637,13 +722,14 @@ namespace Project1
 
 
                 // Texte
-                positionText = new Vector2(Game1.WIDTH - 600, 10);
-                _myGame._spriteBatch.DrawString(_myGame.font, "Zombies Restants : " + listeZomb.Count, positionText, new Color(74, 110, 40));
-                positionText = new Vector2(Game1.WIDTH - 270, 250);
-                _myGame._spriteBatch.DrawString(_myGame.font, "Argent " + player.Gold, positionText, new Color(74, 110, 40));
-                positionText = new Vector2(Game1.WIDTH - 250, 120);
-                _myGame._spriteBatch.DrawString(_myGame.font, "Vague " + numVague, positionText, new Color(74, 110, 40));
-
+                positionText = new Vector2(20, 10);
+                _myGame._spriteBatch.DrawString(_myGame.font, "Time before next wave: " + Math.Round(chronoVagueSuivante), positionText, Color.YellowGreen);
+                positionText = new Vector2(Game1.WIDTH - 500, 10);
+                _myGame._spriteBatch.DrawString(_myGame.font, "Zombies Left : " + listeZomb.Count, positionText, Color.YellowGreen);
+                positionText = new Vector2(20, 100);
+                _myGame._spriteBatch.DrawString(_myGame.font, "Wave " + (numVague - 1), positionText, Color.YellowGreen);
+                positionText = new Vector2(20, 200);
+                _myGame._spriteBatch.DrawString(_myGame.font, "Gold : " + player.Gold, positionText, Color.YellowGreen);
                 _myGame._spriteBatch.End();
 
             }

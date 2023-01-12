@@ -17,17 +17,18 @@ namespace Project1
     public class Zombie
     {
         public const int VIE_NORMAL = 25, VIE_GROS = 50, VIE_RAPIDE = 10;
-        public const int VITESSE_NORMAL = 2, VITESSE_GROS = 1, VITESSE_RAPIDE = 4;
+        public const int VITESSE_NORMAL = 4, VITESSE_GROS = 2, VITESSE_RAPIDE = 8;
+        public const int PUISSANCE_NORMAl = 3, PUISSANCE_RAPIDE = 8, PUISSANCE_GROS = 11;
 
-        private int vieZombie, vitesseZombie, XposZomb, YposZomb, nbzombie = 0;
+        private int vieZombie, vitesseZombie, XposZomb, YposZomb;
         private int width = 91;
         private int height = 177;
 
         private string typeZombie;
 
-        private Random rd = new Random();
-
         private AnimatedSprite textureZomb;
+        
+        private Random rd = new Random();
 
         private Rectangle hitbox;
 
@@ -40,6 +41,8 @@ namespace Project1
         {
             this.TypeZombie = typeZombie;
             this.TextureZomb = textureZomb;
+            this.VieZombie = vieZombie;
+            this.VitesseZombie = vitesseZombie;
             LoadContent(gamescreen);
             
             int Xspawn = rd.Next(0, map.WidthInPixels);
@@ -70,7 +73,6 @@ namespace Project1
 
             this.Cible = new Vector2(0, 0);
 
-            
         }
 
 
@@ -84,21 +86,6 @@ namespace Project1
             set
             {
                 this.typeZombie = value;
-                switch (this.TypeZombie)
-                {
-                    case "Normal":
-                        vieZombie = Zombie.VIE_NORMAL;
-                        vitesseZombie = Zombie.VITESSE_NORMAL;
-                        break;
-                    case "Rapide":
-                        vieZombie = Zombie.VIE_RAPIDE;
-                        vitesseZombie = Zombie.VITESSE_RAPIDE;
-                        break;
-                    case "Gros":
-                        vieZombie = Zombie.VIE_GROS;
-                        vitesseZombie = Zombie.VITESSE_GROS;
-                        break;
-                }
             }
         }
         public AnimatedSprite TextureZomb
@@ -151,6 +138,30 @@ namespace Project1
                 this.hitbox = value;
             }
         }
+        public int VieZombie
+        {
+            get
+            {
+                return this.vieZombie;
+            }
+
+            set
+            {
+                this.vieZombie = value;
+            }
+        }
+        public int VitesseZombie
+        {
+            get
+            {
+                return this.vitesseZombie;
+            }
+
+            set
+            {
+                this.vitesseZombie = value;
+            }
+        }
 
         private void LoadContent(GameScreen gamescreen)
         {
@@ -158,7 +169,21 @@ namespace Project1
             switch (this.TypeZombie)
             {
                 case "Normal":
-                    SpriteSheet apparence = gamescreen.Content.Load<SpriteSheet>("zombieAnim.sf", new JsonContentLoader());
+                    this.VieZombie = Zombie.VIE_NORMAL;
+                    this.VitesseZombie = Zombie.VITESSE_NORMAL;
+                    SpriteSheet apparence = gamescreen.Content.Load<SpriteSheet>("zombie-NormalAnim.sf", new JsonContentLoader());
+                    this.TextureZomb = new AnimatedSprite(apparence);
+                    break;
+                case "Rapide":
+                    this.VieZombie = Zombie.VIE_RAPIDE;
+                    this.VitesseZombie = Zombie.VITESSE_RAPIDE;
+                    apparence = gamescreen.Content.Load<SpriteSheet>("zombie-NinjaAnim.sf", new JsonContentLoader());
+                    this.TextureZomb = new AnimatedSprite(apparence);
+                    break;
+                case "Gros":
+                    this.VieZombie = Zombie.VIE_GROS;
+                    this.VitesseZombie = Zombie.VITESSE_GROS;
+                    apparence = gamescreen.Content.Load<SpriteSheet>("zombie-CasquetteAnim.sf", new JsonContentLoader());
                     this.TextureZomb = new AnimatedSprite(apparence);
                     break;
             }
