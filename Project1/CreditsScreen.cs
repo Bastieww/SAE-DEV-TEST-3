@@ -32,12 +32,12 @@ namespace Project1
         }
         public override void LoadContent()
         {
-            fondCreditsScreen = Content.Load<Texture2D>("fondcredits");
+            fondCreditsScreen = Content.Load<Texture2D>("fond/fondcredits");
             _posFondControlsScreen = new Vector2(0, 0);
             button = new Rectangle(10, 10, 390, 118);
 
-            buttonMenu = Content.Load<Texture2D>("buttonmenuend");
-            buttonMenuPressed = Content.Load<Texture2D>("buttonmenuendpressed");
+            buttonMenu = Content.Load<Texture2D>("buttons/buttonmenuend");
+            buttonMenuPressed = Content.Load<Texture2D>("buttons/buttonmenuendpressed");
             buttonMenuReleased = buttonMenu;
             _buttonMenuPos = new Vector2(10, 10);
             base.LoadContent();

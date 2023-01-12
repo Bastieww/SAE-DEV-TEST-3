@@ -139,16 +139,16 @@ namespace Project1
             _myGame.mapLayer = _myGame._tiledMap.GetLayer<TiledMapTileLayer>("Cailloux");
 
             // Boutons
-            pause = Content.Load<Texture2D>("fondpause");
+            pause = Content.Load<Texture2D>("fond/fondpause");
             _pausepos = new Vector2(0, 0);
 
-            buttonresume = Content.Load<Texture2D>("buttonresume");
-            buttonresumepressed = Content.Load<Texture2D>("buttonresumepressed");
+            buttonresume = Content.Load<Texture2D>("buttons/buttonresume");
+            buttonresumepressed = Content.Load<Texture2D>("buttons/buttonresumepressed");
             buttonresumereleased = buttonresume;
             buttonresumepos = new Vector2(690, 314);
 
-            buttonmenu = Content.Load<Texture2D>("buttonmenu");
-            buttonmenupressed = Content.Load<Texture2D>("buttonmenupressed");
+            buttonmenu = Content.Load<Texture2D>("buttons/buttonmenu");
+            buttonmenupressed = Content.Load<Texture2D>("buttons/buttonmenupressed");
             buttonmenureleased = buttonmenu;
             _buttonmenupos = new Vector2(690, 625);
 
@@ -186,11 +186,11 @@ namespace Project1
 
             // SHOP
             shopoui = false;
-            shop = Content.Load<Texture2D>("fondshop");
+            shop = Content.Load<Texture2D>("fond/fondshop");
             _shopPos = new Vector2(0, 0);
 
-            shop1 = Content.Load<Texture2D>("shop1");
-            shop1pressed = Content.Load<Texture2D>("shop1pressed");
+            shop1 = Content.Load<Texture2D>("shop/shop1");
+            shop1pressed = Content.Load<Texture2D>("shop/shop1pressed");
             shop1released = shop1;
             nbshop1 = 0;
             priceshop1= 10;
@@ -198,24 +198,24 @@ namespace Project1
             nbshop1pos = new Vector2(780, 450);
             
 
-            shop2 = Content.Load<Texture2D>("shop2");
-            shop2pressed = Content.Load<Texture2D>("shop2pressed");
+            shop2 = Content.Load<Texture2D>("shop/shop2");
+            shop2pressed = Content.Load<Texture2D>("shop/shop2pressed");
             shop2released = shop2;
             nbshop2 = 0;
             priceshop2 = 10;
             shop2pos = new Vector2(961, 185);
             nbshop2pos = new Vector2(1450,450);
 
-            shop3 = Content.Load<Texture2D>("shop3");
-            shop3pressed = Content.Load<Texture2D>("shop3pressed");
+            shop3 = Content.Load<Texture2D>("shop/shop3");
+            shop3pressed = Content.Load<Texture2D>("shop/shop3pressed");
             shop3released = shop3;
             nbshop3 = 0;
             priceshop2= 10;
             shop3pos = new Vector2(336, 545);
             nbshop3pos = new Vector2(780, 800);
 
-            shop4 = Content.Load<Texture2D>("shop4");
-            shop4pressed = Content.Load<Texture2D>("shop4pressed");
+            shop4 = Content.Load<Texture2D>("shop/shop4");
+            shop4pressed = Content.Load<Texture2D>("shop/shop4pressed");
             shop4released = shop4;
             nbshop4 = 0;
             priceshop4 = 10;
