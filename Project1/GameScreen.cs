@@ -47,14 +47,12 @@ namespace Project1
         private Texture2D buttonmenu;
         private Texture2D buttonmenupressed;
         private Texture2D buttonmenureleased;
-        private Vector2 buttonmenupos;
+        private Vector2 _buttonmenupos;
         // Barre de vie du coeur
-        private SpriteBatch barredeviestatiqueCore;
         private AnimatedSprite barredevieCore;
         private Vector2 barredevieposCore;
 
         // Barre de vie du joueur
-        private SpriteBatch barredeviestatiquePlayer;
         private AnimatedSprite barredeviePlayer;
         private Vector2 barredevieposPlayer;
 
@@ -62,8 +60,7 @@ namespace Project1
 
         // Texte
         Vector2 positionText;
-
-
+       
         private AnimatedSprite barredevie;
         private Vector2 barredeviepos;
 
@@ -71,18 +68,34 @@ namespace Project1
         // Zombies
         List<Bullet> listeBalles;
         List<Zombie> listeZomb;
-        private int nbZombie = 0, numVague = 0, zombMaxVague = 10;
-        private float chrono = 0;
+        private int nbZombie = 0, numVague = 1, zombMaxVague = 20, multiplicateur = 1, puissanceZomb = 1;
+        private float chrono = 0, chronoVagueSuivante = 5;
+        private string textureZomb;
 
         // Shop
         private Texture2D shop;
         private Vector2 _shopPos;
         private Rectangle[] buttons;
         public bool shopoui;
-        public const int PRICESHOP1 = 10;
-        public const int PRICESHOP2 = 20;
-        public const int PRICESHOP3 = 30;
-        public const int PRICESHOP4 = 40;
+        private int priceshop1 = 10;
+        private int priceshop2 = 10;
+        public int priceshop3 = 10;
+        public int priceshop4 = 10;
+
+        private int nbshop1;
+        private int nbshop2;
+        private int nbshop3;
+        private int nbshop4;
+       
+
+        const int MAXSHOP = 5;
+        private Vector2 nbshop1pos;
+        private Vector2 nbshop2pos;
+        private Vector2 nbshop3pos;
+        private Vector2 nbshop4pos;
+
+        private bool clickshop;
+       
 
         private Texture2D shop1;
         private Texture2D shop1pressed;
@@ -103,6 +116,7 @@ namespace Project1
         private Texture2D shop4pressed;
         private Texture2D shop4released;
         private Vector2 shop4pos;
+        
 
 
         // Murs
@@ -112,8 +126,6 @@ namespace Project1
         //Musique
         Song gameScreenMusic;
         SoundEffect shootSound;
-        
-       
 
         public GameScreen(Game1 game) : base(game)
         {
@@ -138,7 +150,7 @@ namespace Project1
             buttonmenu = Content.Load<Texture2D>("buttonmenu");
             buttonmenupressed = Content.Load<Texture2D>("buttonmenupressed");
             buttonmenureleased = buttonmenu;
-            buttonmenupos = new Vector2(690, 625);
+            _buttonmenupos = new Vector2(690, 625);
 
             buttonsPause = new Rectangle[2];
             buttonsPause[0] = new Rectangle(690, 314, 500, 150);
@@ -151,8 +163,8 @@ namespace Project1
             barredevieCore = new AnimatedSprite(spriteCore);
 
             // Barre de vie du joueur
-            barredevieposPlayer = new Vector2(Game1.WIDTH - 400, Game1.HEIGHT - 80);
-            SpriteSheet spriteVieJoueur = Content.Load<SpriteSheet>("barredevie.sf", new JsonContentLoader());
+            barredevieposPlayer = new Vector2(200, Game1.HEIGHT - 180);
+            SpriteSheet spriteVieJoueur = Content.Load<SpriteSheet>("barredevieperso.sf", new JsonContentLoader());
             barredeviePlayer = new AnimatedSprite(spriteVieJoueur);
 
             player = new Player(this);
@@ -162,6 +174,7 @@ namespace Project1
 
             click = false;
             screenpause = false;
+            clickshop = false;
 
             wallReference = new Walls(_myGame, new Rectangle(0, 0, 0, 0));
             
@@ -179,22 +192,35 @@ namespace Project1
             shop1 = Content.Load<Texture2D>("shop1");
             shop1pressed = Content.Load<Texture2D>("shop1pressed");
             shop1released = shop1;
+            nbshop1 = 0;
+            priceshop1= 10;
             shop1pos = new Vector2(336, 185);
+            nbshop1pos = new Vector2(780, 450);
+            
 
             shop2 = Content.Load<Texture2D>("shop2");
             shop2pressed = Content.Load<Texture2D>("shop2pressed");
             shop2released = shop2;
+            nbshop2 = 0;
+            priceshop2 = 10;
             shop2pos = new Vector2(961, 185);
+            nbshop2pos = new Vector2(1356,450);
 
             shop3 = Content.Load<Texture2D>("shop3");
             shop3pressed = Content.Load<Texture2D>("shop3pressed");
             shop3released = shop3;
+            nbshop3 = 0;
+            priceshop2= 10;
             shop3pos = new Vector2(336, 545);
+            nbshop3pos = new Vector2(780, 800);
 
             shop4 = Content.Load<Texture2D>("shop4");
             shop4pressed = Content.Load<Texture2D>("shop4pressed");
             shop4released = shop4;
+            nbshop4 = 0;
+            priceshop4 = 10;
             shop4pos = new Vector2(961, 545);
+            nbshop4pos = new Vector2(1356, 800);
 
             buttons = new Rectangle[5];
             buttons[0] = new Rectangle(336, 185, 608, 353);
@@ -202,6 +228,8 @@ namespace Project1
             buttons[2] = new Rectangle(336, 545, 608, 353);
             buttons[3] = new Rectangle(961, 545, 608, 353);
             buttons[4] = new Rectangle(36, 937, 438, 132);
+
+
 
             
             collisions = new Collisions();
@@ -232,6 +260,7 @@ namespace Project1
                 relativeCursor = Vector2.Transform(new Vector2(mouseState.X, mouseState.Y), Matrix.Invert(camera.Transform));
 
                 string animation = "idle";
+                string animationZombie = "walkWest";
                 string animationcore = "idle";
                 string animationbarredevieCore = "100%";
                 string animationbarredeviePlayer = "100%";
@@ -287,6 +316,7 @@ namespace Project1
                     }
                 }
 
+               
 
                 // Disparition du bullet
                 foreach (Bullet balle in listeBalles)
@@ -360,26 +390,47 @@ namespace Project1
                     collisions.CollisionZombieCore(listeZomb, core);
                     if (listeBalles.Count >= 1)
                     {
-                        collisions.CollisionBalleZombie(listeBalles, listeZomb);
+                        collisions.CollisionBalleZombie(listeBalles, listeZomb, player);
                     }
                 }
-
 
                 // Systeme de vague
                 if (listeZomb.Count == 0)
                     chrono += deltaSeconds;
-                if (chrono >= 5)
+                else
+                    chronoVagueSuivante -= deltaSeconds;
+                if (chrono >= 5 || chronoVagueSuivante <= 0)
                 {
+                    chronoVagueSuivante = 5;
                     chrono = 0;
                     nbZombie = 0;
+
                     while (nbZombie < zombMaxVague)
                     {
+                        multiplicateur = _myGame.rd.Next(1, numVague);
+                        puissanceZomb *= multiplicateur;
+                        Console.WriteLine(puissanceZomb);
+
                         nbZombie += 1;
-                        Zombie zombie = new Zombie(this, "Normal", _myGame._tiledMap);
+                        if (puissanceZomb <= Zombie.PUISSANCE_NORMAl)
+                        {
+                            textureZomb = "Normal";
+                        }
+                        else if (puissanceZomb <= Zombie.PUISSANCE_RAPIDE)
+                        {
+                            textureZomb = "Rapide";
+                        }
+                        else
+                        {
+                            textureZomb = "Gros";
+                        }
+                        Zombie zombie = new Zombie(this, textureZomb, _myGame._tiledMap);
                         listeZomb.Add(zombie);
+                        puissanceZomb = 1;
                     }
                     numVague += 1;
-                    zombMaxVague += 25;
+                    zombMaxVague += 3;
+
                 }
 
 
@@ -389,23 +440,25 @@ namespace Project1
                     if (core.Life < i * 10 && core.Life > (i - 1) * 10)
                         animationbarredevie = $"{i}0%"; */
 
-                if (core.Life <= 90 && core.Life > 80)
+                if (core.Life >90)
+                    animationbarredevieCore = "100%";
+                else if (core.Life > 80)
                     animationbarredevieCore = "90%";
-                else if (core.Life <= 80 && core.Life > 70)
+                else if (core.Life > 70)
                     animationbarredevieCore = "80%";
-                else if (core.Life <= 70 && core.Life > 60)
+                else if (core.Life > 60)
                     animationbarredevieCore = "70%";
-                else if (core.Life <=60 && core.Life > 50)
+                else if (core.Life > 50)
                     animationbarredevieCore = "60%";
-                else if (core.Life <= 50 && core.Life > 40)
+                else if (core.Life > 40)
                     animationbarredevieCore = "50%";
-                else if (core.Life <= 40 && core.Life > 30)
+                else if (core.Life > 30)
                     animationbarredevieCore = "40%";
-                else if (core.Life <= 30 && core.Life > 20)
+                else if (core.Life > 20)
                     animationbarredevieCore = "30%";
-                else if (core.Life <= 20 && core.Life > 10)
+                else if (core.Life > 10)
                     animationbarredevieCore = "20%";
-                else if (core.Life <= 10 && core.Life > 0)
+                else if (core.Life >= 1)
                     animationbarredevieCore = "10%";
                 else if (core.Life == 0)
                     animationbarredevieCore = "0%";
@@ -414,27 +467,79 @@ namespace Project1
 
 
 
+                // Affichage de la vie du joueur
+                //Console.WriteLine(player.Life);
+                switch (player.Life)
+                {
+                    case 900:
+                        animationbarredeviePlayer = "90%";
+                        break;
+                    case 800:
+                        animationbarredeviePlayer = "80%";
+                        break;
+                    case 700:
+                        animationbarredeviePlayer = "70%";
+                        break;
+                    case 600:
+                        animationbarredeviePlayer = "60%";
+                        break;
+                    case 500:
+                        animationbarredeviePlayer = "50%";
+                        break;
+                    case 400:
+                        animationbarredeviePlayer = "40%";
+                        break;
+                    case 300:
+                        animationbarredeviePlayer = "30%";
+                        break;
+                    case 200:
+                        animationbarredeviePlayer = "20%";
+                        break;
+                    case 100:
+                        animationbarredeviePlayer = "10%";
+                        break;
+                    case 0:
+                        {
+                            animationbarredeviePlayer = "0%";
+                            //_myGame.Etat = Game1.Etats.EndScreen;
+                        }
+                        break;
+                }
 
-
+                // Anime Player
                 player.Apparence.Play(animation);
                 player.Apparence.Update(deltaSeconds);
-                
+
+                // Anime barre de vie Core
                 barredevieCore.Play(animationbarredevieCore);
                 barredevieCore.Update(deltaSeconds);
 
+                // Anime barre vie player
                 barredeviePlayer.Play(animationbarredeviePlayer);
                 barredeviePlayer.Update(deltaSeconds);
 
+                // Anime core
                 core.Apparence.Play(animationcore);
                 core.Apparence.Update(deltaSeconds);
-               
-                _myGame._tiledMapRenderer.Update(gameTime);
-                
-                camera.Follow(player, _myGame);
-            }
+
+                // Anime Zombie
+                foreach (Zombie zombie in listeZomb)
+                {
+                    zombie.TextureZomb.Play(animationZombie);
+                    zombie.TextureZomb.Update(deltaSeconds);
+                    
+                  /*  if (zombie.Position.X > player.Position.X)
+                        animationZombie = "walkWest";
+                    else
+                        animationZombie = "walkEast";   */
+                }
+
+                    _myGame._tiledMapRenderer.Update(gameTime);
+
+                    camera.Follow(player, _myGame);
 
             //PAUSE
-            if (screenpause)
+            if (screenpause == true && shopoui == false)
             {
                 if (mouseState.LeftButton == ButtonState.Pressed)
                 {
@@ -449,7 +554,6 @@ namespace Project1
                             else if (i == 1)
                             {
                                 _myGame.Etat = Game1.Etats.StartScreen;
-                                _myGame.changementMusic = true;
                             }
                         }
                     }
@@ -459,11 +563,11 @@ namespace Project1
                 else
                     buttonresumereleased = buttonresume;
 
-                if (buttonsPause[1].Contains(Mouse.GetState().X, Mouse.GetState().Y))
-                    buttonmenureleased = buttonmenupressed;
-                else
-                    buttonmenureleased = buttonmenu;
-            }
+                    if (buttonsPause[1].Contains(Mouse.GetState().X, Mouse.GetState().Y))
+                        buttonmenureleased = buttonmenupressed;
+                    else
+                        buttonmenureleased = buttonmenu;
+                }
 
             // SHOP
             if (shopoui)
@@ -481,58 +585,80 @@ namespace Project1
                         {
                             if (i == 0)
                             {
-                                if (player.Gold >= PRICESHOP1)
+                                if (player.Gold >= priceshop1 && nbshop1<MAXSHOP && clickshop == false)
                                 {
-                                    player.Gold -= PRICESHOP1;
+                                    clickshop = true;
+                                    player.Gold -= priceshop1;
                                     player.Life += 10;
                                     shop1released = shop1pressed;
+                                    priceshop1 *= 2;
+                                    nbshop1 += 1;
+                                    Console.WriteLine(player.Life);
 
-                                }
+                                    }
+
 
 
                             }
                             else if (i == 1)
                             {
-                                if (player.Gold >= PRICESHOP2)
+                                if (player.Gold >= priceshop2 && nbshop2<MAXSHOP && clickshop == false)
                                 {
+                                    clickshop = true;
                                     speedsup += 100;
-                                    player.Gold -= PRICESHOP2;
+                                    player.Gold -= priceshop2;
                                     shop2released = shop2pressed;
+                                    priceshop2 *= 2;
+                                    nbshop2 += 1;
                                 }
 
 
-                            }
+                                }
 
                             else if (i == 2)
                             {
-                                if (player.Gold >= PRICESHOP3)
+                                if (player.Gold >= priceshop3 && nbshop3<MAXSHOP && clickshop == false)
                                 {
-                                    player.Speed += 10;
-                                    player.Gold -= PRICESHOP3;
+                                    clickshop= true;
+                                    player.Speed += 100;
+                                    player.Gold -= priceshop3;
                                     shop3released = shop3pressed;
+                                    priceshop3 *= 2;
+                                    nbshop3 += 1;
                                 }
 
-                            }
+                                }
 
                             else if (i == 3)
                             {
-                                if (player.Gold >= PRICESHOP4)
+                                if (player.Gold >= priceshop4 && nbshop4<MAXSHOP && clickshop == false)
                                 {
-                                    player.Speed += 100;
-                                    player.Gold -= PRICESHOP4;
+                                    clickshop = true;
+                                    player.Damage -= 10;
+                                    player.Gold -= priceshop4;
                                     shop4released = shop4pressed;
+                                    priceshop4 *= 2;
+                                    nbshop4 += 1;
                                 }
-
+                                
                             }
                             else if (i == 4)
                             {
                                 shopoui = false;
                                 screenpause = false;
                             }
+
+                            
+
+
                         }
 
-                    }
+                        }
 
+                }
+                else if (mouseState.LeftButton == ButtonState.Released && clickshop == true)
+                {
+                    clickshop = false;
                 }
 
 
@@ -551,6 +677,13 @@ namespace Project1
                 _myGame._spriteBatch.Draw(shop3released, shop3pos, Color.White);
                 _myGame._spriteBatch.Draw(shop4released, shop4pos, Color.White);
 
+
+                _myGame._spriteBatch.DrawString(_myGame.font, nbshop1+ " / 5 \n-"+ priceshop1+" Gold" ,nbshop1pos, Color.Black);
+                _myGame._spriteBatch.DrawString(_myGame.font, nbshop2 + " / 5 \n-"+ priceshop2+" Gold", nbshop2pos, Color.Black);
+                _myGame._spriteBatch.DrawString(_myGame.font, nbshop3 + " / 5 \n-"+ priceshop3+" Gold", nbshop3pos, Color.Black);
+                _myGame._spriteBatch.DrawString(_myGame.font, nbshop4 + " / 5 \n-"+ priceshop4+" Gold", nbshop4pos, Color.Black);
+                
+
                 _myGame._spriteBatch.End();
             }
             else
@@ -561,28 +694,28 @@ namespace Project1
                 _myGame._spriteBatch.Begin(transformMatrix: camera.Transform);
 
                 _myGame._tiledMapRenderer.Draw(viewMatrix: camera.Transform);
-
-                _myGame._spriteBatch.Draw(rect, player.Hitbox, Color.White);
                 _myGame._spriteBatch.Draw(core.Apparence, core.Position);
+
+                //_myGame._spriteBatch.Draw(rect, player.Hitbox, Color.White);
                 _myGame._spriteBatch.Draw(player.Apparence, player.Position);
 
                 foreach (Bullet balle in listeBalles)
                 {
-                    _myGame._spriteBatch.DrawRectangle(balle.Hitbox, Color.Cyan, 7);
+                    //_myGame._spriteBatch.Draw(pause, balle.Hitbox, Color.White);
+                    //_myGame._spriteBatch.DrawRectangle(balle.Hitbox, Color.Cyan, 7);
                     _myGame._spriteBatch.Draw(balle.Apparence, balle.Position, Color.White);
-                    _myGame._spriteBatch.Draw(pause, balle.Hitbox, Color.White);
                 }
 
                 foreach (Zombie zombie in listeZomb)
                 {
-                    _myGame._spriteBatch.Draw(rect, zombie.Hitbox, Color.White);
+                    //_myGame._spriteBatch.Draw(pause, zombie.Hitbox, Color.White);
+                    //_myGame._spriteBatch.Draw(rect, zombie.Hitbox, Color.White);
                     _myGame._spriteBatch.Draw(zombie.TextureZomb, zombie.Position);
-                    _myGame._spriteBatch.Draw(pause, zombie.Hitbox, Color.White);
                 }
 
                 foreach (Walls wall in listeWalls)
                 {
-                    _myGame._spriteBatch.Draw(rect, wall.Hitbox, Color.White);
+                    //_myGame._spriteBatch.Draw(rect, wall.Hitbox, Color.White);
                 }
                 _myGame._spriteBatch.End();
 
@@ -592,13 +725,14 @@ namespace Project1
 
 
                 // Texte
-                positionText = new Vector2(Game1.WIDTH - 600, 10);
-                _myGame._spriteBatch.DrawString(_myGame.font, "Zombies Restants : " + listeZomb.Count, positionText, new Color(74, 110, 40));
-                positionText = new Vector2(Game1.WIDTH - 270, 250);
-                _myGame._spriteBatch.DrawString(_myGame.font, "Argent " + player.Gold, positionText, new Color(74, 110, 40));
-                positionText = new Vector2(Game1.WIDTH - 250, 120);
-                _myGame._spriteBatch.DrawString(_myGame.font, "Vague " + numVague, positionText, new Color(74, 110, 40));
-
+                positionText = new Vector2(20, 10);
+                _myGame._spriteBatch.DrawString(_myGame.font, "Time before next wave: " + Math.Round(chronoVagueSuivante), positionText, Color.YellowGreen);
+                positionText = new Vector2(Game1.WIDTH - 500, 10);
+                _myGame._spriteBatch.DrawString(_myGame.font, "Zombies Left : " + listeZomb.Count, positionText, Color.YellowGreen);
+                positionText = new Vector2(20, 100);
+                _myGame._spriteBatch.DrawString(_myGame.font, "Wave " + (numVague - 1), positionText, Color.YellowGreen);
+                positionText = new Vector2(20, 200);
+                _myGame._spriteBatch.DrawString(_myGame.font, "Gold : " + player.Gold, positionText, Color.YellowGreen);
                 _myGame._spriteBatch.End();
 
             }
@@ -610,7 +744,7 @@ namespace Project1
                 _myGame._spriteBatch.Begin();
                 _myGame._spriteBatch.Draw(pause, _pausepos, Color.White);
                 _myGame._spriteBatch.Draw(buttonresumereleased, buttonresumepos, Color.White);
-                _myGame._spriteBatch.Draw(buttonmenureleased, buttonmenupos, Color.White);
+                _myGame._spriteBatch.Draw(buttonmenureleased, _buttonmenupos, Color.White);
                 _myGame._spriteBatch.End();
             }
         }

@@ -23,7 +23,7 @@ namespace Project1
         
 
         
-        public void CollisionBalleZombie(List<Bullet> bullets, List<Zombie> zombies)
+        public void CollisionBalleZombie(List<Bullet> bullets, List<Zombie> zombies, Player player)
         {
             bool touche = false;
             List<Bullet> bulletsToRemove = new List<Bullet>();
@@ -40,11 +40,14 @@ namespace Project1
                             Console.WriteLine("Intersect");
 
                             bulletsToRemove.Add(bullet);
-                            zombiesToRemove.Add(zombie);
-
+                            zombie.VieZombie -= 5;
+                            if (zombie.VieZombie <= 0)
+                            {
+                                zombiesToRemove.Add(zombie);
+                                player.Gold += 3;
+                            }
                             touche = true;
                             break;
-
                         }
                     }
                 }
