@@ -17,7 +17,7 @@ namespace Project1
     public class Player
     {
         private int life = 10000;
-        private int gold = 0;
+        private int gold = 50;
         private int speed = 400;
         private int damage = 1;
 

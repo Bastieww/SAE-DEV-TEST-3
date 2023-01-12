@@ -380,25 +380,25 @@ namespace Project1
                         animationbarredevie = $"{i}0%"; */
 
                 if (core.Life < 90 && core.Life > 80)
-                    animationbarredevie = "90%";
+                    animationbarredevieCore = "90%";
                 else if (core.Life < 80 && core.Life > 70)
-                    animationbarredevie = "80%";
+                    animationbarredevieCore = "80%";
                 else if (core.Life < 70 && core.Life > 60)
-                    animationbarredevie = "70%";
+                    animationbarredevieCore = "70%";
                 else if (core.Life < 60 && core.Life > 50)
-                    animationbarredevie = "60%";
+                    animationbarredevieCore = "60%";
                 else if (core.Life < 50 && core.Life > 40)
-                    animationbarredevie = "50%";
+                    animationbarredevieCore = "50%";
                 else if (core.Life < 40 && core.Life > 30)
-                    animationbarredevie = "40%";
+                    animationbarredevieCore = "40%";
                 else if (core.Life < 30 && core.Life > 20)
-                    animationbarredevie = "30%";
+                    animationbarredevieCore = "30%";
                 else if (core.Life < 20 && core.Life > 10)
-                    animationbarredevie = "20%";
+                    animationbarredevieCore = "20%";
                 else if (core.Life < 10 && core.Life > 0)
-                    animationbarredevie = "10%";
+                    animationbarredevieCore = "10%";
                 else if (core.Life == 0)
-                    animationbarredevie = "0%";
+                    animationbarredevieCore = "0%";
 
 
 
