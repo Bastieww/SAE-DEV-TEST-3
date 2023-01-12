@@ -25,7 +25,7 @@ namespace Project1
 
 
 
-        public enum Etats { StartScreen, GameScreen, EndScreen, ControlsScreen };
+        public enum Etats { StartScreen, GameScreen, EndScreen, ControlsScreen, CreditsScreen };
 
 
         private Etats etat;
@@ -44,10 +44,11 @@ namespace Project1
                 Console.WriteLine(value + " SET");
                 Console.WriteLine(controlsscreen.clickControls);
 
-                if (value == Etats.EndScreen)
+                if (value == Etats.EndScreen && startscreen.clickQuit == false)
+                    _screenManager.LoadScreen(endscreen, new FadeTransition(GraphicsDevice, Color.Black));
+                else if (value == Etats.EndScreen && startscreen.clickQuit==true)
                     Exit();
-
-                else if (value == Etats.GameScreen && startscreen.clickMenu == true)
+                else if (value == Etats.GameScreen && startscreen.clickMenu == true || endscreen.clickRestart==true)
                     _screenManager.LoadScreen(gamescreen, new FadeTransition(GraphicsDevice, Color.Black));
                 else if (value == Etats.ControlsScreen && startscreen.clickMenu == true)
                     _screenManager.LoadScreen(controlsscreen, new FadeTransition(GraphicsDevice, Color.Black));
@@ -56,6 +57,8 @@ namespace Project1
                     Console.WriteLine("TEST START");
                     _screenManager.LoadScreen(startscreen, new FadeTransition(GraphicsDevice, Color.Black));
                 }
+                else if(value == Etats.CreditsScreen)
+                    _screenManager.LoadScreen(creditsscreen, new FadeTransition(GraphicsDevice, Color.Black));
             }
         }
 
@@ -65,6 +68,7 @@ namespace Project1
         GameScreen gamescreen;
         EndScreen endscreen;
         ControlsScreen controlsscreen;
+        CreditsScreen creditsscreen;
 
 
         public TiledMap _tiledMap;
@@ -91,6 +95,7 @@ namespace Project1
             gamescreen = new GameScreen(this);
             endscreen = new EndScreen(this);
             controlsscreen = new ControlsScreen(this);
+            creditsscreen = new CreditsScreen(this);
         }
 
         protected override void Initialize()
