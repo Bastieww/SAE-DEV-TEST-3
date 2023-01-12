@@ -371,13 +371,12 @@ namespace Project1
                     zombie.UpdateHitbox();
                     if (collisions.CollisionZombieWall(zombie, listeWalls))
                     {
-                        zombie.Position -= new Vector2(directionZombie.X * zombSpeed, directionZombie.Y * zombSpeed);
-
+                        zombie.Position -= new Vector2(directionZombie.X * zombie.VitesseZombie, directionZombie.Y * zombie.VitesseZombie);
                         zombie.UpdateHitbox();
                     }
                     if (collisions.CollisionZombieCore(listeZomb, core))
                     {
-                        zombie.Position -= new Vector2(directionZombie.X * zombSpeed, directionZombie.Y * zombSpeed);
+                        zombie.Position -= new Vector2(directionZombie.X * zombie.VitesseZombie, directionZombie.Y * zombie.VitesseZombie);
                         zombie.UpdateHitbox();
                     }
                 }
@@ -440,27 +439,27 @@ namespace Project1
                     if (core.Life < i * 10 && core.Life > (i - 1) * 10)
                         animationbarredevie = $"{i}0%"; */
 
-                if (core.Life > 90)
+                if (core.Life > 900)
                     animationbarredevieCore = "100%";
-                else if (core.Life > 80)
+                else if (core.Life > 800)
                     animationbarredevieCore = "90%";
-                else if (core.Life > 70)
+                else if (core.Life > 700)
                     animationbarredevieCore = "80%";
-                else if (core.Life > 60)
+                else if (core.Life > 600)
                     animationbarredevieCore = "70%";
-                else if (core.Life > 50)
+                else if (core.Life > 500)
                     animationbarredevieCore = "60%";
-                else if (core.Life > 40)
+                else if (core.Life > 400)
                     animationbarredevieCore = "50%";
-                else if (core.Life > 30)
+                else if (core.Life > 300)
                     animationbarredevieCore = "40%";
-                else if (core.Life > 20)
+                else if (core.Life > 200)
                     animationbarredevieCore = "30%";
-                else if (core.Life > 10)
+                else if (core.Life > 100)
                     animationbarredevieCore = "20%";
-                else if (core.Life >= 1)
+                else if (core.Life >= 10)
                     animationbarredevieCore = "10%";
-                else if (core.Life == 0)
+                else if (core.Life <= 0)
                     animationbarredevieCore = "0%";
 
 
