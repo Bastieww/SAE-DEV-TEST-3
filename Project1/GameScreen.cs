@@ -40,12 +40,10 @@ namespace Project1
         private bool toucheBalleZombie;
 
         // Barre de vie du coeur
-        private SpriteBatch barredeviestatiqueCore;
         private AnimatedSprite barredevieCore;
         private Vector2 barredevieposCore;
 
         // Barre de vie du joueur
-        private SpriteBatch barredeviestatiquePlayer;
         private AnimatedSprite barredeviePlayer;
         private Vector2 barredevieposPlayer;
 
@@ -58,7 +56,8 @@ namespace Project1
         List<Bullet> listeBalles;
         List<Zombie> listeZomb;
         private int nbZombie = 0, numVague = 0, zombMaxVague = 10;
-        private float chrono = 0;
+        private float chrono = 0, chronoVagueSuivante = 60;
+        private string textureZomb;
 
         // Shop
         private Texture2D shop;
@@ -285,19 +284,34 @@ namespace Project1
                         collisions.CollisionBalleZombie( listeBalles,  listeZomb);
                     }
                 }
-            
 
                 // Systeme de vague
                 if (listeZomb.Count == 0)
                     chrono += deltaSeconds;
-                if (chrono >= 5)
+                else
+                    chronoVagueSuivante -= deltaSeconds;
+                if (chrono >= 5 || chronoVagueSuivante <= 0)
                 {
+                    chronoVagueSuivante = 60;
                     chrono = 0;
                     nbZombie = 0;
                     while (nbZombie < zombMaxVague)
                     {
                         nbZombie += 1;
-                        Zombie zombie = new Zombie(this, "Normal", _myGame._tiledMap);
+                        int puissanceZomb = 1;
+                        if (puissanceZomb == 1)
+                        {
+                            textureZomb = "Normal";
+                        }
+                        else if (puissanceZomb == 2)
+                        {
+                            textureZomb = "Rapide";
+                        }
+                        else
+                        {
+                            textureZomb = "Gros";
+                        }
+                        Zombie zombie = new Zombie(this, textureZomb, _myGame._tiledMap);
                         listeZomb.Add(zombie);
                     }
                     numVague += 1;
@@ -343,7 +357,7 @@ namespace Project1
                 }
 
                 // Affichage de la vie du joueur
-                Console.WriteLine(player.Life);
+                //Console.WriteLine(player.Life);
                 switch (player.Life)
                 {
                     case 900:
@@ -381,16 +395,19 @@ namespace Project1
                         break;
                 }
 
-
+                // Anime zombie
                 player.Apparence.Play(animation);
                 player.Apparence.Update(deltaSeconds);
-                
+
+                // Anime barre de vie
                 barredevieCore.Play(animationbarredevieCore);
                 barredevieCore.Update(deltaSeconds);
 
+                // Anime player
                 barredeviePlayer.Play(animationbarredeviePlayer);
                 barredeviePlayer.Update(deltaSeconds);
 
+                // Anime core
                 core.Apparence.Play(animationcore);
                 core.Apparence.Update(deltaSeconds);
                
@@ -486,16 +503,16 @@ namespace Project1
 
                 foreach (Bullet balle in listeBalles)
                 {
-                    _myGame._spriteBatch.DrawRectangle(balle.Hitbox, Color.Cyan, 7);
-                    _myGame._spriteBatch.Draw(balle.Apparence, balle.Position, Color.White);
                     _myGame._spriteBatch.Draw(pause, balle.Hitbox, Color.White);
+                    //_myGame._spriteBatch.DrawRectangle(balle.Hitbox, Color.Cyan, 7);
+                    _myGame._spriteBatch.Draw(balle.Apparence, balle.Position, Color.White);
                 }
 
                 foreach (Zombie zombie in listeZomb)
                 {
+                    _myGame._spriteBatch.Draw(pause, zombie.Hitbox, Color.White);
                     _myGame._spriteBatch.Draw(rect, zombie.Hitbox, Color.White);
                     _myGame._spriteBatch.Draw(zombie.TextureZomb, zombie.Position);
-                    _myGame._spriteBatch.Draw(pause, zombie.Hitbox, Color.White);
                 }
 
                 foreach (Walls wall in listeWalls)
@@ -510,12 +527,14 @@ namespace Project1
 
 
                 // Texte
-                positionText = new Vector2(Game1.WIDTH - 600, 10);
-                _myGame._spriteBatch.DrawString(_myGame.font, "Zombies Restants : " + listeZomb.Count, positionText, new Color(74, 110, 40));
-                positionText = new Vector2(Game1.WIDTH - 270, 250);
-                _myGame._spriteBatch.DrawString(_myGame.font, "Argent " + player.Gold, positionText, new Color(74, 110, 40));
-                positionText = new Vector2(Game1.WIDTH - 250, 120);
-                _myGame._spriteBatch.DrawString(_myGame.font, "Vague " + numVague, positionText, new Color(74, 110, 40));
+                positionText = new Vector2(20, 10);
+                _myGame._spriteBatch.DrawString(_myGame.font, "Temps avant vague suivante: " + Math.Round(chronoVagueSuivante), positionText, Color.YellowGreen);
+                positionText = new Vector2(Game1.WIDTH - 500, 10);
+                _myGame._spriteBatch.DrawString(_myGame.font, "Zombies Restants : " + listeZomb.Count, positionText, Color.YellowGreen);
+                positionText = new Vector2(20, 100);
+                _myGame._spriteBatch.DrawString(_myGame.font, "Vague " + numVague, positionText, Color.YellowGreen);
+                positionText = new Vector2(20, 200);
+                _myGame._spriteBatch.DrawString(_myGame.font, "Argent : " + player.Gold, positionText, Color.YellowGreen);
 
                 _myGame._spriteBatch.End();
                 

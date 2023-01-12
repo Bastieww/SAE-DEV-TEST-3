@@ -19,7 +19,7 @@ namespace Project1
         public const int VIE_NORMAL = 25, VIE_GROS = 50, VIE_RAPIDE = 10;
         public const int VITESSE_NORMAL = 2, VITESSE_GROS = 1, VITESSE_RAPIDE = 4;
 
-        private int vieZombie, vitesseZombie, XposZomb, YposZomb, nbzombie = 0;
+        private int vieZombie, vitesseZombie, XposZomb, YposZomb;
         private int width = 91;
         private int height = 177;
 
@@ -159,6 +159,14 @@ namespace Project1
             {
                 case "Normal":
                     SpriteSheet apparence = gamescreen.Content.Load<SpriteSheet>("zombieAnim.sf", new JsonContentLoader());
+                    this.TextureZomb = new AnimatedSprite(apparence);
+                    break;
+                case "Rapide":
+                    apparence = gamescreen.Content.Load<SpriteSheet>("zombieAnim.sf", new JsonContentLoader());
+                    this.TextureZomb = new AnimatedSprite(apparence);
+                    break;
+                case "Gros":
+                    apparence = gamescreen.Content.Load<SpriteSheet>("zombieAnim.sf", new JsonContentLoader());
                     this.TextureZomb = new AnimatedSprite(apparence);
                     break;
             }
