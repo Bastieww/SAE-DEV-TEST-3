@@ -31,20 +31,27 @@ namespace Project1
         private Vector2 relativeCursor;
         private bool click;
 
+        //PAUSE
         private Texture2D pause;
         private Vector2 _pausepos;
         private Rectangle[] buttonsPause;
         public bool screenpause;
 
-        private bool testpause = false;
+        private Texture2D buttonresume;
+        private Texture2D buttonresumepressed;
+        private Texture2D buttonresumereleased;
+        private Vector2 buttonresumepos;
+
+        private Texture2D buttonmenu;
+        private Texture2D buttonmenupressed;
+        private Texture2D buttonmenureleased;
+        private Vector2 buttonmenupos;
+
+
         private bool toucheBalleZombie;
-
-        // Barre de vie du coeur
-        private SpriteBatch barredeviestatique;
-
         private int speedsup;
 
-        
+
         private AnimatedSprite barredevie;
         private Vector2 barredeviepos;
 
@@ -60,11 +67,36 @@ namespace Project1
         private Vector2 _shopPos;
         private Rectangle[] buttons;
         public bool shopoui;
+        public const int PRICESHOP1 = 10;
+        public const int PRICESHOP2 = 20;
+        public const int PRICESHOP3 = 30;
+        public const int PRICESHOP4 = 40;
+
+        private Texture2D shop1;
+        private Texture2D shop1pressed;
+        private Texture2D shop1released;
+        private Vector2 shop1pos;
+
+        private Texture2D shop2;
+        private Texture2D shop2pressed;
+        private Texture2D shop2released;
+        private Vector2 shop2pos;
+
+        private Texture2D shop3;
+        private Texture2D shop3pressed;
+        private Texture2D shop3released;
+        private Vector2 shop3pos;
+
+        private Texture2D shop4;
+        private Texture2D shop4pressed;
+        private Texture2D shop4released;
+        private Vector2 shop4pos;
+
 
         // Murs
         Walls wallReference;
         List<Walls> listeWalls;
-       
+
 
         public GameScreen(Game1 game) : base(game)
         {
@@ -80,12 +112,25 @@ namespace Project1
             barredeviepos = new Vector2(250, 1000);
 
 
-
-            pause = Content.Load<Texture2D>("fondpause");
+            //PAUSE
+            pause = Content.Load<Texture2D>("fond");
             _pausepos = new Vector2(0, 0);
+
+            buttonresume = Content.Load<Texture2D>("buttonresume");
+            buttonresumepressed = Content.Load<Texture2D>("buttonresumepressed");
+            buttonresumereleased = buttonresume;
+            buttonresumepos = new Vector2(690, 314);
+
+            buttonmenu = Content.Load<Texture2D>("buttonmenu");
+            buttonmenupressed = Content.Load<Texture2D>("buttonmenupressed");
+            buttonmenureleased = buttonmenu;
+            buttonmenupos = new Vector2(690, 625);
+
             buttonsPause = new Rectangle[2];
-            buttonsPause[0] = new Rectangle(618, 314, 621, 154);
-            buttonsPause[1] = new Rectangle(618, 625, 621, 154);
+            buttonsPause[0] = new Rectangle(690, 314, 500, 150);
+            buttonsPause[1] = new Rectangle(690, 625, 500, 150);
+
+
 
             SpriteSheet sprite = Content.Load<SpriteSheet>("barredevie.sf", new JsonContentLoader());
             barredevie = new AnimatedSprite(sprite);
@@ -93,7 +138,7 @@ namespace Project1
             player = new Player(this);
             camera = new Camera();
             core = new Core(this, _myGame._tiledMap);
-            
+
 
 
 
@@ -103,19 +148,40 @@ namespace Project1
             listeBalles = new List<Bullet>();
             listeZomb = new List<Zombie>();
 
-            // Shop
+            // SHOP
             shopoui = false;
             shop = Content.Load<Texture2D>("fondshop");
             _shopPos = new Vector2(0, 0);
+
+            shop1 = Content.Load<Texture2D>("shop1");
+            shop1pressed = Content.Load<Texture2D>("shop1pressed");
+            shop1released = shop1;
+            shop1pos = new Vector2(336, 185);
+
+            shop2 = Content.Load<Texture2D>("shop2");
+            shop2pressed = Content.Load<Texture2D>("shop2pressed");
+            shop2released = shop2;
+            shop2pos = new Vector2(961, 185);
+
+            shop3 = Content.Load<Texture2D>("shop3");
+            shop3pressed = Content.Load<Texture2D>("shop3pressed");
+            shop3released = shop3;
+            shop3pos = new Vector2(336, 545);
+
+            shop4 = Content.Load<Texture2D>("shop4");
+            shop4pressed = Content.Load<Texture2D>("shop4pressed");
+            shop4released = shop4;
+            shop4pos = new Vector2(961, 545);
+
             buttons = new Rectangle[5];
-            buttons[0] = new Rectangle(329, 196, 564, 325);
-            buttons[1] = new Rectangle(962, 203, 564, 325);
-            buttons[2] = new Rectangle(329, 571, 564, 325);
-            buttons[3] = new Rectangle(962, 571, 564, 325);
-            buttons[4] = new Rectangle(56, 927, 438, 132);
+            buttons[0] = new Rectangle(336, 185, 608, 353);
+            buttons[1] = new Rectangle(961, 185, 608, 353);
+            buttons[2] = new Rectangle(336, 545, 608, 353);
+            buttons[3] = new Rectangle(961, 545, 608, 353);
+            buttons[4] = new Rectangle(36, 937, 438, 132);
 
             wallReference = new Walls(_myGame, new Rectangle(0, 0, 0, 0));
-            
+
 
             listeWalls = new List<Walls>();
             listeWalls = wallReference.ChargementMap();
@@ -209,8 +275,8 @@ namespace Project1
 
                     balle.Position += new Vector2(flySpeed * balle.Direction.X, flySpeed * balle.Direction.Y);
                     balle.UpdateHitbox();
-                    
-                    if (collisions.CollisionBulletWall(balle, listeWalls) || collisions.CollisionBalleOutside(balle,_myGame._tiledMap, player))
+
+                    if (collisions.CollisionBulletWall(balle, listeWalls) || collisions.CollisionBalleOutside(balle, _myGame._tiledMap, player))
                     {
                         listeBalles.Remove(balle);
                         break;
@@ -267,14 +333,14 @@ namespace Project1
                 // Verif collision Zombie/Joueur , Zombie/Coeur , Zombie/Balle
                 if (listeZomb.Count >= 1)
                 {
-                    collisions.CollisionZombiePlayer( listeZomb,  player);
-                    collisions.CollisionZombieCore( listeZomb,  core);
+                    collisions.CollisionZombiePlayer(listeZomb, player);
+                    collisions.CollisionZombieCore(listeZomb, core);
                     if (listeBalles.Count >= 1)
                     {
-                        collisions.CollisionBalleZombie( listeBalles,  listeZomb);
+                        collisions.CollisionBalleZombie(listeBalles, listeZomb);
                     }
                 }
-            
+
 
                 // Systeme de vague
                 if (listeZomb.Count == 0)
@@ -293,40 +359,38 @@ namespace Project1
                     zombMaxVague += 25;
                 }
 
+
                 // Affichage de la vie du Coeur
-                switch(core.Life)
-                {
-                    case 90:
-                        animationbarredevie = "90%";
-                        break;
-                    case 80:
-                        animationbarredevie = "80%";
-                        break;
-                    case 70:
-                        animationbarredevie = "70%";
-                        break;
-                    case 60:
-                        animationbarredevie = "60%";
-                        break;
-                    case 50:
-                        animationbarredevie = "50%";
-                        break;
-                    case 40:
-                        animationbarredevie = "40%";
-                        break;
-                    case 30:
-                        animationbarredevie = "30%";
-                        break;
-                    case 20:
-                        animationbarredevie = "20%";
-                        break;
-                    case 10:
-                        animationbarredevie = "10%";
-                        break;
-                    case 0:
-                        animationbarredevie = "0%";
-                        break;
-                }
+                /*
+                for (int i = 10; i >= 0; i++)
+                    if (core.Life < i * 10 && core.Life > (i - 1) * 10)
+                        animationbarredevie = $"{i}0%"; */
+
+                if (core.Life < 90 && core.Life > 80)
+                    animationbarredevie = "90%";
+                else if (core.Life < 80 && core.Life > 70)
+                    animationbarredevie = "80%";
+                else if (core.Life < 70 && core.Life > 60)
+                    animationbarredevie = "70%";
+                else if (core.Life < 60 && core.Life > 50)
+                    animationbarredevie = "60%";
+                else if (core.Life < 50 && core.Life > 40)
+                    animationbarredevie = "50%";
+                else if (core.Life < 40 && core.Life > 30)
+                    animationbarredevie = "40%";
+                else if (core.Life < 30 && core.Life > 20)
+                    animationbarredevie = "30%";
+                else if (core.Life < 20 && core.Life > 10)
+                    animationbarredevie = "20%";
+                else if (core.Life < 10 && core.Life > 0)
+                    animationbarredevie = "10%";
+                else if (core.Life == 0)
+                    animationbarredevie = "0%";
+
+
+
+
+
 
 
                 player.Apparence.Play(animation);
@@ -338,35 +402,49 @@ namespace Project1
                 player.Apparence.Update(deltaSeconds);
                 camera.Follow(player, _myGame);
             }
-             
+
             //PAUSE
-            if(screenpause == true)
+            if (screenpause == true)
             {
-                if(mouseState.LeftButton== ButtonState.Pressed)
+                if (mouseState.LeftButton == ButtonState.Pressed)
                 {
                     for (int i = 0; i < buttonsPause.Length; i++)
                     {
-                        if(buttonsPause[i].Contains(Mouse.GetState().X, Mouse.GetState().Y))
+                        if (buttonsPause[i].Contains(Mouse.GetState().X, Mouse.GetState().Y))
                         {
-                            if(i == 0)
+                            if (i == 0)
                             {
                                 screenpause = false;
                             }
-                            else if(i == 1)
+                            else if (i == 1)
                             {
                                 _myGame.Etat = Game1.Etats.StartScreen;
                             }
-                        }                            
+                        }
 
-                      
+
                     }
                 }
+                if (buttonsPause[0].Contains(Mouse.GetState().X, Mouse.GetState().Y))
+                    buttonresumereleased = buttonresumepressed;
+                else
+                    buttonresumereleased = buttonresume;
+
+                if (buttonsPause[1].Contains(Mouse.GetState().X, Mouse.GetState().Y))
+                    buttonmenureleased = buttonmenupressed;
+                else
+                    buttonmenureleased = buttonmenu;
             }
 
             //SHOP
 
             if (shopoui == true)
             {
+
+                shop1released = shop1;
+                shop2released = shop2;
+                shop3released = shop3;
+                shop4released = shop4;
                 if (mouseState.LeftButton == ButtonState.Pressed)
                 {
                     for (int i = 0; i < buttons.Length; i++)
@@ -375,26 +453,48 @@ namespace Project1
                         {
                             if (i == 0)
                             {
-                                if (player.Gold >= 0)
+                                if (player.Gold >= PRICESHOP1)
+                                {
+                                    player.Gold -= PRICESHOP1;
                                     player.Life += 10;
+                                    shop1released = shop1pressed;
+
+                                }
+
+
                             }
                             else if (i == 1)
                             {
-                                if (player.Gold >= 0)
+                                if (player.Gold >= PRICESHOP2)
+                                {
                                     speedsup += 100;
+                                    player.Gold -= PRICESHOP2;
+                                    shop2released = shop2pressed;
+                                }
+
 
                             }
 
                             else if (i == 2)
                             {
-                                if (player.Gold >= 0)
+                                if (player.Gold >= PRICESHOP3)
+                                {
                                     player.Speed += 10;
+                                    player.Gold -= PRICESHOP3;
+                                    shop3released = shop3pressed;
+                                }
+
                             }
 
                             else if (i == 3)
                             {
-                                if (player.Gold >= 0)
+                                if (player.Gold >= PRICESHOP4)
+                                {
                                     player.Speed += 100;
+                                    player.Gold -= PRICESHOP4;
+                                    shop4released = shop4pressed;
+                                }
+
                             }
                             else if (i == 4)
                             {
@@ -405,8 +505,13 @@ namespace Project1
 
 
                         }
+
                     }
+
                 }
+
+
+
             }
 
 
@@ -421,6 +526,11 @@ namespace Project1
             {
                 _myGame._spriteBatch.Begin();
                 _myGame._spriteBatch.Draw(shop, _shopPos, Color.White);
+                _myGame._spriteBatch.Draw(shop1released, shop1pos, Color.White);
+                _myGame._spriteBatch.Draw(shop2released, shop2pos, Color.White);
+                _myGame._spriteBatch.Draw(shop3released, shop3pos, Color.White);
+                _myGame._spriteBatch.Draw(shop4released, shop4pos, Color.White);
+
                 _myGame._spriteBatch.End();
             }
             else
@@ -459,15 +569,17 @@ namespace Project1
                 _myGame._spriteBatch.Begin();
                 _myGame._spriteBatch.Draw(barredevie, barredeviepos);
                 _myGame._spriteBatch.End();
-                
+
             }
 
-            if (screenpause == true && shopoui== false)
+            if (screenpause == true && shopoui == false)
             {
                 Console.WriteLine("test");
 
                 _myGame._spriteBatch.Begin();
                 _myGame._spriteBatch.Draw(pause, _pausepos, Color.White);
+                _myGame._spriteBatch.Draw(buttonresumereleased, buttonresumepos, Color.White);
+                _myGame._spriteBatch.Draw(buttonmenureleased, buttonmenupos, Color.White);
                 _myGame._spriteBatch.End();
             }
         }

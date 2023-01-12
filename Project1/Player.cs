@@ -14,10 +14,10 @@ using MonoGame.Extended.Tiled.Renderers;
 
 namespace Project1
 {
-    public class Player 
+    public class Player
     {
         private int life = 100;
-        private int gold = 0;
+        private int gold = 10000000;
         private int speed = 400;
         private int damage = 1;
 
@@ -26,14 +26,14 @@ namespace Project1
         private int width = 91;
         private int height = 177;
 
-      
+
         private AnimatedSprite apparence;
 
         private Vector2 position;
-        
+
         private Rectangle hitbox;
 
-        
+
         public Player(GameScreen gamescreen)
         {
             LoadContent(gamescreen);
@@ -42,7 +42,7 @@ namespace Project1
             this.Gold = gold;
             this.Speed = speed;
             this.Damage = damage;
-            
+
             this.Position = new Vector2(800, 175);
             this.Hitbox = new Rectangle((int)Position.X - width / 2, (int)Position.Y - height / 2, this.width, this.height);
         }
@@ -139,7 +139,7 @@ namespace Project1
             }
         }
 
-       
+
 
         public void LoadContent(GameScreen gamescreen)
         {

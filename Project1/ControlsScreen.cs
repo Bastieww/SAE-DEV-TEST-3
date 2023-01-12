@@ -33,8 +33,8 @@ namespace Project1
         {
             base.LoadContent();
             _fondcontrols = Content.Load<Texture2D>("fondcontrols");
-            _fondpos = new Vector2(0,0);
-            goback = new Rectangle(87,919,419,101);
+            _fondpos = new Vector2(0, 0);
+            goback = new Rectangle(47, 925, 378, 112);
             clickControls = false;
         }
 
@@ -54,7 +54,7 @@ namespace Project1
                 else
                     clickControls = false;
             }
-        
+
         }
         public override void Draw(GameTime gameTime)
         {
