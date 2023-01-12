@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -53,7 +52,7 @@ namespace Project1
 
             }
 
-            foreach (Bullet bullet in bulletsToRemove) bullets.Remove(bullet);
+            bulletsToRemove.ForEach(bullet=> bullets.Remove(bullet));
         }
 
         public bool CollisionBalleOutside(Bullet bullet,TiledMap map, Player player)
@@ -90,15 +89,41 @@ namespace Project1
 
         public bool CollisionZombieWall(Zombie zombie,  List<Walls> walls)
         {
+            Vector2 deplacement = Vector2.Zero;
+            Point hautGaucheZombie = zombie.Hitbox.Location;
+            Point hautDroiteZombie = zombie.Hitbox.Location + new Point(zombie.Hitbox.Width,0);
+            Point basGaucheZombie = zombie.Hitbox.Location + new Point(0,zombie.Hitbox.Height);
+            Point basDroiteZombie = zombie.Hitbox.Location + new Point(zombie.Hitbox.Width, zombie.Hitbox.Height);
+            
+
+
+
             foreach (Walls wall in walls)
             {
-               
-                if(zombie.Hitbox.Intersects(wall.Hitbox))
-                {
-                    return true;
-                }
+                //PAS LE CHOIX FAUT FAIRE LES 3 checks par truc, la j'ai fais que les premiers
+
+               if(zombie.Hitbox.Intersects(wall.Hitbox))
+               {
+                    Point hautGaucheWall = wall.Hitbox.Location;
+                    Point hautDroiteWall = wall.Hitbox.Location + new Point(wall.Hitbox.Width, 0);
+                    Point basGaucheWall = wall.Hitbox.Location + new Point(0, wall.Hitbox.Height);
+                    Point basDroiteWall = wall.Hitbox.Location + new Point(wall.Hitbox.Width, wall.Hitbox.Height);
+                    if ((basGaucheZombie.X <= hautDroiteWall.X) && (basDroiteZombie.X < hautDroiteWall.X))
+                    {
+                        deplacement = new Vector2(-1, 0);
+                    }
+                    else if ((hautDroiteZombie.X >= basGaucheWall.X) && (hautGaucheZombie.X < basDroiteWall.X))
+                    {
+                        deplacement = new Vector2(1, 0);
+                    }
+               }
+                    
+                
             }
+            //a enlever
             return false;
+            
+
         }
 
         public bool CollisionPlayerWall(Player player, List<Walls> walls)

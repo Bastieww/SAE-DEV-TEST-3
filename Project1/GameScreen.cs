@@ -287,13 +287,6 @@ namespace Project1
                     }
                 }
 
-                //if (keyboardState.IsKeyDown(Keys.R))
-                //{
-
-                //    screenpause = true;
-                //    Console.WriteLine("pause");
-                //}
-
 
                 // Disparition du bullet
                 foreach (Bullet balle in listeBalles)
@@ -321,8 +314,7 @@ namespace Project1
 
                     click = true;
 
-                    //A EFFACER
-                    core.Life -= 10;
+                   
                 }
                 else if (mouseState.LeftButton == ButtonState.Released && click == true)
                 {
@@ -347,13 +339,17 @@ namespace Project1
                 // Verif collision Zombie/Mur
                 foreach (Zombie zombie in listeZomb)
                 {
-                    zombie.Position += Vector2.Normalize((player.Position - zombie.Position) * 9);
+                    Vector2 directionZombie = Vector2.Normalize(player.Position - zombie.Position);
+                    zombie.Position += new Vector2(directionZombie.X * zombSpeed , directionZombie.Y * zombSpeed);
                     zombie.UpdateHitbox();
                     if (collisions.CollisionZombieWall(zombie, listeWalls))
                     {
-                        zombie.Position -= Vector2.Normalize((player.Position - zombie.Position) * 9);
+                        zombie.Position -= new Vector2(directionZombie.X * zombSpeed, directionZombie.Y * zombSpeed);
+                        
                         zombie.UpdateHitbox();
                     }
+                   
+                    
                 }
 
 
@@ -393,23 +389,23 @@ namespace Project1
                     if (core.Life < i * 10 && core.Life > (i - 1) * 10)
                         animationbarredevie = $"{i}0%"; */
 
-                if (core.Life < 90 && core.Life > 80)
+                if (core.Life <= 90 && core.Life > 80)
                     animationbarredevieCore = "90%";
-                else if (core.Life < 80 && core.Life > 70)
+                else if (core.Life <= 80 && core.Life > 70)
                     animationbarredevieCore = "80%";
-                else if (core.Life < 70 && core.Life > 60)
+                else if (core.Life <= 70 && core.Life > 60)
                     animationbarredevieCore = "70%";
-                else if (core.Life < 60 && core.Life > 50)
+                else if (core.Life <=60 && core.Life > 50)
                     animationbarredevieCore = "60%";
-                else if (core.Life < 50 && core.Life > 40)
+                else if (core.Life <= 50 && core.Life > 40)
                     animationbarredevieCore = "50%";
-                else if (core.Life < 40 && core.Life > 30)
+                else if (core.Life <= 40 && core.Life > 30)
                     animationbarredevieCore = "40%";
-                else if (core.Life < 30 && core.Life > 20)
+                else if (core.Life <= 30 && core.Life > 20)
                     animationbarredevieCore = "30%";
-                else if (core.Life < 20 && core.Life > 10)
+                else if (core.Life <= 20 && core.Life > 10)
                     animationbarredevieCore = "20%";
-                else if (core.Life < 10 && core.Life > 0)
+                else if (core.Life <= 10 && core.Life > 0)
                     animationbarredevieCore = "10%";
                 else if (core.Life == 0)
                     animationbarredevieCore = "0%";
@@ -438,7 +434,7 @@ namespace Project1
             }
 
             //PAUSE
-            if (screenpause == true)
+            if (screenpause)
             {
                 if (mouseState.LeftButton == ButtonState.Pressed)
                 {
@@ -470,7 +466,7 @@ namespace Project1
             }
 
             // SHOP
-            if (shopoui == true)
+            if (shopoui)
             {
 
                 shop1released = shop1;
