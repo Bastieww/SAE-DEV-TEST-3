@@ -106,7 +106,7 @@ namespace Project1
 
         // TODO: Add your initialization logic here
         
-            _graphics.IsFullScreen = false;
+            _graphics.IsFullScreen = true;
             _graphics.ApplyChanges();
            
 
@@ -127,13 +127,6 @@ namespace Project1
             Etat = Etats.StartScreen;
 
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            
-
-            //_screenManager.LoadScreen(startscreen, new FadeTransition(GraphicsDevice, Color.Black));
-
-            //_screenManager.LoadScreen(gamescreen, new FadeTransition(GraphicsDevice, Color.Black));
-
-            //_screenManager.LoadScreen(controlsscreen, new FadeTransition(GraphicsDevice, Color.Black));
 
             font = Content.Load<SpriteFont>("font");
          
@@ -146,25 +139,6 @@ namespace Project1
             MouseState mouseState = Mouse.GetState();
 
 
-
-
-            // TODO: Add your update logic here
-
-
-
-            //if (mouseState.LeftButton == ButtonState.Pressed)
-            //{
-            //    // Attention, l'état a été mis à jour directement par l'écran en question
-            //    if (this.Etat == Etats.EndScreen)
-            //        Exit();
-
-            //    else if (this.Etat == Etats.GameScreen && startscreen.clickMenu == true)
-            //        _screenManager.LoadScreen(gamescreen, new FadeTransition(GraphicsDevice, Color.Black));
-            //    else if (this.Etat == Etats.ControlsScreen && startscreen.clickMenu == true)
-            //        _screenManager.LoadScreen(controlsscreen, new FadeTransition(GraphicsDevice, Color.Black));
-            //    else if (this.Etat == Etats.StartScreen && controlsscreen.clickControls == true)
-            //        _screenManager.LoadScreen(startscreen, new FadeTransition(GraphicsDevice, Color.Black));
-            //}
 
             if(keyboardState.IsKeyDown(Keys.S))
                 {

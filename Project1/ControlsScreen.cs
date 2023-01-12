@@ -32,7 +32,7 @@ namespace Project1
         public override void LoadContent()
         {
             base.LoadContent();
-            _fondcontrols = Content.Load<Texture2D>("fondcontrols");
+            _fondcontrols = Content.Load<Texture2D>("fond/fondcontrols");
             _fondpos = new Vector2(0, 0);
             goback = new Rectangle(47, 925, 378, 112);
             clickControls = false;

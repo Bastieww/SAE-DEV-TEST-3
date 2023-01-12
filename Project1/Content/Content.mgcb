@@ -54,7 +54,7 @@
 /processorParam:TextureFormat=Color
 /build:bullet.png
 
-#begin buttoncontrols.png
+#begin buttons/buttoncontrols.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -64,9 +64,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:buttoncontrols.png
+/build:buttons/buttoncontrols.png
 
-#begin buttoncontrolspressed.png
+#begin buttons/buttoncontrolspressed.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -76,9 +76,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:buttoncontrolspressed.png
+/build:buttons/buttoncontrolspressed.png
 
-#begin buttoncredits.png
+#begin buttons/buttoncredits.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -88,9 +88,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:buttoncredits.png
+/build:buttons/buttoncredits.png
 
-#begin buttoncreditspressed.png
+#begin buttons/buttoncreditspressed.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -100,9 +100,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:buttoncreditspressed.png
+/build:buttons/buttoncreditspressed.png
 
-#begin buttonmenu.png
+#begin buttons/buttonmenu.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -112,9 +112,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:buttonmenu.png
+/build:buttons/buttonmenu.png
 
-#begin buttonmenuend.png
+#begin buttons/buttonmenuend.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -124,9 +124,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:buttonmenuend.png
+/build:buttons/buttonmenuend.png
 
-#begin buttonmenuendpressed.png
+#begin buttons/buttonmenuendpressed.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -136,9 +136,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:buttonmenuendpressed.png
+/build:buttons/buttonmenuendpressed.png
 
-#begin buttonmenupressed.png
+#begin buttons/buttonmenupressed.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -148,9 +148,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:buttonmenupressed.png
+/build:buttons/buttonmenupressed.png
 
-#begin buttonplay.png
+#begin buttons/buttonplay.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -160,9 +160,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:buttonplay.png
+/build:buttons/buttonplay.png
 
-#begin buttonplaypressed.png
+#begin buttons/buttonplaypressed.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -172,9 +172,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:buttonplaypressed.png
+/build:buttons/buttonplaypressed.png
 
-#begin buttonquit.png
+#begin buttons/buttonquit.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -184,9 +184,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:buttonquit.png
+/build:buttons/buttonquit.png
 
-#begin buttonquitpressed.png
+#begin buttons/buttonquitpressed.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -196,9 +196,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:buttonquitpressed.png
+/build:buttons/buttonquitpressed.png
 
-#begin buttonrestart.png
+#begin buttons/buttonrestart.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -208,9 +208,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:buttonrestart.png
+/build:buttons/buttonrestart.png
 
-#begin buttonrestartpressed.png
+#begin buttons/buttonrestartpressed.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -220,9 +220,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:buttonrestartpressed.png
+/build:buttons/buttonrestartpressed.png
 
-#begin buttonresume.png
+#begin buttons/buttonresume.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -232,9 +232,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:buttonresume.png
+/build:buttons/buttonresume.png
 
-#begin buttonresumepressed.png
+#begin buttons/buttonresumepressed.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -244,9 +244,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:buttonresumepressed.png
+/build:buttons/buttonresumepressed.png
 
-#begin buttons.png
+#begin buttons/buttons.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -256,7 +256,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:buttons.png
+/build:buttons/buttons.png
 
 #begin Demon-Slayer.mp3
 /importer:Mp3Importer
@@ -264,7 +264,7 @@
 /processorParam:Quality=Best
 /build:Demon-Slayer.mp3
 
-#begin fond.png
+#begin fond/fond.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -274,7 +274,67 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:fond.png
+/build:fond/fond.png
+
+#begin fond/fondcontrols.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:fond/fondcontrols.png
+
+#begin fond/fondcredits.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:fond/fondcredits.png
+
+#begin fond/fondEndscreen.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:fond/fondEndscreen.png
+
+#begin fond/fondpause.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:fond/fondpause.png
+
+#begin fond/fondshop.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:fond/fondshop.png
 
 #begin fond_de_map.png
 /importer:TextureImporter
@@ -287,54 +347,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:fond_de_map.png
-
-#begin fondcontrols.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:fondcontrols.png
-
-#begin fondEndscreen.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:fondEndscreen.png
-
-#begin fondpause.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:fondpause.png
-
-#begin fondshop.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:fondshop.png
 
 #begin font.spritefont
 /importer:FontDescriptionImporter
@@ -396,7 +408,7 @@
 /processorParam:Quality=Best
 /build:ShootSound.wav
 
-#begin shop1.png
+#begin shop/shop1.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -406,9 +418,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:shop1.png
+/build:shop/shop1.png
 
-#begin shop1pressed.png
+#begin shop/shop1pressed.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -418,9 +430,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:shop1pressed.png
+/build:shop/shop1pressed.png
 
-#begin shop2.png
+#begin shop/shop2.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -430,9 +442,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:shop2.png
+/build:shop/shop2.png
 
-#begin shop2pressed.png
+#begin shop/shop2pressed.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -442,9 +454,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:shop2pressed.png
+/build:shop/shop2pressed.png
 
-#begin shop3.png
+#begin shop/shop3.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -454,9 +466,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:shop3.png
+/build:shop/shop3.png
 
-#begin shop3pressed.png
+#begin shop/shop3pressed.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -466,9 +478,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:shop3pressed.png
+/build:shop/shop3pressed.png
 
-#begin shop4.png
+#begin shop/shop4.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -478,9 +490,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:shop4.png
+/build:shop/shop4.png
 
-#begin shop4pressed.png
+#begin shop/shop4pressed.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -490,7 +502,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:shop4pressed.png
+/build:shop/shop4pressed.png
 
 #begin zombie-Casquette.png
 /importer:TextureImporter
@@ -504,7 +516,7 @@
 /processorParam:TextureFormat=Color
 /build:zombie-Casquette.png
 
-#begin zombie-Ninja.png
+#begin zombie-ninja.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -514,7 +526,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:zombie-Ninja.png
+/build:zombie-ninja.png
 
 #begin zombie-Normal.png
 /importer:TextureImporter
@@ -527,16 +539,4 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:zombie-Normal.png
-
-#begin zombie-ninja.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:zombie-ninja.png
 

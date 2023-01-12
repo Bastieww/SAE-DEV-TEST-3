@@ -138,16 +138,16 @@ namespace Project1
             _myGame.mapLayer = _myGame._tiledMap.GetLayer<TiledMapTileLayer>("Cailloux");
 
             // Boutons
-            pause = Content.Load<Texture2D>("fondpause");
+            pause = Content.Load<Texture2D>("fond/fondpause");
             _pausepos = new Vector2(0, 0);
 
-            buttonresume = Content.Load<Texture2D>("buttonresume");
-            buttonresumepressed = Content.Load<Texture2D>("buttonresumepressed");
+            buttonresume = Content.Load<Texture2D>("buttons/buttonresume");
+            buttonresumepressed = Content.Load<Texture2D>("buttons/buttonresumepressed");
             buttonresumereleased = buttonresume;
             buttonresumepos = new Vector2(690, 314);
 
-            buttonmenu = Content.Load<Texture2D>("buttonmenu");
-            buttonmenupressed = Content.Load<Texture2D>("buttonmenupressed");
+            buttonmenu = Content.Load<Texture2D>("buttons/buttonmenu");
+            buttonmenupressed = Content.Load<Texture2D>("buttons/buttonmenupressed");
             buttonmenureleased = buttonmenu;
             _buttonmenupos = new Vector2(690, 625);
 
@@ -185,11 +185,11 @@ namespace Project1
 
             // SHOP
             shopoui = false;
-            shop = Content.Load<Texture2D>("fondshop");
+            shop = Content.Load<Texture2D>("fond/fondshop");
             _shopPos = new Vector2(0, 0);
 
-            shop1 = Content.Load<Texture2D>("shop1");
-            shop1pressed = Content.Load<Texture2D>("shop1pressed");
+            shop1 = Content.Load<Texture2D>("shop/shop1");
+            shop1pressed = Content.Load<Texture2D>("shop/shop1pressed");
             shop1released = shop1;
             nbshop1 = 0;
             priceshop1= 10;
@@ -197,29 +197,29 @@ namespace Project1
             nbshop1pos = new Vector2(780, 450);
             
 
-            shop2 = Content.Load<Texture2D>("shop2");
-            shop2pressed = Content.Load<Texture2D>("shop2pressed");
+            shop2 = Content.Load<Texture2D>("shop/shop2");
+            shop2pressed = Content.Load<Texture2D>("shop/shop2pressed");
             shop2released = shop2;
             nbshop2 = 0;
             priceshop2 = 10;
             shop2pos = new Vector2(961, 185);
-            nbshop2pos = new Vector2(1356,450);
+            nbshop2pos = new Vector2(1450,450);
 
-            shop3 = Content.Load<Texture2D>("shop3");
-            shop3pressed = Content.Load<Texture2D>("shop3pressed");
+            shop3 = Content.Load<Texture2D>("shop/shop3");
+            shop3pressed = Content.Load<Texture2D>("shop/shop3pressed");
             shop3released = shop3;
             nbshop3 = 0;
             priceshop2= 10;
             shop3pos = new Vector2(336, 545);
             nbshop3pos = new Vector2(780, 800);
 
-            shop4 = Content.Load<Texture2D>("shop4");
-            shop4pressed = Content.Load<Texture2D>("shop4pressed");
+            shop4 = Content.Load<Texture2D>("shop/shop4");
+            shop4pressed = Content.Load<Texture2D>("shop/shop4pressed");
             shop4released = shop4;
             nbshop4 = 0;
             priceshop4 = 10;
             shop4pos = new Vector2(961, 545);
-            nbshop4pos = new Vector2(1356, 800);
+            nbshop4pos = new Vector2(1450, 800);
 
             buttons = new Rectangle[5];
             buttons[0] = new Rectangle(336, 185, 608, 353);
@@ -366,12 +366,13 @@ namespace Project1
                 // Verif collision Zombie/Mur
                 foreach (Zombie zombie in listeZomb)
                 {
-                    Vector2 directionZombie = Vector2.Normalize(core.Position - zombie.Position) * zombie.VitesseZombie;
-                    zombie.Position += new Vector2(directionZombie.X * zombie.VitesseZombie, directionZombie.Y * zombie.VitesseZombie);
+                    Vector2 directionZombie = Vector2.Normalize(player.Position - zombie.Position);
+                    zombie.Position += new Vector2(directionZombie.X * zombSpeed, directionZombie.Y * zombSpeed);
                     zombie.UpdateHitbox();
                     if (collisions.CollisionZombieWall(zombie, listeWalls))
                     {
-                        zombie.Position -= new Vector2(directionZombie.X * zombie.VitesseZombie, directionZombie.Y * zombie.VitesseZombie);
+                        zombie.Position -= new Vector2(directionZombie.X * zombSpeed, directionZombie.Y * zombSpeed);
+
                         zombie.UpdateHitbox();
                     }
                     if (collisions.CollisionZombieCore(listeZomb, core))
@@ -468,42 +469,35 @@ namespace Project1
 
                 // Affichage de la vie du joueur
                 //Console.WriteLine(player.Life);
-                switch (player.Life)
+                if(player.Life > 900)
+                    animationbarredeviePlayer = "100%";
+                else if (player.Life > 800)
+                    animationbarredeviePlayer = "90%";
+                else if (player.Life > 700)
+                    animationbarredeviePlayer = "80%";
+                else if (player.Life > 600)
+                    animationbarredeviePlayer = "70%";
+                else if (player.Life > 500)
+                    animationbarredeviePlayer = "60%";
+                else if (player.Life > 400)
+                    animationbarredeviePlayer = "50%";
+                else if (player.Life > 300)
+                    animationbarredeviePlayer = "40%";
+                else if (player.Life > 200)
+                    animationbarredeviePlayer = "30%";
+                else if (player.Life > 100)
+                    animationbarredeviePlayer = "20%";
+                else if (player.Life >= 1)
+                    animationbarredeviePlayer = "10%";
+                else if (player.Life == 0)
                 {
-                    case 900:
-                        animationbarredeviePlayer = "90%";
-                        break;
-                    case 800:
-                        animationbarredeviePlayer = "80%";
-                        break;
-                    case 700:
-                        animationbarredeviePlayer = "70%";
-                        break;
-                    case 600:
-                        animationbarredeviePlayer = "60%";
-                        break;
-                    case 500:
-                        animationbarredeviePlayer = "50%";
-                        break;
-                    case 400:
-                        animationbarredeviePlayer = "40%";
-                        break;
-                    case 300:
-                        animationbarredeviePlayer = "30%";
-                        break;
-                    case 200:
-                        animationbarredeviePlayer = "20%";
-                        break;
-                    case 100:
-                        animationbarredeviePlayer = "10%";
-                        break;
-                    case 0:
-                        {
-                            animationbarredeviePlayer = "0%";
-                            //_myGame.Etat = Game1.Etats.EndScreen;
-                        }
-                        break;
+                    animationbarredevieCore = "0%";
+                    _myGame.Etat = Game1.Etats.EndScreen;
                 }
+                    
+                
+
+
 
                 // Anime Player
                 player.Apparence.Play(animation);
@@ -536,132 +530,124 @@ namespace Project1
                 _myGame._tiledMapRenderer.Update(gameTime);
 
                 camera.Follow(player, _myGame);
+    
+            }
 
-                //PAUSE
-                if (screenpause == true && shopoui == false)
+
+            //PAUSE
+            if (screenpause == true && shopoui == false)
+            {
+                if (mouseState.LeftButton == ButtonState.Pressed)
                 {
-                    if (mouseState.LeftButton == ButtonState.Pressed)
+                    for (int i = 0; i < buttonsPause.Length; i++)
                     {
-                        for (int i = 0; i < buttonsPause.Length; i++)
+                        if (buttonsPause[i].Contains(Mouse.GetState().X, Mouse.GetState().Y))
                         {
-                            if (buttonsPause[i].Contains(Mouse.GetState().X, Mouse.GetState().Y))
+                            if (i == 0)
                             {
-                                if (i == 0)
-                                {
-                                    screenpause = false;
-                                }
-                                else if (i == 1)
-                                {
-                                    _myGame.Etat = Game1.Etats.StartScreen;
-                                }
+                                screenpause = false;
+                            }
+                            else if (i == 1)
+                            {
+                                _myGame.Etat = Game1.Etats.StartScreen;
                             }
                         }
                     }
-                    if (buttonsPause[0].Contains(Mouse.GetState().X, Mouse.GetState().Y))
-                        buttonresumereleased = buttonresumepressed;
-                    else
-                        buttonresumereleased = buttonresume;
-
-                    if (buttonsPause[1].Contains(Mouse.GetState().X, Mouse.GetState().Y))
-                        buttonmenureleased = buttonmenupressed;
-                    else
-                        buttonmenureleased = buttonmenu;
                 }
+                if (buttonsPause[0].Contains(Mouse.GetState().X, Mouse.GetState().Y))
+                    buttonresumereleased = buttonresumepressed;
+                else
+                    buttonresumereleased = buttonresume;
 
-                // SHOP
-                if (shopoui)
+                if (buttonsPause[1].Contains(Mouse.GetState().X, Mouse.GetState().Y))
+                    buttonmenureleased = buttonmenupressed;
+                else
+                    buttonmenureleased = buttonmenu;
+            }
+
+
+            // SHOP
+            if (shopoui)
+            {
+
+                shop1released = shop1;
+                shop2released = shop2;
+                shop3released = shop3;
+                shop4released = shop4;
+                if (mouseState.LeftButton == ButtonState.Pressed)
                 {
-
-                    shop1released = shop1;
-                    shop2released = shop2;
-                    shop3released = shop3;
-                    shop4released = shop4;
-                    if (mouseState.LeftButton == ButtonState.Pressed)
+                    for (int i = 0; i < buttons.Length; i++)
                     {
-                        for (int i = 0; i < buttons.Length; i++)
+                        if (buttons[i].Contains(Mouse.GetState().X, Mouse.GetState().Y))
                         {
-                            if (buttons[i].Contains(Mouse.GetState().X, Mouse.GetState().Y))
+                            if (i == 0)
                             {
-                                if (i == 0)
+                                if (player.Gold >= priceshop1 && nbshop1 < MAXSHOP && clickshop == false)
                                 {
-                                    if (player.Gold >= priceshop1 && nbshop1 < MAXSHOP && clickshop == false)
-                                    {
-                                        clickshop = true;
-                                        player.Gold -= priceshop1;
-                                        player.Life += 10;
-                                        shop1released = shop1pressed;
-                                        priceshop1 *= 2;
-                                        nbshop1 += 1;
-                                        Console.WriteLine(player.Life);
-
-                                    }
-
-
-
-                                }
-                                else if (i == 1)
-                                {
-                                    if (player.Gold >= priceshop2 && nbshop2 < MAXSHOP && clickshop == false)
-                                    {
-                                        clickshop = true;
-                                        speedsup += 100;
-                                        player.Gold -= priceshop2;
-                                        shop2released = shop2pressed;
-                                        priceshop2 *= 2;
-                                        nbshop2 += 1;
-                                    }
-
-
+                                    clickshop = true;
+                                    player.Gold -= priceshop1;
+                                    player.Life += 30 ;
+                                    shop1released = shop1pressed;
+                                    priceshop1 *= 2;
+                                    nbshop1 += 1;
+                                    Console.WriteLine(player.Life);
                                 }
 
-                                else if (i == 2)
+                            }
+                            else if (i == 1)
+                            {
+                                if (player.Gold >= priceshop2 && nbshop2 < MAXSHOP && clickshop == false)
                                 {
-                                    if (player.Gold >= priceshop3 && nbshop3 < MAXSHOP && clickshop == false)
-                                    {
-                                        clickshop = true;
-                                        player.Speed += 100;
-                                        player.Gold -= priceshop3;
-                                        shop3released = shop3pressed;
-                                        priceshop3 *= 2;
-                                        nbshop3 += 1;
-                                    }
-
+                                    clickshop = true;
+                                    speedsup += 100;
+                                    player.Gold -= priceshop2;
+                                    shop2released = shop2pressed;
+                                    priceshop2 *= 2;
+                                    nbshop2 += 1;
                                 }
-
-                                else if (i == 3)
-                                {
-                                    if (player.Gold >= priceshop4 && nbshop4 < MAXSHOP && clickshop == false)
-                                    {
-                                        clickshop = true;
-                                        player.Damage -= 10;
-                                        player.Gold -= priceshop4;
-                                        shop4released = shop4pressed;
-                                        priceshop4 *= 2;
-                                        nbshop4 += 1;
-                                    }
-
-                                }
-                                else if (i == 4)
-                                {
-                                    shopoui = false;
-                                    screenpause = false;
-                                }
-
-
 
 
                             }
 
+                            else if (i == 2)
+                            {
+                                if (player.Gold >= priceshop3 && nbshop3 < MAXSHOP && clickshop == false)
+                                {
+                                    clickshop = true;
+                                    player.Speed += 100;
+                                    player.Gold -= priceshop3;
+                                    shop3released = shop3pressed;
+                                    priceshop3 *= 2;
+                                    nbshop3 += 1;
+                                }
+
+                            }
+
+                            else if (i == 3)
+                            {
+                                if (player.Gold >= priceshop4 && nbshop4 < MAXSHOP && clickshop == false)
+                                {
+                                    clickshop = true;
+                                    player.Damage += 20;
+                                    player.Gold -= priceshop4;
+                                    shop4released = shop4pressed;
+                                    priceshop4 *= 2;
+                                    nbshop4 += 1;
+                                }
+
+                            }
+                            else if (i == 4)
+                            {
+                                shopoui = false;
+                                screenpause = false;
+                            }
                         }
-
-                    }
-                    else if (mouseState.LeftButton == ButtonState.Released && clickshop == true)
-                    {
-                        clickshop = false;
                     }
 
-
-
+                }
+                else if (mouseState.LeftButton == ButtonState.Released && clickshop == true)
+                {
+                    clickshop = false;
                 }
             }
         }
@@ -678,12 +664,17 @@ namespace Project1
                 _myGame._spriteBatch.Draw(shop4released, shop4pos, Color.White);
 
 
-                _myGame._spriteBatch.DrawString(_myGame.font, nbshop1+ " / 5 \n-"+ priceshop1+" Gold" ,nbshop1pos, Color.Black);
-                _myGame._spriteBatch.DrawString(_myGame.font, nbshop2 + " / 5 \n-"+ priceshop2+" Gold", nbshop2pos, Color.Black);
-                _myGame._spriteBatch.DrawString(_myGame.font, nbshop3 + " / 5 \n-"+ priceshop3+" Gold", nbshop3pos, Color.Black);
-                _myGame._spriteBatch.DrawString(_myGame.font, nbshop4 + " / 5 \n-"+ priceshop4+" Gold", nbshop4pos, Color.Black);
-                
+                _myGame._spriteBatch.DrawString(_myGame.font, nbshop1+ " / 5 " ,nbshop1pos, Color.Black);
+                _myGame._spriteBatch.DrawString(_myGame.font, nbshop2 + " / 5 ", nbshop2pos, Color.Black);
+                _myGame._spriteBatch.DrawString(_myGame.font, nbshop3 + " / 5 ", nbshop3pos, Color.Black);
+                _myGame._spriteBatch.DrawString(_myGame.font, nbshop4 + " / 5 ", nbshop4pos, Color.Black);
 
+                _myGame._spriteBatch.DrawString(_myGame.font, "\n-" + priceshop1 + " Gold", shop1pos.SetX(770) ,  Color.Red);
+                _myGame._spriteBatch.DrawString(_myGame.font, "\n-" + priceshop2 + " Gold", shop2pos.SetX(1400), Color.Red);
+                _myGame._spriteBatch.DrawString(_myGame.font, "\n-" + priceshop3 + " Gold", shop3pos.SetX(770), Color.Red);
+                _myGame._spriteBatch.DrawString(_myGame.font, "\n-" + priceshop4 + " Gold", shop4pos.SetX(1400), Color.Red);
+
+              
                 _myGame._spriteBatch.End();
             }
             else
