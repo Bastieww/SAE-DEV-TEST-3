@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
+using Microsoft.Xna.Framework.Audio;
 using MonoGame.Extended.Tiled;
 using MonoGame.Extended.Tiled.Renderers;
 using MonoGame.Extended.Content;
@@ -69,6 +71,11 @@ namespace Project1
         // Murs
         Walls wallReference;
         List<Walls> listeWalls;
+
+        //Musique
+        Song gameScreenMusic;
+        SoundEffect shootSound;
+        
        
 
         public GameScreen(Game1 game) : base(game)
@@ -131,7 +138,13 @@ namespace Project1
             
             collisions = new Collisions();
 
+            gameScreenMusic = Content.Load<Song>("Demon-Slayer");
+            MediaPlayer.Play(gameScreenMusic);
+            shootSound = Content.Load<SoundEffect>("ShootSound");
+            
             speedsup = 0;
+
+            
 
         }
         public override void Update(GameTime gameTime)
@@ -236,6 +249,7 @@ namespace Project1
                     Bullet balle = new Bullet(this, player, new Vector2(relativeCursor.X, relativeCursor.Y));
                     balle.Speed += speedsup;
                     listeBalles.Add(balle);
+                    shootSound.Play();
 
                     click = true;
 
@@ -415,6 +429,7 @@ namespace Project1
                             else if (i == 1)
                             {
                                 _myGame.Etat = Game1.Etats.StartScreen;
+                                _myGame.changementMusic = true;
                             }
                         }
                     }

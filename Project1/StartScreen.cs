@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using MonoGame.Extended.Tiled;
 using MonoGame.Extended.Tiled.Renderers;
 using MonoGame.Extended.Animations;
@@ -26,6 +27,7 @@ namespace Project1
 
         private Texture2D _fond;
         private Vector2 _posfond;
+        private Song startMenuMusic;
 
 
 
@@ -38,7 +40,14 @@ namespace Project1
         }
         public override void LoadContent()
         {
-            _myGame._tiledMap = Content.Load<TiledMap>("map");
+            if (_myGame.changementMusic == true)
+            {
+                startMenuMusic = Content.Load<Song>("Partner-of-Doom");
+                MediaPlayer.Play(startMenuMusic);
+                _myGame.changementMusic = false;
+
+            }
+            
             _myGame._tiledMapRenderer = new TiledMapRenderer(GraphicsDevice, _myGame._tiledMap);
             _textButtons = Content.Load<Texture2D>("buttons");
             _posbuttons = new Vector2(Game1.WIDTH / 2 - _textButtons.Width / 2, Game1.HEIGHT / 2 - _textButtons.Height / 2);
@@ -48,13 +57,15 @@ namespace Project1
             buttons[0] = new Rectangle(719,275, 320, 135);
             buttons[1] = new Rectangle(719, 670, 320, 135);
             buttons[2] = new Rectangle(719, 467, 320, 135);
-           
+            
         }
 
 
 
         public override void Update(GameTime gameTime)
         {
+          
+           
            MouseState mouseState = Mouse.GetState();
            Rectangle mouserect = new Rectangle(mouseState.X, mouseState.Y, 1,1);
             clickMenu = false;
@@ -80,15 +91,6 @@ namespace Project1
 
                 }
             }
-
-            /*
-            if (Keyboard.GetState().IsKeyDown(Keys.P))
-            {
-                if (_myGame.Etat == Game1.Etats.GameScreen)
-                    _myGame.Etat = Game1.Etats.StartScreen;
-            }*/
-           
-
         }
 
 

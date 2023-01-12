@@ -54,6 +54,12 @@
 /processorParam:TextureFormat=Color
 /build:buttons.png
 
+#begin Demon-Slayer.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Demon-Slayer.mp3
+
 #begin fond.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -138,6 +144,12 @@
 /processor:TiledMapProcessor
 /build:map.tmx
 
+#begin Partner-of-Doom.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Partner-of-Doom.mp3
+
 #begin pause.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -161,6 +173,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:playerdebase.png
+
+#begin ShootSound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:ShootSound.wav
 
 #begin zombie.png
 /importer:TextureImporter
