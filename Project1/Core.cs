@@ -31,9 +31,9 @@ namespace Project1
         public Core(GameScreen gamescreen, TiledMap map)
         {
             LoadContent(gamescreen);
-            this.Life = 100;
+            this.Life = 1000;
             this.Position = new Vector2((map.Width*map.TileWidth)/2,(map.Height* map.TileHeight)/2);
-            this.Hitbox = new Rectangle((int)Position.X, (int)Position.Y,200,200);
+            this.Hitbox = new Rectangle((int)Position.X - 100, (int)Position.Y - 100,200,200);
             
 
         }

@@ -80,7 +80,7 @@ namespace Project1
             buttoncontrolsreleased = buttoncontrols;
             buttoncontrolspos = new Vector2(301, 752);
 
-            buttonquit = Content.Load<Texture2D>("buttonquit");
+            buttonquit = Content.Load<Texture2D>("buttons/buttonquit");
             buttonquitpressed = Content.Load<Texture2D>("buttonquitpressed");
             buttonquitreleased = buttonquit;
             buttonquitpos = new Vector2(1239,752);
@@ -102,7 +102,7 @@ namespace Project1
             buttons[0] = new Rectangle(770, 752, 231, 110);
             buttons[1] = new Rectangle(301, 752, 320, 135);
             buttons[2] = new Rectangle(1239, 752, 320, 135);
-            buttons[3]= new Rectangle(10,10,100,100);
+            buttons[3]= new Rectangle(10,10,186,76);
 
 
 

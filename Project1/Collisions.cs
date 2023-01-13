@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Project1
 {
@@ -20,9 +21,7 @@ namespace Project1
         public Collisions()
         {
         }
-        
 
-        
         public void CollisionBalleZombie(List<Bullet> bullets, List<Zombie> zombies, Player player)
         {
             bool touche = false;
@@ -52,7 +51,6 @@ namespace Project1
                     }
                 }
                 zombiesToRemove.ForEach(zombie => zombies.Remove(zombie));
-
             }
 
             bulletsToRemove.ForEach(bullet=> bullets.Remove(bullet));
@@ -79,15 +77,17 @@ namespace Project1
                 }
             }
         }
-        public void CollisionZombieCore(List<Zombie> zombies, Core core)
+        public bool CollisionZombieCore(List<Zombie> zombies, Core core)
         {
             foreach (Zombie zombie in zombies)
             {
                 if (zombie.Hitbox.Intersects(core.Hitbox))
                 {
                     core.Life -= 1;
+                    return true;
                 }
             }
+            return false;
         }
 
 
