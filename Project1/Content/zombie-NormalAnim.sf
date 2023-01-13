@@ -1,17 +1,17 @@
 {
   "textureAtlas": {
     "texture": "zombie-Normal.png",
-    "regionWidth": 90,
+    "regionWidth": 91,
     "regionHeight": 180
   },
   "cycles": {
-    "walkWest": {
-      "frames": [0,1,2,8,1],
+    "walkEast": {
+      "frames": [0,1,2,7,1],
       "isLooping": false,
       "frameDuration": 0.2
     },
-    "walkEast": {
-      "frames": [5,4,3,13,4],
+    "walkWest": {
+      "frames": [5,4,3,11,5],
       "isLooping": false,
       "frameDuration": 0.2
     }

@@ -17,8 +17,8 @@ namespace Project1
     public class Player
     {
         private int life = 1000;
-        private int gold = 5550;
-        private int speed = 400;
+        private int gold = 0;
+        private int speed = 350;
         private int damage = 1;
 
         //ATTENTION : JE NE SAVAIS PAS COMMENT RECUPERER LA TAILLE D'UNE SEULE TUILE SUR UNE SPRITE SHEET

@@ -61,12 +61,7 @@ namespace Project1
 
         // Texte
         Vector2 positionText;
-       
-
-        private AnimatedSprite barredevie;
-        private Vector2 barredeviepos;
-
-
+    
         // Zombies
         List<Bullet> listeBalles;
         List<Zombie> listeZomb;
@@ -396,7 +391,7 @@ namespace Project1
                     chronoVagueSuivante -= deltaSeconds;
                 if (chrono >= 5 || chronoVagueSuivante <= 0)
                 {
-                    chronoVagueSuivante = 1500;
+                    chronoVagueSuivante = 30;
                     chrono = 0;
                     nbZombie = 0;
 
@@ -513,13 +508,13 @@ namespace Project1
                 // Anime Zombie
                 foreach (Zombie zombie in listeZomb)
                 {
-                    zombie.TextureZomb.Play(animationZombie);
-                    zombie.TextureZomb.Update(deltaSeconds);
-
-                    /*  if (zombie.Position.X > player.Position.X)
+                      if (zombie.Position.X > player.Position.X)
                           animationZombie = "walkWest";
                       else
-                          animationZombie = "walkEast";   */
+                          animationZombie = "walkEast";
+                    
+                    zombie.TextureZomb.Play(animationZombie);
+                    zombie.TextureZomb.Update(deltaSeconds);
                 }
 
                 _myGame._tiledMapRenderer.Update(gameTime);
@@ -581,11 +576,11 @@ namespace Project1
                                 {
                                     clickshop = true;
                                     player.Gold -= priceshop1;
-                                    player.Life += 30 ;
+                                    player.Life += 400 ;
                                     shop1released = shop1pressed;
                                     priceshop1 *= 2;
                                     nbshop1 += 1;
-                                    Console.WriteLine(player.Life);
+                                    
                                 }
 
                             }
@@ -623,7 +618,7 @@ namespace Project1
                                 if (player.Gold >= priceshop4 && nbshop4 < MAXSHOP && clickshop == false)
                                 {
                                     clickshop = true;
-                                    player.Damage += 20;
+                                    player.Damage += 1;
                                     player.Gold -= priceshop4;
                                     shop4released = shop4pressed;
                                     priceshop4 *= 2;
@@ -674,8 +669,7 @@ namespace Project1
             }
             else
             {
-                Texture2D rect = new Texture2D(GraphicsDevice, 1, 1);
-                rect.SetData(new Color[] { Color.Blue });
+              
 
                 _myGame._spriteBatch.Begin(transformMatrix: camera.Transform);
 
@@ -725,8 +719,6 @@ namespace Project1
 
             if (screenpause == true && shopoui == false)
             {
-                Console.WriteLine("test");
-
                 _myGame._spriteBatch.Begin();
                 _myGame._spriteBatch.Draw(pause, _pausepos, Color.White);
                 _myGame._spriteBatch.Draw(buttonresumereleased, buttonresumepos, Color.White);

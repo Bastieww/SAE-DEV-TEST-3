@@ -47,19 +47,19 @@ namespace Project1
         public override void LoadContent()
         {
             base.LoadContent();
-            fondEndscreen = Content.Load<Texture2D>("fondEndscreen");
+            fondEndscreen = Content.Load<Texture2D>("fond/fondEndscreen");
             _posFondEndscreen = new Vector2(0, 0);
             buttons = new Rectangle[2];
             buttons[0] = new Rectangle(494, 754, 390, 118);
             buttons[1] = new Rectangle(999, 754, 390, 118);
 
-            buttonRestart = Content.Load<Texture2D>("buttonrestart");
-            buttonRestartPressed = Content.Load<Texture2D>("buttonrestartpressed");
+            buttonRestart = Content.Load<Texture2D>("buttons/buttonrestart");
+            buttonRestartPressed = Content.Load<Texture2D>("buttons/buttonrestartpressed");
             buttonRestartReleased = buttonRestart;
             _buttonRestartPos = new Vector2(494, 754);
 
-            buttonMenu = Content.Load<Texture2D>("buttonmenuend");
-            buttonMenuPressed = Content.Load<Texture2D>("buttonmenuendpressed");
+            buttonMenu = Content.Load<Texture2D>("buttons/buttonmenuend");
+            buttonMenuPressed = Content.Load<Texture2D>("buttons/buttonmenuendpressed");
             buttonMenuReleased = buttonMenu;
             _buttonMenuPos = new Vector2(999, 754);
 

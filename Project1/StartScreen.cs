@@ -21,7 +21,7 @@ namespace Project1
 
         private Texture2D _textButtons;
         private Rectangle[] buttons;
-        private Vector2 _posbuttons;
+        
 
         private Texture2D buttonplay;
         private Texture2D buttonplaypressed;
@@ -70,31 +70,31 @@ namespace Project1
             }
             
 
-            buttonplay = Content.Load<Texture2D>("buttonplay");
-            buttonplaypressed = Content.Load<Texture2D>("buttonplaypressed");
+            buttonplay = Content.Load<Texture2D>("buttons/buttonplay");
+            buttonplaypressed = Content.Load<Texture2D>("buttons/buttonplaypressed");
             buttonplayreleased = buttonplay;
             buttonplaypos = new Vector2(770, 752);
 
-            buttoncontrols = Content.Load<Texture2D>("buttoncontrols");
-            buttoncontrolspressed = Content.Load<Texture2D>("buttoncontrolspressed");
+            buttoncontrols = Content.Load<Texture2D>("buttons/buttoncontrols");
+            buttoncontrolspressed = Content.Load<Texture2D>("buttons/buttoncontrolspressed");
             buttoncontrolsreleased = buttoncontrols;
             buttoncontrolspos = new Vector2(301, 752);
 
             buttonquit = Content.Load<Texture2D>("buttons/buttonquit");
-            buttonquitpressed = Content.Load<Texture2D>("buttonquitpressed");
+            buttonquitpressed = Content.Load<Texture2D>("buttons/buttonquitpressed");
             buttonquitreleased = buttonquit;
             buttonquitpos = new Vector2(1239,752);
 
-            buttonCredits = Content.Load<Texture2D>("buttoncredits");
-            buttonCreditsPressed = Content.Load<Texture2D>("buttoncreditspressed");
+            buttonCredits = Content.Load<Texture2D>("buttons/buttoncredits");
+            buttonCreditsPressed = Content.Load<Texture2D>("buttons/buttoncreditspressed");
             buttonCreditsReleased = buttonCredits;
             _buttonCreditsPos= new Vector2(10,10);
 
             _myGame._tiledMap = Content.Load<TiledMap>("map");
             _myGame._tiledMapRenderer = new TiledMapRenderer(GraphicsDevice, _myGame._tiledMap);
-            _textButtons = Content.Load<Texture2D>("buttons");
+            _textButtons = Content.Load<Texture2D>("buttons/buttons");
 
-            _fond = Content.Load<Texture2D>("fond");
+            _fond = Content.Load<Texture2D>("fond/fond");
             _posfond = new Vector2(0, 0);
 
 
@@ -174,7 +174,7 @@ namespace Project1
 
         public override void Draw(GameTime gameTime)
         {
-            //_myGame._tiledMapRenderer.Draw();
+           
 
             _myGame._spriteBatch.Begin();
             _myGame._spriteBatch.Draw(_fond, _posfond, Color.White);
@@ -182,7 +182,7 @@ namespace Project1
             _myGame._spriteBatch.Draw(buttoncontrolsreleased, buttoncontrolspos, Color.Red);
             _myGame._spriteBatch.Draw(buttonquitreleased, buttonquitpos, Color.Red);
             _myGame._spriteBatch.Draw(buttonCreditsReleased,_buttonCreditsPos, Color.White);
-            //_myGame._spriteBatch.Draw(_textButtons, _posbuttons, Color.Red);
+            
 
 
             _myGame._spriteBatch.End();

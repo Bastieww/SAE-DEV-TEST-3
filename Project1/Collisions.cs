@@ -16,7 +16,7 @@ namespace Project1
 {
     internal class Collisions
     {
-        private bool toucheBalleZombie;
+        
 
         public Collisions()
         {
@@ -39,7 +39,7 @@ namespace Project1
                             Console.WriteLine("Intersect");
 
                             bulletsToRemove.Add(bullet);
-                            zombie.VieZombie -= 5;
+                            zombie.VieZombie -= player.Damage;
                             if (zombie.VieZombie <= 0)
                             {
                                 zombiesToRemove.Add(zombie);
