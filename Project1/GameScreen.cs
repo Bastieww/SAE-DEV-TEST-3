@@ -391,7 +391,7 @@ namespace Project1
                     chronoVagueSuivante -= deltaSeconds;
                 if (chrono >= 5 || chronoVagueSuivante <= 0)
                 {
-                    chronoVagueSuivante = 30;
+                    chronoVagueSuivante = 1;
                     chrono = 0;
                     nbZombie = 0;
 
@@ -451,7 +451,10 @@ namespace Project1
                 else if (core.Life >= 10)
                     animationbarredevieCore = "10%";
                 else if (core.Life <= 0)
+                {
                     animationbarredevieCore = "0%";
+                    _myGame.Etat = Game1.Etats.EndScreen;
+                }
 
 
 
@@ -479,9 +482,9 @@ namespace Project1
                     animationbarredeviePlayer = "20%";
                 else if (player.Life >= 1)
                     animationbarredeviePlayer = "10%";
-                else if (player.Life == 0)
+                else if (player.Life <= 0)
                 {
-                    animationbarredevieCore = "0%";
+                    animationbarredeviePlayer = "0%";
                     _myGame.Etat = Game1.Etats.EndScreen;
                 }
                     
@@ -540,6 +543,7 @@ namespace Project1
                             else if (i == 1)
                             {
                                 _myGame.Etat = Game1.Etats.StartScreen;
+                                _myGame.changementMusic = true;
                             }
                         }
                     }

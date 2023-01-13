@@ -221,7 +221,7 @@ namespace Project1
                 case "Rapide":
                     this.VieZombie = Zombie.VIE_RAPIDE;
                     this.VitesseZombie = Zombie.VITESSE_RAPIDE;
-                    apparence = gamescreen.Content.Load<SpriteSheet>("zombie-NinjaAnim.sf", new JsonContentLoader());
+                    apparence = gamescreen.Content.Load<SpriteSheet>("zombieNinjaAnim.sf", new JsonContentLoader());
                     this.TextureZomb = new AnimatedSprite(apparence);
                     break;
                 case "Gros":
