@@ -17,7 +17,7 @@ namespace Project1
     public class Zombie
     {
         public const int VIE_NORMAL = 25, VIE_GROS = 50, VIE_RAPIDE = 10;
-        public const int VITESSE_NORMAL = 4, VITESSE_GROS = 2, VITESSE_RAPIDE = 8;
+        public const int VITESSE_NORMAL = 100, VITESSE_GROS = 2, VITESSE_RAPIDE = 8;
         public const int PUISSANCE_NORMAl = 3, PUISSANCE_RAPIDE = 8, PUISSANCE_GROS = 11;
 
         private int vieZombie, vitesseZombie, XposZomb, YposZomb;
@@ -36,13 +36,14 @@ namespace Project1
 
         private Vector2 cible;
 
+        private string memoireDirection;
+        private  Point memoireCoinADepasser;
+        private Walls dernierMurTouche;
+
 
         public Zombie(GameScreen gamescreen, string typeZombie, TiledMap map)
         {
             this.TypeZombie = typeZombie;
-            this.TextureZomb = textureZomb;
-            this.VieZombie = vieZombie;
-            this.VitesseZombie = vitesseZombie;
             LoadContent(gamescreen);
             
             int Xspawn = rd.Next(0, map.WidthInPixels);
@@ -70,8 +71,12 @@ namespace Project1
             }
 
             this.Position = new Vector2(XposZomb,YposZomb);
+            
 
             this.Cible = new Vector2(0, 0);
+
+            this.MemoireDirection = "";
+            this.memoireCoinADepasser = Point.Zero;
 
         }
 
@@ -163,6 +168,45 @@ namespace Project1
             }
         }
 
+        public string MemoireDirection
+        {
+            get
+            {
+                return this.memoireDirection;
+            }
+
+            set
+            {
+                this.memoireDirection = value;
+            }
+        }
+
+        public Point MemoireCoinADepasser
+        {
+            get
+            {
+                return this.memoireCoinADepasser;
+            }
+
+            set
+            {
+                this.memoireCoinADepasser = value;
+            }
+        }
+
+        internal Walls DernierMurTouche
+        {
+            get
+            {
+                return this.dernierMurTouche;
+            }
+
+            set
+            {
+                this.dernierMurTouche = value;
+            }
+        }
+
         private void LoadContent(GameScreen gamescreen)
         {
             // Type du zombie
@@ -191,6 +235,12 @@ namespace Project1
         public void UpdateHitbox()
         {
             this.Hitbox = new Rectangle((int)Position.X - width / 2, (int)Position.Y - height / 2, this.width, this.height);
+        }
+
+        public void Memorisation(Point coin, string direction)
+        {
+            this.MemoireCoinADepasser = coin;
+            this.MemoireDirection = direction;
         }
     }
 }

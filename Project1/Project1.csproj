@@ -62,6 +62,9 @@
     <None Update="Content\fond_de_map.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Content\fond_de_map.tsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Content\heart.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

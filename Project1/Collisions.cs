@@ -90,44 +90,183 @@ namespace Project1
             }
         }
 
-        public bool CollisionZombieWall(Zombie zombie,  List<Walls> walls)
+
+
+   
+
+        public void EscapingObstacles(Zombie zombie, List<Walls> walls, Vector2 direction, Vector2 move)
         {
-            Vector2 deplacement = Vector2.Zero;
-            Point hautGaucheZombie = zombie.Hitbox.Location;
-            Point hautDroiteZombie = zombie.Hitbox.Location + new Point(zombie.Hitbox.Width,0);
-            Point basGaucheZombie = zombie.Hitbox.Location + new Point(0,zombie.Hitbox.Height);
-            Point basDroiteZombie = zombie.Hitbox.Location + new Point(zombie.Hitbox.Width, zombie.Hitbox.Height);
-            
-
-
-
             foreach (Walls wall in walls)
             {
-                //PAS LE CHOIX FAUT FAIRE LES 3 checks par truc, la j'ai fais que les premiers
+                if (zombie.Hitbox.Intersects(wall.Hitbox))
+                {
+                    if (zombie.DernierMurTouche != wall)
+                    {
+                        zombie.DernierMurTouche = wall;
+                        zombie.Memorisation(Point.Zero, "");
+                    }
+                    
+                        
+                    zombie.Position -= move;
+                    zombie.UpdateHitbox();
 
-               if(zombie.Hitbox.Intersects(wall.Hitbox))
-               {
+
+                    Point hautGaucheZombie = zombie.Hitbox.Location;
+                    Point hautDroiteZombie = zombie.Hitbox.Location + new Point(zombie.Hitbox.Width, 0);
+                    Point basGaucheZombie = zombie.Hitbox.Location + new Point(0, zombie.Hitbox.Height);
+                    Point basDroiteZombie = zombie.Hitbox.Location + new Point(zombie.Hitbox.Width, zombie.Hitbox.Height);
+
+
                     Point hautGaucheWall = wall.Hitbox.Location;
                     Point hautDroiteWall = wall.Hitbox.Location + new Point(wall.Hitbox.Width, 0);
                     Point basGaucheWall = wall.Hitbox.Location + new Point(0, wall.Hitbox.Height);
                     Point basDroiteWall = wall.Hitbox.Location + new Point(wall.Hitbox.Width, wall.Hitbox.Height);
-                    if ((basGaucheZombie.X <= hautDroiteWall.X) && (basDroiteZombie.X < hautDroiteWall.X))
-                    {
-                        deplacement = new Vector2(-1, 0);
-                    }
-                    else if ((hautDroiteZombie.X >= basGaucheWall.X) && (hautGaucheZombie.X < basDroiteWall.X))
-                    {
-                        deplacement = new Vector2(1, 0);
-                    }
-               }
-                    
-                
-            }
-            //a enlever
-            return false;
-            
+                    /*
+                    Console.WriteLine(hautGaucheZombie.ToString()+ " : "+ hautGaucheWall.ToString()+ "\n"+ hautDroiteZombie.ToString()+ " : "+ hautDroiteWall.ToString()+ "\n"+ basGaucheZombie.ToString()+ " : "+ basGaucheWall.ToString()+ "\n"+ basDroiteZombie.ToString()+ " : "+ basDroiteWall.ToString() + "\n" + (hautDroiteWall.X + zombie.Hitbox.Width).ToString() + "\n" +(hautGaucheWall.X - zombie.Hitbox.Width).ToString() + "\n" + (wall.Hitbox.Contains(basGaucheZombie) && (wall.Hitbox.Contains(basDroiteZombie))) +"\n" + (wall.Hitbox.Contains(hautGaucheZombie) && (wall.Hitbox.Contains(hautDroiteZombie))));
+                    Console.WriteLine(" ");
+                    Console.WriteLine((basGaucheZombie.X <= hautDroiteWall.X));
+                    Console.WriteLine(basDroiteZombie.X < hautDroiteWall.X + zombie.Hitbox.Width);
+                    Console.WriteLine(basGaucheZombie.X > hautGaucheWall.X - zombie.Hitbox.Width);
+                    Console.WriteLine((wall.Hitbox.Contains(basGaucheZombie + new Point(0, 5)) && (wall.Hitbox.Contains(basDroiteZombie + new Point(0, 5)))));
+                    Console.WriteLine((wall.Hitbox.Contains(hautGaucheZombie + new Point(0, -5)) && (wall.Hitbox.Contains(hautDroiteZombie + new Point(0, -5)))));
+                    if ((wall.Hitbox.Contains(hautGaucheZombie + new Point(0, -5)) && (wall.Hitbox.Contains(hautDroiteZombie + new Point(0, -5)))))
+                        Console.Read();
 
-        }
+                    Console.WriteLine((basGaucheZombie.X <= hautDroiteWall.X && basDroiteZombie.X < hautDroiteWall.X + zombie.Hitbox.Width && basGaucheZombie.X > hautGaucheWall.X - zombie.Hitbox.Width && ((wall.Hitbox.Contains(basGaucheZombie + new Point(0, -5)) && (wall.Hitbox.Contains(basDroiteZombie + new Point(0, -5)))) || (wall.Hitbox.Contains(hautGaucheZombie + new Point(0, 5)) && (wall.Hitbox.Contains(hautDroiteZombie + new Point(0, 5)))))));
+                    if (basGaucheZombie.X <= hautDroiteWall.X && basDroiteZombie.X < hautDroiteWall.X + zombie.Hitbox.Width && basGaucheZombie.X > hautGaucheWall.X - zombie.Hitbox.Width && ((wall.Hitbox.Contains(basGaucheZombie+ new Point(0,-5)) && (wall.Hitbox.Contains(basDroiteZombie + new Point(0, -5)))) || (wall.Hitbox.Contains(hautGaucheZombie + new Point(0, 5)) && (wall.Hitbox.Contains(hautDroiteZombie + new Point(0, 5)))))) 
+
+
+                    {
+                        
+                        if(zombie.Cible.X - zombie.Hitbox.Center.X <= 0)
+                            deplacement = new Vector2(-1, 0);
+                        else
+                            deplacement = new Vector2(1, 0);
+                    }
+                    else 
+                    {
+                        if (zombie.Cible.Y - zombie.Hitbox.Center.Y <= 0)
+                            deplacement = new Vector2(0, -1);
+                        else
+                            deplacement = new Vector2(0, 1);
+                    }
+                    */
+                    
+                    
+                        if (zombie.MemoireDirection == "")
+                        {
+
+                            if (direction.X > 0)
+                            {
+                                zombie.Position += new Vector2(1, 0);
+                                zombie.UpdateHitbox();
+                                if (zombie.Hitbox.Intersects(wall.Hitbox))
+                                {
+                                    zombie.Position -= new Vector2(1, 0);
+                                    zombie.UpdateHitbox();
+                                }
+                                else
+                                {
+                                    zombie.Memorisation(hautDroiteWall, "droite");
+                                }
+
+                            }
+                            else if (direction.X > 0)
+                            {
+                                zombie.Position += new Vector2(-1, 0);
+                                zombie.UpdateHitbox();
+                                if (zombie.Hitbox.Intersects(wall.Hitbox))
+                                {
+                                    zombie.Position -= new Vector2(-1, 0);
+                                    zombie.UpdateHitbox();
+                                }
+                                else
+                                {
+                                    zombie.Memorisation(hautGaucheWall, "gauche");
+                                }
+                            }
+                            if (zombie.MemoireDirection == "")
+                            {
+                                if (direction.Y > 0)
+                                {
+                                    zombie.Position += new Vector2(0, 1);
+                                    zombie.UpdateHitbox();
+                                    if (zombie.Hitbox.Intersects(wall.Hitbox))
+                                    {
+                                        zombie.Position -= new Vector2(0, 1);
+                                        zombie.UpdateHitbox();
+                                    }
+                                    else
+                                    {
+                                        zombie.Memorisation(basDroiteWall, "bas");
+                                    }
+
+                                }
+                                else
+                                {
+                                    zombie.Position += new Vector2(0, -1);
+                                    zombie.UpdateHitbox();
+                                    if (zombie.Hitbox.Intersects(wall.Hitbox))
+                                    {
+                                        zombie.Position -= new Vector2(0, -1);
+                                        zombie.UpdateHitbox();
+                                    }
+                                    else
+                                    {
+                                        zombie.Memorisation(hautGaucheWall - new Point(0, zombie.Hitbox.Height), "haut");
+                                    }
+                                }
+                            }
+                        }
+
+                        switch (zombie.MemoireDirection)
+                        {
+                            case "droite":
+                                zombie.Position += new Vector2(1, 0);
+                                zombie.UpdateHitbox();
+
+                                if (hautGaucheZombie.X > zombie.MemoireCoinADepasser.X)
+                                {
+                                    zombie.MemoireDirection = "";
+                                }
+                                break;
+
+                            case "gauche":
+                                zombie.Position += new Vector2(-1, 0);
+                                zombie.UpdateHitbox();
+
+                                if (hautDroiteZombie.X < zombie.MemoireCoinADepasser.X)
+                                {
+                                    zombie.MemoireDirection = "";
+                                }
+                                break;
+
+                            case "bas":
+                                zombie.Position += new Vector2(0, 1);
+                                zombie.UpdateHitbox();
+
+                                if (hautDroiteZombie.Y > zombie.MemoireCoinADepasser.Y)
+                                {
+                                    zombie.MemoireDirection = "";
+                                }
+                                break;
+
+                            case "haut":
+                                zombie.Position += new Vector2(0, -1);
+                                zombie.UpdateHitbox();
+
+                                if (hautDroiteZombie.Y < zombie.MemoireCoinADepasser.Y)
+                                {
+                                    zombie.MemoireDirection = "";
+                                }
+                                break;
+                        }
+                        Console.WriteLine(zombie.MemoireCoinADepasser.ToString() + " ; " + zombie.MemoireDirection);
+                    }
+
+                }
+            }                  
+        
 
         public bool CollisionPlayerWall(Player player, List<Walls> walls)
         {

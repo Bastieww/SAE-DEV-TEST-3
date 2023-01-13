@@ -16,6 +16,7 @@ using MonoGame.Extended.Sprites;
 using MonoGame.Extended.Serialization;
 using System.Threading;
 using MonoGame.Extended;
+using System.Runtime.CompilerServices;
 
 namespace Project1
 {
@@ -316,7 +317,7 @@ namespace Project1
                     }
                 }
 
-               
+
 
                 // Disparition du bullet
                 foreach (Bullet balle in listeBalles)
@@ -344,7 +345,7 @@ namespace Project1
 
                     click = true;
 
-                   
+
                 }
                 else if (mouseState.LeftButton == ButtonState.Released && click == true)
                 {
@@ -370,15 +371,11 @@ namespace Project1
                 foreach (Zombie zombie in listeZomb)
                 {
                     Vector2 directionZombie = Vector2.Normalize(player.Position - zombie.Position);
-                    zombie.Position += new Vector2(directionZombie.X * zombSpeed , directionZombie.Y * zombSpeed);
+                    Vector2 move = new Vector2(directionZombie.X * zombSpeed, directionZombie.Y * zombSpeed);
+                    zombie.Position += move;
                     zombie.UpdateHitbox();
-                    if (collisions.CollisionZombieWall(zombie, listeWalls))
-                    {
-                        zombie.Position -= new Vector2(directionZombie.X * zombSpeed, directionZombie.Y * zombSpeed);
-                        
-                        zombie.UpdateHitbox();
-                    }
-                   
+                    
+                    collisions.EscapingObstacles(zombie,listeWalls,directionZombie,move);
                     
                 }
 
@@ -395,13 +392,14 @@ namespace Project1
                 }
 
                 // Systeme de vague
+                
                 if (listeZomb.Count == 0)
                     chrono += deltaSeconds;
                 else
                     chronoVagueSuivante -= deltaSeconds;
                 if (chrono >= 5 || chronoVagueSuivante <= 0)
                 {
-                    chronoVagueSuivante = 5;
+                    chronoVagueSuivante = 1500;
                     chrono = 0;
                     nbZombie = 0;
 
@@ -429,7 +427,7 @@ namespace Project1
                         puissanceZomb = 1;
                     }
                     numVague += 1;
-                    zombMaxVague += 3;
+                    zombMaxVague += 1;
 
                 }
 
@@ -440,7 +438,7 @@ namespace Project1
                     if (core.Life < i * 10 && core.Life > (i - 1) * 10)
                         animationbarredevie = $"{i}0%"; */
 
-                if (core.Life >90)
+                if (core.Life > 90)
                     animationbarredevieCore = "100%";
                 else if (core.Life > 80)
                     animationbarredevieCore = "90%";
@@ -527,41 +525,41 @@ namespace Project1
                 {
                     zombie.TextureZomb.Play(animationZombie);
                     zombie.TextureZomb.Update(deltaSeconds);
-                    
-                  /*  if (zombie.Position.X > player.Position.X)
-                        animationZombie = "walkWest";
-                    else
-                        animationZombie = "walkEast";   */
+
+                    /*  if (zombie.Position.X > player.Position.X)
+                          animationZombie = "walkWest";
+                      else
+                          animationZombie = "walkEast";   */
                 }
 
-                    _myGame._tiledMapRenderer.Update(gameTime);
+                _myGame._tiledMapRenderer.Update(gameTime);
 
-                    camera.Follow(player, _myGame);
+                camera.Follow(player, _myGame);
 
-            //PAUSE
-            if (screenpause == true && shopoui == false)
-            {
-                if (mouseState.LeftButton == ButtonState.Pressed)
+                //PAUSE
+                if (screenpause == true && shopoui == false)
                 {
-                    for (int i = 0; i < buttonsPause.Length; i++)
+                    if (mouseState.LeftButton == ButtonState.Pressed)
                     {
-                        if (buttonsPause[i].Contains(Mouse.GetState().X, Mouse.GetState().Y))
+                        for (int i = 0; i < buttonsPause.Length; i++)
                         {
-                            if (i == 0)
+                            if (buttonsPause[i].Contains(Mouse.GetState().X, Mouse.GetState().Y))
                             {
-                                screenpause = false;
-                            }
-                            else if (i == 1)
-                            {
-                                _myGame.Etat = Game1.Etats.StartScreen;
+                                if (i == 0)
+                                {
+                                    screenpause = false;
+                                }
+                                else if (i == 1)
+                                {
+                                    _myGame.Etat = Game1.Etats.StartScreen;
+                                }
                             }
                         }
                     }
-                }
-                if (buttonsPause[0].Contains(Mouse.GetState().X, Mouse.GetState().Y))
-                    buttonresumereleased = buttonresumepressed;
-                else
-                    buttonresumereleased = buttonresume;
+                    if (buttonsPause[0].Contains(Mouse.GetState().X, Mouse.GetState().Y))
+                        buttonresumereleased = buttonresumepressed;
+                    else
+                        buttonresumereleased = buttonresume;
 
                     if (buttonsPause[1].Contains(Mouse.GetState().X, Mouse.GetState().Y))
                         buttonmenureleased = buttonmenupressed;
@@ -569,100 +567,101 @@ namespace Project1
                         buttonmenureleased = buttonmenu;
                 }
 
-            // SHOP
-            if (shopoui)
-            {
-
-                shop1released = shop1;
-                shop2released = shop2;
-                shop3released = shop3;
-                shop4released = shop4;
-                if (mouseState.LeftButton == ButtonState.Pressed)
+                // SHOP
+                if (shopoui)
                 {
-                    for (int i = 0; i < buttons.Length; i++)
+
+                    shop1released = shop1;
+                    shop2released = shop2;
+                    shop3released = shop3;
+                    shop4released = shop4;
+                    if (mouseState.LeftButton == ButtonState.Pressed)
                     {
-                        if (buttons[i].Contains(Mouse.GetState().X, Mouse.GetState().Y))
+                        for (int i = 0; i < buttons.Length; i++)
                         {
-                            if (i == 0)
+                            if (buttons[i].Contains(Mouse.GetState().X, Mouse.GetState().Y))
                             {
-                                if (player.Gold >= priceshop1 && nbshop1<MAXSHOP && clickshop == false)
+                                if (i == 0)
                                 {
-                                    clickshop = true;
-                                    player.Gold -= priceshop1;
-                                    player.Life += 10;
-                                    shop1released = shop1pressed;
-                                    priceshop1 *= 2;
-                                    nbshop1 += 1;
-                                    Console.WriteLine(player.Life);
+                                    if (player.Gold >= priceshop1 && nbshop1 < MAXSHOP && clickshop == false)
+                                    {
+                                        clickshop = true;
+                                        player.Gold -= priceshop1;
+                                        player.Life += 10;
+                                        shop1released = shop1pressed;
+                                        priceshop1 *= 2;
+                                        nbshop1 += 1;
+                                        Console.WriteLine(player.Life);
 
                                     }
 
 
 
-                            }
-                            else if (i == 1)
-                            {
-                                if (player.Gold >= priceshop2 && nbshop2<MAXSHOP && clickshop == false)
+                                }
+                                else if (i == 1)
                                 {
-                                    clickshop = true;
-                                    speedsup += 100;
-                                    player.Gold -= priceshop2;
-                                    shop2released = shop2pressed;
-                                    priceshop2 *= 2;
-                                    nbshop2 += 1;
-                                }
+                                    if (player.Gold >= priceshop2 && nbshop2 < MAXSHOP && clickshop == false)
+                                    {
+                                        clickshop = true;
+                                        speedsup += 100;
+                                        player.Gold -= priceshop2;
+                                        shop2released = shop2pressed;
+                                        priceshop2 *= 2;
+                                        nbshop2 += 1;
+                                    }
 
 
                                 }
 
-                            else if (i == 2)
-                            {
-                                if (player.Gold >= priceshop3 && nbshop3<MAXSHOP && clickshop == false)
+                                else if (i == 2)
                                 {
-                                    clickshop= true;
-                                    player.Speed += 100;
-                                    player.Gold -= priceshop3;
-                                    shop3released = shop3pressed;
-                                    priceshop3 *= 2;
-                                    nbshop3 += 1;
-                                }
+                                    if (player.Gold >= priceshop3 && nbshop3 < MAXSHOP && clickshop == false)
+                                    {
+                                        clickshop = true;
+                                        player.Speed += 100;
+                                        player.Gold -= priceshop3;
+                                        shop3released = shop3pressed;
+                                        priceshop3 *= 2;
+                                        nbshop3 += 1;
+                                    }
 
                                 }
 
-                            else if (i == 3)
-                            {
-                                if (player.Gold >= priceshop4 && nbshop4<MAXSHOP && clickshop == false)
+                                else if (i == 3)
                                 {
-                                    clickshop = true;
-                                    player.Damage -= 10;
-                                    player.Gold -= priceshop4;
-                                    shop4released = shop4pressed;
-                                    priceshop4 *= 2;
-                                    nbshop4 += 1;
+                                    if (player.Gold >= priceshop4 && nbshop4 < MAXSHOP && clickshop == false)
+                                    {
+                                        clickshop = true;
+                                        player.Damage -= 10;
+                                        player.Gold -= priceshop4;
+                                        shop4released = shop4pressed;
+                                        priceshop4 *= 2;
+                                        nbshop4 += 1;
+                                    }
+
                                 }
-                                
-                            }
-                            else if (i == 4)
-                            {
-                                shopoui = false;
-                                screenpause = false;
-                            }
+                                else if (i == 4)
+                                {
+                                    shopoui = false;
+                                    screenpause = false;
+                                }
 
-                            
 
+
+
+                            }
 
                         }
 
-                        }
+                    }
+                    else if (mouseState.LeftButton == ButtonState.Released && clickshop == true)
+                    {
+                        clickshop = false;
+                    }
+
+
 
                 }
-                else if (mouseState.LeftButton == ButtonState.Released && clickshop == true)
-                {
-                    clickshop = false;
-                }
-
-
-
             }
         }
         public override void Draw(GameTime gameTime)
